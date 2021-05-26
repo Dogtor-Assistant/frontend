@@ -4,27 +4,32 @@ import {
     Route,
     Switch,
 } from 'react-router-dom';
+import { ChakraProvider } from '@chakra-ui/react';
 
 import Home from 'Home';
 import Login from 'Login';
 
+import theme from 'utils/theme';
+
 function App() {
     return (
-        <Router>
-            <div>
-                <h1>Dogtor</h1>
+        <ChakraProvider theme={theme}>
+            <Router>
+                <div>
+                    <h1>Dogtor</h1>
 
-                <Switch>
-                    <Route exact path="/">
-                        <Home />
-                    </Route>
+                    <Switch>
+                        <Route exact path="/">
+                            <Home />
+                        </Route>
 
-                    <Route path="/login">
-                        <Login />
-                    </Route>
-                </Switch>
-            </div>
-        </Router>
+                        <Route path="/login">
+                            <Login />
+                        </Route>
+                    </Switch>
+                </div>
+            </Router>
+        </ChakraProvider>
     );
 }
 
