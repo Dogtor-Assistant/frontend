@@ -55,7 +55,7 @@ jobs:
          uses: s0/git-publish-subdir-action@develop
          env:
           SSH_PRIVATE_KEY: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
-          REPO: dokku@78.47.176.210:tmdb-react
+          REPO: dokku@78.47.176.210:dogtor-frontend
           BRANCH: master
           FOLDER: release
           KNOWN_HOSTS_FILE: known_hosts
