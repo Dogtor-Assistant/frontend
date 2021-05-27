@@ -8,6 +8,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 
 import Home from 'Home';
 import Login from 'Login';
+import Navbar from 'Navbar';
 
 import theme from 'utils/theme';
 
@@ -16,7 +17,7 @@ function App() {
         <ChakraProvider theme={theme}>
             <Router>
                 <div>
-                    <h1>Dogtor</h1>
+                    <Navbar />
 
                     <Switch>
                         <Route exact path="/">
