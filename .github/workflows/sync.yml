@@ -5,14 +5,14 @@ on:
     branches: [ main ]
 
 jobs:
-  git-sync:
+  gitlab:
     runs-on: ubuntu-latest
     steps:
       - name: git-sync
         uses: wei/git-sync@v3
         with:
-          source_repo: "Dogtor-Assistant/frontend"
+          source_repo: "git@github.com:Dogtor-Assistant/frontend.git"
           source_branch: "main"
           destination_repo: "git@gitlab.lrz.de:seba-master-2021/team-10/frontend.git"
           destination_branch: "main"
-          destination_ssh_private_key: ${{ secrets.DESTINATION_SSH_PRIVATE_KEY }}
+          ssh_private_key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
