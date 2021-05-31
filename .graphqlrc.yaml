@@ -1,0 +1,10 @@
+schema: 
+    - "data/schema.graphql"
+    - "data/relay.graphql"
+documents: "src/**/*.{graphql, ts,tsx}"
+extensions:
+    endpoints:
+        default:
+            url: https://backend.dogtor.xyz/graphql
+    languageService:
+        useSchemaFileDefinitions: true
