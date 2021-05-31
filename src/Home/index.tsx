@@ -1,11 +1,12 @@
 import React from 'react';
 import { Center, Text } from '@chakra-ui/react';
 
+import Footer from 'Footer';
+
 function Home() {
     return <Center>
-        <Text fontSize="2xl" fontWeight="semibold">
-            Here goes the home page
-        </Text>
+        
+        <Footer/>
     </Center>;
 }
 
