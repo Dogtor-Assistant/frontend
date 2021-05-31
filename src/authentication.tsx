@@ -14,6 +14,22 @@ type TokenResponse = {
     'refresh_token': string,
 }
 
+type LoginContextType = {
+    isLoggingIn: boolean
+    isLoggedIn: boolean,
+    token: () => Promise<string | null>,
+    login: (username: string, password: string) => Promise<void>
+    logout: () => void
+}
+
+const LoginContext = React.createContext<LoginContextType>({
+    isLoggedIn: false,
+    isLoggingIn: false,
+    login: async () => { /* no-op */ },
+    logout: () => { /* no-op */ },
+    token: async () => null,
+});
+
 const TOKEN_URL = `${BACKEND_BASE_URL}/auth/token`;
 
 async function token(params: Record<string, string>): Promise<TokenType> {
