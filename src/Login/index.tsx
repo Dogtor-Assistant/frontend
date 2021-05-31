@@ -14,6 +14,8 @@ import {
     VStack,
 } from '@chakra-ui/react';
 
+import Greeting from './Greeting';
+
 import { useIsLoggedIn, useIsLoggingIn, useLogin, useLogout } from 'authentication';
 
 function Login() {
@@ -43,6 +45,8 @@ function Login() {
                     <Text fontSize="2xl" fontWeight="semibold">
                         You are already logged in!
                     </Text>
+                    
+                    <Greeting />
 
                     <Button mt={4} onClick={() => logout()} width="full">
                         Logout
