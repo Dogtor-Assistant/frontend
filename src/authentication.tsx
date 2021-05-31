@@ -38,3 +38,22 @@ async function token(params: Record<string, string>): Promise<TokenType> {
     };
 }
 
+async function loginImpl(username: string, password: string): Promise<TokenType> {
+    return token(
+        {
+            'grant_type' : 'password',
+            password,
+            username,
+        },
+    );
+}
+
+async function refreshImpl(refreshToken: string): Promise<TokenType> {
+    return token(
+        {
+            'grant_type' : 'refresh_token',
+            'refresh_token': refreshToken,
+        },
+    );
+}
+
