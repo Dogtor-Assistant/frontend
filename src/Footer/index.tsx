@@ -2,7 +2,6 @@ import React from 'react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { Box,
     ButtonGroup,
-    ButtonGroupProps,
     IconButton,
     Stack,
     useColorModeValue } from '@chakra-ui/react';
