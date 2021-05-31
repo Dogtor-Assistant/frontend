@@ -25,8 +25,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "lint": "eslint . --ignore-pattern node_modules/ --ext .js,.jsx,.ts,.tsx",
-    "autofix": "eslint . --ignore-pattern node_modules/ --ext .js,.jsx,.ts,.tsx --fix"
+    "lint": "eslint . --ignore-pattern node_modules/ --ignore-pattern build/ --ext .js,.jsx,.ts,.tsx",
+    "autofix": "eslint . --ignore-pattern node_modules/ --ignore-pattern build/ --ext .js,.jsx,.ts,.tsx --fix"
   },
   "eslintConfig": {
     "extends": [
