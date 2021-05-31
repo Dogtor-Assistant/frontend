@@ -4,13 +4,14 @@ module.exports = {
         'eslint:recommended',
         'plugin:react/recommended',
         'plugin:@typescript-eslint/recommended',
+        'plugin:relay/recommended',
     ],
     parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaVersion: 2018,
         sourceType: 'module',
     },
-    plugins: ['simple-import-sort', '@typescript-eslint', 'react-hooks', 'sort-keys-fix'],
+    plugins: ['relay', 'simple-import-sort', '@typescript-eslint', 'react-hooks', 'sort-keys-fix'],
     rules: {
         // Allow for return type inference (I'm lazy)
         '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -81,6 +82,15 @@ module.exports = {
         'react/jsx-indent-props': 'warn',
         'react/jsx-sort-props': 'warn',
         'react/prop-types': 'off',
+        'relay/compat-uses-vars': 'warn',
+        'relay/function-required-argument': 'warn',
+        'relay/generated-flow-types': 'warn',
+        'relay/graphql-naming': 'error',
+        'relay/graphql-syntax': 'error',
+        'relay/hook-required-argument': 'warn',
+        'relay/must-colocate-fragment-spreads': 'warn',
+        'relay/no-future-added-value': 'warn',
+        'relay/unused-fields': 'warn',
         semi: ['error', 'always'],
         'simple-import-sort/exports': 'error',
         'simple-import-sort/imports': [
