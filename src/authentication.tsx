@@ -1,6 +1,15 @@
 
+import type { ReactNode } from 'react';
+
+import React, { useCallback, useContext, useState } from 'react';
+
+import useLocalStorage from 'useLocalStorage';
+
 import { BACKEND_BASE_URL } from 'utils/constants';
 
+interface Props {
+    children: ReactNode | ReactNode[] | null,
+}
 
 type TokenType = {
     accessToken: string
@@ -71,5 +80,84 @@ async function refreshImpl(refreshToken: string): Promise<TokenType> {
             'refresh_token': refreshToken,
         },
     );
+}
+
+export function AuthenticationProvider({ children }: Props) {
+    const [token, setToken] = useLocalStorage<TokenType | null>('authentication', null);
+    const [loginPromise, setLoginPromise] = useState<Promise<TokenType> | null>(null);
+    const [refreshPromise, setRefreshPromise] = useState<Promise<TokenType> | null>(null);
+
+    const login = useCallback(async (username: string, password: string) => {
+        if (loginPromise != null) {
+            return await loginPromise;
+        }
+
+        const promise = loginImpl(username, password);
+        setLoginPromise(promise);
+        try {
+            const token = await promise;
+            setToken(token);
+            setLoginPromise(null);
+            return token;
+        } catch (error) {
+            setLoginPromise(null);
+            throw error;
+        }
+    }, [loginPromise, setLoginPromise, setToken]);
+
+    const logout = useCallback(() => {
+        setToken(null);
+    }, [setToken]);
+
+    const refresh = useCallback(async () => {
+        if (refreshPromise != null) {
+            return await refreshPromise;
+        }
+
+        if (token == null) {
+            return;
+        }
+
+        const promise = refreshImpl(token.refreshToken);
+        setRefreshPromise(promise);
+        try {
+            const newToken = await promise;
+            setToken(newToken);
+            setRefreshPromise(null);
+            return newToken;
+        } catch (error) {
+            setRefreshPromise(null);
+            logout();
+            throw error;
+        }
+    }, [refreshPromise, token, setRefreshPromise, setToken, logout]);
+
+    const loadToken = useCallback(async () => {
+        if (token == null) {
+            return null;
+        }
+
+        const currentTime = Date.now();
+        if (currentTime < token.expiresAt - 60 * 1000) {
+            return token.accessToken;
+        }
+
+        const newToken = await refresh() ?? token;
+        return newToken.accessToken;
+    }, [token, refresh]);
+
+    return <LoginContext.Provider
+        value={{
+            isLoggedIn: token != null,
+            isLoggingIn: loginPromise != null,
+            login: async (username: string, password: string) => {
+                await login(username, password);
+            },
+            logout,
+            token: loadToken,
+        }}
+    >
+        {children}
+    </LoginContext.Provider>;
 }
 
