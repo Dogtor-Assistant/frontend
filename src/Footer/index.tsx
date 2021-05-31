@@ -15,7 +15,7 @@ const Copyright = (props: TextProps) => (
 );
 
 const SocialMediaLinks = () => (
-    <ButtonGroup color="gray.600" variant="ghost" paddingLeft={14} >
+    <ButtonGroup color="gray.600" paddingLeft={14} variant="ghost" >
         <IconButton aria-label="LinkedIn" as="a" href="#" icon={<FaLinkedin fontSize="30px" />} />
         <IconButton aria-label="GitHub" as="a" href="#" icon={<FaGithub fontSize="30px" />} />
     </ButtonGroup>

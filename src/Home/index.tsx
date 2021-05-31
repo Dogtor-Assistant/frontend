@@ -15,7 +15,7 @@ import { BellIcon, CalendarIcon, SearchIcon, TimeIcon } from '@chakra-ui/icons';
 
 import Footer from 'Footer';
 
-export function Search() {
+function Search() {
     return (
         <Container paddingTop={8}>
             <InputGroup size="lg">
@@ -44,7 +44,7 @@ export function Search() {
     );
 }
 
-export function HomePageNavBar() {
+function HomePageNavBar() {
     const backgroundColor = useColorModeValue('white', 'gray.800');
     
     return (
@@ -67,11 +67,116 @@ export function HomePageNavBar() {
     );
 }
 
+function HomePageServices() {
+    const backgroundColor = useColorModeValue('white', 'gray.800');
+    
+    return (
+        <Container maxW="container.xl">
+
+            <Grid bg={backgroundColor} gap={6} templateColumns="repeat(4, 1fr)">
+                <Box borderRadius="lg" borderWidth="1px" maxW="sm" overflow="hidden">
+                
+                    <Box p="6">
+                        <Box gap={2} >
+                            <SearchIcon color="green.300" />
+
+                            <Box
+                                as="h4"
+                                fontWeight="semibold"
+                                isTruncated
+                                lineHeight="tight"
+                                mt="1"
+                            >
+                        Find a specialists
+                            </Box>
+                        </Box>
+                        <h2>
+                            Using Dogtor you can find the specialist you need easily!
+                        </h2>
+                    </Box>
+                </Box>
+                <Box borderRadius="lg" borderWidth="1px" maxW="sm" overflow="hidden">
+                
+                    <Box p="6">
+                        <Box gap={2} templateColumns="repeat(2, 1fr)">
+                            <BellIcon color="green.300" />
+
+                            <Box
+                                as="h4"
+                                fontWeight="semibold"
+                                isTruncated
+                                lineHeight="tight"
+                                mt="1"
+                            >
+                        Remainders
+                            </Box>
+                        </Box>
+
+                        <h2>
+                            As Dogtor we provide Remainders and notifications for upcoming appointments
+                             and suggestions for following visits
+                        </h2>
+
+                    </Box>
+                </Box>
+                <Box borderRadius="lg" borderWidth="1px" maxW="sm" overflow="hidden">
+                
+                    <Box p="6">
+                        <Box gap={2} templateColumns="repeat(2, 1fr)">
+                            <CalendarIcon color="green.300" />
+
+                            <Box
+                                as="h4"
+                                fontWeight="semibold"
+                                isTruncated
+                                lineHeight="tight"
+                                mt="1"
+                            >
+                        Appointment scheduling
+                            </Box>
+                        </Box>
+
+                        <h2>
+                            You can view your appintments clearly in a time table
+                        </h2>
+
+                    </Box>
+                </Box>
+                <Box borderRadius="lg" borderWidth="1px" maxW="sm" overflow="hidden">
+                
+                    <Box p="6">
+                        <Box gap={2} templateColumns="repeat(2, 1fr)">
+                            <TimeIcon color="green.300" />
+
+                            <Box
+                                as="h4"
+                                fontWeight="semibold"
+                                isTruncated
+                                lineHeight="tight"
+                                mt="1"
+                            >
+                        Time Tracker
+                            </Box>
+
+                        </Box>
+                        <h2>With Time Tracker you can
+                             check and manage your time before the appointment
+                        </h2>
+
+                    </Box>
+                </Box>
+            
+            </Grid>
+        </Container>
+    );
+}
+
 function Home() {
     return <Center>
         <Grid gap={6}>
             
             <HomePageNavBar/>
+            <HomePageServices/>
             
             <Footer/>
         </Grid>
