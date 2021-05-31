@@ -31,7 +31,8 @@
     "lint": "eslint . --ignore-pattern node_modules/ --ignore-pattern build/ --ext .js,.jsx,.ts,.tsx",
     "autofix": "eslint . --ignore-pattern node_modules/ --ignore-pattern build/ --ext .js,.jsx,.ts,.tsx --fix",
     "relay": "relay-compiler --src ./src --schema ./data/schema.graphql --extensions ts tsx --language typescript",
-    "validate-relay": "relay-compiler --validate  --src ./src --schema ./data/schema.graphql --extensions ts tsx --language typescript"
+    "validate-relay": "relay-compiler --validate  --src ./src --schema ./data/schema.graphql --extensions ts tsx --language typescript",
+    "relay-watch": "relay-compiler --src ./src --schema ./data/schema.graphql --extensions ts tsx --language typescript --watch"
   },
   "eslintConfig": {
     "extends": [
