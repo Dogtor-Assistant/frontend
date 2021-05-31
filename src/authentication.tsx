@@ -161,3 +161,31 @@ export function AuthenticationProvider({ children }: Props) {
     </LoginContext.Provider>;
 }
 
+export function useIsLoggedIn(): boolean {
+    const context = useContext(LoginContext);
+    return context.isLoggedIn;
+}
+
+export function useIsLoggedOut(): boolean {
+    return !useIsLoggedIn();
+}
+
+export function useIsLoggingIn(): boolean {
+    const context = useContext(LoginContext);
+    return context.isLoggingIn;
+}
+
+export function useAuthenticatedToken(): (() => Promise<string | null>) {
+    const context = useContext(LoginContext);
+    return context.token;
+}
+
+export function useLogin(): ((username: string, password: string) => Promise<void>) {
+    const context = useContext(LoginContext);
+    return context.login;
+}
+
+export function useLogout(): () => void {
+    const context = useContext(LoginContext);
+    return context.logout;
+}
