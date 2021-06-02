@@ -58,7 +58,7 @@ async function token(params: Record<string, string>): Promise<TokenType> {
     const tokenResponse = await response.json() as TokenResponse;
     return {
         accessToken: tokenResponse.access_token,
-        expiresAt: Date.now() + tokenResponse.expires_in * 60 * 1000,
+        expiresAt: Date.now() + tokenResponse.expires_in * 1000,
         refreshToken: tokenResponse.refresh_token,
     };
 }
