@@ -3,6 +3,7 @@ import type { BackendConfig } from 'config';
 import React from 'react';
 import { FaBug } from 'react-icons/fa';
 import {
+    Divider,
     Flex,
     HStack,
     IconButton,
@@ -69,6 +70,16 @@ function DebugMenu() {
                                     onChange={() => toggleColorMode()}
                                 />
                             </Flex>
+
+                            <Divider/>
+                            {
+                                isLoggedIn && (
+                                    <Text fontSize="sm" fontWeight="light">
+                                        Please log out before changing any of the following settings.
+                                    </Text>
+                                )
+                            }
+
                             <Text fontSize="md" fontWeight="semibold">
                                 Backend Configuration
                             </Text>
