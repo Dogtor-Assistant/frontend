@@ -3,6 +3,8 @@ import type { BackendConfig } from 'config';
 import React from 'react';
 import { FaBug } from 'react-icons/fa';
 import {
+    Flex,
+    HStack,
     IconButton,
     Popover,
     PopoverArrow,
@@ -11,7 +13,11 @@ import {
     PopoverHeader,
     PopoverTrigger,
     Select,
+    Spacer,
+    Switch,
     Text,
+    useColorMode,
+    useColorModeValue,
     VStack,
 } from '@chakra-ui/react';
 
@@ -22,7 +28,11 @@ import { BACKEND_CONFIGS } from 'utils/constants';
 function DebugMenu() {
     const isLoggedIn = useIsLoggedIn();
     const isLoggingIn = useIsLoggingIn();
+    
     const [config, setConfig] = useBackendConfig();
+
+    const { colorMode, toggleColorMode } = useColorMode();
+    const appearenceName = useColorModeValue('Light', 'Dark');
 
     return (
         <div style={{
@@ -44,6 +54,21 @@ function DebugMenu() {
                     <PopoverHeader>Debug</PopoverHeader>
                     <PopoverBody>
                         <VStack align="left">
+                            <Flex align="center">
+                                <HStack align="center">
+                                    <Text fontSize="md" fontWeight="semibold">
+                                        Appearance:
+                                    </Text>
+                                    <Text fontSize="sm" fontWeight="light">
+                                        {appearenceName}
+                                    </Text>
+                                </HStack>
+                                <Spacer />
+                                <Switch
+                                    isChecked={colorMode === 'light'}
+                                    onChange={() => toggleColorMode()}
+                                />
+                            </Flex>
                             <Text fontSize="md" fontWeight="semibold">
                                 Backend Configuration
                             </Text>
