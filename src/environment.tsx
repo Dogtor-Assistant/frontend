@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react';
 import type { RequestParameters, Variables } from 'relay-runtime';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import {
     Environment,
@@ -48,7 +48,7 @@ export function GrahQLEnvironmentProvider({ children }: Props) {
         [url, accessToken],
     );
 
-    const makeEnvironment = useCallback(
+    const environment = useMemo(
         () => {
             const network = Network.create(fetchQuery);
             const store = new Store(new RecordSource());
@@ -61,14 +61,6 @@ export function GrahQLEnvironmentProvider({ children }: Props) {
         },
         [fetchQuery],
     );
-
-    const [environment, setEnvironment] = useState(
-        () => makeEnvironment(),
-    );
-
-    useEffect(() => {
-        setEnvironment(makeEnvironment());
-    }, [makeEnvironment, setEnvironment]);
      
     return (
         <RelayEnvironmentProvider environment={environment}>
