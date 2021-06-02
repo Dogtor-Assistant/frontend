@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react';
 import type { RequestParameters, Variables } from 'relay-runtime';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import {
     Environment,
@@ -13,16 +13,16 @@ import {
 import { RelayEnvironmentProvider } from 'react-relay';
 
 import { useAuthenticatedToken } from 'authentication';
-import { BACKEND_BASE_URL } from 'utils/constants';
+import { useBackendURL } from 'config';
 
 interface Props {
     children: ReactNode | ReactNode[] | null,
 }
 
-const GRAPHQL_URL = `${BACKEND_BASE_URL}/graphql`;
-
 export function GrahQLEnvironmentProvider({ children }: Props) {
+    const url = useBackendURL('graphql');
     const accessToken = useAuthenticatedToken();
+
     const fetchQuery = useCallback(
         async (operation: RequestParameters, variables: Variables) => {
             const token = await accessToken();
@@ -30,7 +30,7 @@ export function GrahQLEnvironmentProvider({ children }: Props) {
                 authorization: `Bearer ${token}`,
             } : undefined;
 
-            const response = await fetch(GRAPHQL_URL, {
+            const response = await fetch(url, {
                 body: JSON.stringify({
                     query: operation.text,
                     variables,
@@ -45,10 +45,10 @@ export function GrahQLEnvironmentProvider({ children }: Props) {
 
             return response.json();
         },
-        [accessToken],
+        [url, accessToken],
     );
 
-    const makeEnvironment = useCallback(
+    const environment = useMemo(
         () => {
             const network = Network.create(fetchQuery);
             const store = new Store(new RecordSource());
@@ -61,14 +61,6 @@ export function GrahQLEnvironmentProvider({ children }: Props) {
         },
         [fetchQuery],
     );
-
-    const [environment, setEnvironment] = useState(
-        () => makeEnvironment(),
-    );
-
-    useEffect(() => {
-        setEnvironment(makeEnvironment());
-    }, [makeEnvironment, setEnvironment]);
      
     return (
         <RelayEnvironmentProvider environment={environment}>

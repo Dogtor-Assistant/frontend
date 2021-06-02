@@ -5,7 +5,7 @@ import React, { useCallback, useContext, useState } from 'react';
 
 import useLocalStorage from 'useLocalStorage';
 
-import { BACKEND_BASE_URL } from 'utils/constants';
+import { useBackendURL } from 'config';
 
 interface Props {
     children: ReactNode | ReactNode[] | null,
@@ -39,12 +39,10 @@ const LoginContext = React.createContext<LoginContextType>({
     token: async () => null,
 });
 
-const TOKEN_URL = `${BACKEND_BASE_URL}/auth/token`;
-
-async function token(params: Record<string, string>): Promise<TokenType> {
+async function token(url: string, params: Record<string, string>): Promise<TokenType> {
     const body = new URLSearchParams(params);
     const response = await fetch(
-        TOKEN_URL,
+        url,
         {
             body,
             method: 'POST',
@@ -63,8 +61,9 @@ async function token(params: Record<string, string>): Promise<TokenType> {
     };
 }
 
-async function loginImpl(username: string, password: string): Promise<TokenType> {
+async function loginImpl(url: string, username: string, password: string): Promise<TokenType> {
     return token(
+        url,
         {
             'grant_type' : 'password',
             password,
@@ -73,8 +72,9 @@ async function loginImpl(username: string, password: string): Promise<TokenType>
     );
 }
 
-async function refreshImpl(refreshToken: string): Promise<TokenType> {
+async function refreshImpl(url: string, refreshToken: string): Promise<TokenType> {
     return token(
+        url,
         {
             'grant_type' : 'refresh_token',
             'refresh_token': refreshToken,
@@ -83,6 +83,7 @@ async function refreshImpl(refreshToken: string): Promise<TokenType> {
 }
 
 export function AuthenticationProvider({ children }: Props) {
+    const authURL = useBackendURL('auth', 'token');
     const [token, setToken] = useLocalStorage<TokenType | null>('authentication', null);
     const [loginPromise, setLoginPromise] = useState<Promise<TokenType> | null>(null);
     const [refreshPromise, setRefreshPromise] = useState<Promise<TokenType> | null>(null);
@@ -92,7 +93,7 @@ export function AuthenticationProvider({ children }: Props) {
             return await loginPromise;
         }
 
-        const promise = loginImpl(username, password);
+        const promise = loginImpl(authURL, username, password);
         setLoginPromise(promise);
         try {
             const token = await promise;
@@ -103,7 +104,7 @@ export function AuthenticationProvider({ children }: Props) {
             setLoginPromise(null);
             throw error;
         }
-    }, [loginPromise, setLoginPromise, setToken]);
+    }, [authURL, loginPromise, setLoginPromise, setToken]);
 
     const logout = useCallback(() => {
         setToken(null);
@@ -118,7 +119,7 @@ export function AuthenticationProvider({ children }: Props) {
             return;
         }
 
-        const promise = refreshImpl(token.refreshToken);
+        const promise = refreshImpl(authURL, token.refreshToken);
         setRefreshPromise(promise);
         try {
             const newToken = await promise;
@@ -130,7 +131,7 @@ export function AuthenticationProvider({ children }: Props) {
             logout();
             throw error;
         }
-    }, [refreshPromise, token, setRefreshPromise, setToken, logout]);
+    }, [authURL, refreshPromise, token, setRefreshPromise, setToken, logout]);
 
     const loadToken = useCallback(async () => {
         if (token == null) {
