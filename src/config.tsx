@@ -1,18 +1,22 @@
 
 import type { Dispatch, ReactNode } from 'react';
+import type { BACKEND_CONFIGS } from 'utils/constants';
 
 import { useMemo } from 'react';
 import React, { useContext } from 'react';
 
 import useLocalStorage from 'useLocalStorage';
 
-import { LOCAL_BACKEND_BASE_URL, PRODUCTION_BACKEND_BASE_URL } from 'utils/constants';
+import {
+    LOCAL_BACKEND_BASE_URL,
+    PRODUCTION_BACKEND_BASE_URL,
+} from 'utils/constants';
 
 interface Props {
     children: ReactNode | ReactNode[] | null,
 }
 
-export type BackendConfig = 'Production' | 'Local';
+export type BackendConfig = typeof BACKEND_CONFIGS[number]
 
 type ConfigContextType = {
     backendConfig: BackendConfig

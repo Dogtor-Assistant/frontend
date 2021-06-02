@@ -17,6 +17,7 @@ import {
 
 import { useIsLoggedIn, useIsLoggingIn } from 'authentication';
 import { useBackendConfig } from 'config';
+import { BACKEND_CONFIGS } from 'utils/constants';
 
 function DebugMenu() {
     const isLoggedIn = useIsLoggedIn();
@@ -51,12 +52,15 @@ function DebugMenu() {
                                 onChange={event => setConfig(event.target.value as BackendConfig)}
                                 value={config}
                             >
-                                <option value="Production">
-                                    Production
-                                </option>
-                                <option value="Local">
-                                    Local
-                                </option>
+                                {
+                                    BACKEND_CONFIGS.map(config => {
+                                        return (
+                                            <option key={`backend_config_${config}`} value={config}>
+                                                {config}
+                                            </option>
+                                        );
+                                    })
+                                }
                             </Select>
                         </VStack>
                     </PopoverBody>
