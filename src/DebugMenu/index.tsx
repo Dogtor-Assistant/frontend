@@ -1,4 +1,4 @@
-import type { ConfigKind } from 'config';
+import type { BackendConfig } from 'config';
 
 import React from 'react';
 import { FaBug } from 'react-icons/fa';
@@ -16,12 +16,12 @@ import {
 } from '@chakra-ui/react';
 
 import { useIsLoggedIn, useIsLoggingIn } from 'authentication';
-import { useConfig } from 'config';
+import { useBackendConfig } from 'config';
 
 function DebugMenu() {
     const isLoggedIn = useIsLoggedIn();
     const isLoggingIn = useIsLoggingIn();
-    const [config, setConfig] = useConfig();
+    const [config, setConfig] = useBackendConfig();
 
     return (
         <div style={{
@@ -48,7 +48,7 @@ function DebugMenu() {
                             </Text>
                             <Select
                                 disabled={isLoggedIn || isLoggingIn}
-                                onChange={event => setConfig(event.target.value as ConfigKind)}
+                                onChange={event => setConfig(event.target.value as BackendConfig)}
                                 value={config}
                             >
                                 <option value="Production">

@@ -13,16 +13,16 @@ import {
 import { RelayEnvironmentProvider } from 'react-relay';
 
 import { useAuthenticatedToken } from 'authentication';
-import { useURL } from 'config';
+import { useBackendURL } from 'config';
 
 interface Props {
     children: ReactNode | ReactNode[] | null,
 }
 
 export function GrahQLEnvironmentProvider({ children }: Props) {
-    const url = useURL('graphql');
+    const url = useBackendURL('graphql');
     const accessToken = useAuthenticatedToken();
-    
+
     const fetchQuery = useCallback(
         async (operation: RequestParameters, variables: Variables) => {
             const token = await accessToken();

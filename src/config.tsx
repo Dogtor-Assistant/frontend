@@ -12,26 +12,26 @@ interface Props {
     children: ReactNode | ReactNode[] | null,
 }
 
-export type ConfigKind = 'Production' | 'Local';
+export type BackendConfig = 'Production' | 'Local';
 
 type ConfigContextType = {
-    config: ConfigKind
-    setConfig: Dispatch<ConfigKind>,
+    backendConfig: BackendConfig
+    setBackendConfig: Dispatch<BackendConfig>,
 }
 
 const ConfigContext = React.createContext<ConfigContextType>({
-    config: 'Production',
-    setConfig: () => { /* no-op */ },
+    backendConfig: 'Production',
+    setBackendConfig: () => { /* no-op */ },
 });
 
 export function ConfigProvider({ children }: Props) {
-    const [config, setConfig] = useLocalStorage<ConfigKind>('config_kind', 'Production');
+    const [backendConfig, setBackendConfig] = useLocalStorage<BackendConfig>('backend_config', 'Production');
     
     return (
         <ConfigContext.Provider
             value={{
-                config,
-                setConfig,
+                backendConfig,
+                setBackendConfig,
             }}
         >
             {children}
@@ -39,27 +39,27 @@ export function ConfigProvider({ children }: Props) {
     );
 }
 
-export function useConfig(): [ConfigKind, Dispatch<ConfigKind>] {
-    const { config, setConfig } = useContext(ConfigContext);
-    return [config, setConfig];
+export function useBackendConfig(): [BackendConfig, Dispatch<BackendConfig>] {
+    const { backendConfig, setBackendConfig } = useContext(ConfigContext);
+    return [backendConfig, setBackendConfig];
 }
 
-export function useBaseURL(): string {
-    const { config } = useContext(ConfigContext);
+export function useBackendBaseURL(): string {
+    const { backendConfig } = useContext(ConfigContext);
     const url = useMemo(() => {
-        switch (config) {
+        switch (backendConfig) {
         case 'Production':
             return PRODUCTION_BACKEND_BASE_URL;
         case 'Local':
             return LOCAL_BACKEND_BASE_URL;
         }
-    }, [config]);
+    }, [backendConfig]);
 
     return url;
 }
 
-export function useURL(...pathComponents: (string | number)[]): string {
-    const base = useBaseURL();
+export function useBackendURL(...pathComponents: (string | number)[]): string {
+    const base = useBackendBaseURL();
     const path = useMemo(() => {
         return pathComponents.map(component => component.toString()).join('/');
     }, [pathComponents]);

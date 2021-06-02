@@ -5,7 +5,7 @@ import React, { useCallback, useContext, useState } from 'react';
 
 import useLocalStorage from 'useLocalStorage';
 
-import { useURL } from 'config';
+import { useBackendURL } from 'config';
 
 interface Props {
     children: ReactNode | ReactNode[] | null,
@@ -83,7 +83,7 @@ async function refreshImpl(url: string, refreshToken: string): Promise<TokenType
 }
 
 export function AuthenticationProvider({ children }: Props) {
-    const authUrl = useURL('auth', 'token');
+    const authURL = useBackendURL('auth', 'token');
     const [token, setToken] = useLocalStorage<TokenType | null>('authentication', null);
     const [loginPromise, setLoginPromise] = useState<Promise<TokenType> | null>(null);
     const [refreshPromise, setRefreshPromise] = useState<Promise<TokenType> | null>(null);
@@ -93,7 +93,7 @@ export function AuthenticationProvider({ children }: Props) {
             return await loginPromise;
         }
 
-        const promise = loginImpl(authUrl, username, password);
+        const promise = loginImpl(authURL, username, password);
         setLoginPromise(promise);
         try {
             const token = await promise;
@@ -104,7 +104,7 @@ export function AuthenticationProvider({ children }: Props) {
             setLoginPromise(null);
             throw error;
         }
-    }, [authUrl, loginPromise, setLoginPromise, setToken]);
+    }, [authURL, loginPromise, setLoginPromise, setToken]);
 
     const logout = useCallback(() => {
         setToken(null);
@@ -119,7 +119,7 @@ export function AuthenticationProvider({ children }: Props) {
             return;
         }
 
-        const promise = refreshImpl(authUrl, token.refreshToken);
+        const promise = refreshImpl(authURL, token.refreshToken);
         setRefreshPromise(promise);
         try {
             const newToken = await promise;
@@ -131,7 +131,7 @@ export function AuthenticationProvider({ children }: Props) {
             logout();
             throw error;
         }
-    }, [authUrl, refreshPromise, token, setRefreshPromise, setToken, logout]);
+    }, [authURL, refreshPromise, token, setRefreshPromise, setToken, logout]);
 
     const loadToken = useCallback(async () => {
         if (token == null) {
