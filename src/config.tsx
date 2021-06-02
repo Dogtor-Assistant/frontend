@@ -12,7 +12,7 @@ interface Props {
     children: ReactNode | ReactNode[] | null,
 }
 
-type ConfigKind = 'Production' | 'Local';
+export type ConfigKind = 'Production' | 'Local';
 
 type ConfigContextType = {
     config: ConfigKind
