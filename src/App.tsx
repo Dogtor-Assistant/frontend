@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 
+import DebugMenu from 'DebugMenu';
 import Home from 'Home';
 import Login from 'Login';
 import Navbar from 'Navbar';
@@ -30,6 +31,7 @@ function App() {
                     </Switch>
                 </div>
             </Router>
+            <DebugMenu />
         </ChakraProvider>
     );
 }
