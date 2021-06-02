@@ -1,12 +1,13 @@
 import type { GreetingQuery as GreetingQueryType } from './__generated__/GreetingQuery.graphql';
 import type { ErrorBoundary } from 'react-error-boundary';
+import type { PreloadedQuery } from 'react-relay';
 
 import GreetingQuery from './__generated__/GreetingQuery.graphql';
 
 import React, { useEffect, useRef } from 'react';
 import { Text } from '@chakra-ui/react';
 
-import { PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
 import Suspense from 'Suspense';

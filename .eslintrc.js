@@ -13,6 +13,7 @@ module.exports = {
     },
     plugins: ['relay', 'simple-import-sort', '@typescript-eslint', 'react-hooks', 'sort-keys-fix'],
     rules: {
+        '@typescript-eslint/consistent-type-imports': 'error',
         // Allow for return type inference (I'm lazy)
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         'array-bracket-spacing': ['error', 'never'],
