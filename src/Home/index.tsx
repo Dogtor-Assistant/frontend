@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box,
+import {
+    Box,
     Center,
     Container,
     Grid,
@@ -11,7 +12,12 @@ import { Box,
     Text,
     useColorModeValue,
 } from '@chakra-ui/react';
-import { BellIcon, CalendarIcon, SearchIcon, TimeIcon } from '@chakra-ui/icons';
+import {
+    BellIcon,
+    CalendarIcon,
+    SearchIcon,
+    TimeIcon,
+} from '@chakra-ui/icons';
 
 import Footer from 'Footer';
 

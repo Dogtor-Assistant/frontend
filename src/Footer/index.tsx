@@ -2,11 +2,13 @@ import type { TextProps } from '@chakra-ui/layout';
 
 import React from 'react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
-import { Box,
+import {
+    Box,
     ButtonGroup,
     IconButton,
     Stack,
-    useColorModeValue } from '@chakra-ui/react';
+    useColorModeValue,
+} from '@chakra-ui/react';
 import { Text } from '@chakra-ui/layout';
 
 const Copyright = (props: TextProps) => (

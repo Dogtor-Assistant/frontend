@@ -7,10 +7,7 @@ import React, { useContext } from 'react';
 
 import useLocalStorage from 'useLocalStorage';
 
-import {
-    LOCAL_BACKEND_BASE_URL,
-    PRODUCTION_BACKEND_BASE_URL,
-} from 'utils/constants';
+import { LOCAL_BACKEND_BASE_URL, PRODUCTION_BACKEND_BASE_URL } from 'utils/constants';
 
 interface Props {
     children: ReactNode | ReactNode[] | null,

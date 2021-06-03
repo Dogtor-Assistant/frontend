@@ -5,7 +5,14 @@ import type { FallbackProps } from 'react-error-boundary';
 import React from 'react';
 import { Suspense as ReactSuspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Center, Spinner } from '@chakra-ui/react';
+import {
+    Alert,
+    AlertDescription,
+    AlertIcon,
+    AlertTitle,
+    Center,
+    Spinner,
+} from '@chakra-ui/react';
 
 type Props = {
     children: ReactNode | Array<ReactNode>,

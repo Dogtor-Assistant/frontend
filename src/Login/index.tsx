@@ -16,7 +16,12 @@ import {
 
 import Greeting from './Greeting';
 
-import { useIsLoggedIn, useIsLoggingIn, useLogin, useLogout } from 'authentication';
+import {
+    useIsLoggedIn,
+    useIsLoggingIn,
+    useLogin,
+    useLogout,
+} from 'authentication';
 
 function Login() {
     const isLoggedIn = useIsLoggedIn();
