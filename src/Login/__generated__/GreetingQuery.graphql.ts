@@ -5,7 +5,7 @@
 import { ConcreteRequest } from "relay-runtime";
 export type GreetingQueryVariables = {};
 export type GreetingQueryResponse = {
-    readonly greeting: string | null;
+    readonly greeting: string;
 };
 export type GreetingQuery = {
     readonly response: GreetingQueryResponse;
