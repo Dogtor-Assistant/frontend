@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import {
     Alert,
     AlertIcon,
@@ -10,24 +11,15 @@ import {
     FormLabel,
     Heading,
     Input,
-    Text,
-    VStack,
 } from '@chakra-ui/react';
 
-import Greeting from './Greeting';
-
-import {
-    useIsLoggedIn,
-    useIsLoggingIn,
-    useLogin,
-    useLogout,
-} from 'authentication';
+import { useIsLoggedIn, useIsLoggingIn, useLogin } from 'authentication';
 
 function Login() {
     const isLoggedIn = useIsLoggedIn();
     const isLoggingIn = useIsLoggingIn();
     const loginImpl = useLogin();
-    const logout = useLogout();
+    const history = useHistory();
 
     const [isWrong, setIsWrong] = useState(false);
     const [username, setUsername] = useState('');
@@ -43,23 +35,11 @@ function Login() {
         }
     }, [loginImpl, username, password]);
 
-    if (isLoggedIn) {
-        return (
-            <Center>
-                <VStack>
-                    <Text fontSize="2xl" fontWeight="semibold">
-                        You are already logged in!
-                    </Text>
-                    
-                    <Greeting />
-
-                    <Button mt={4} onClick={() => logout()} width="full">
-                        Logout
-                    </Button>
-                </VStack>
-            </Center>
-        );
-    }
+    useEffect(() => {
+        if (isLoggedIn) {
+            history.push('/');
+        }
+    }, [isLoggedIn, history]);
 
     return (
         <Center>

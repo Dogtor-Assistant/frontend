@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { MdExpandMore } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import {
     Button,
@@ -7,12 +8,28 @@ import {
     Container,
     Flex,
     HStack,
+    IconButton,
+    Popover,
+    PopoverArrow,
+    PopoverBody,
+    PopoverContent,
+    PopoverHeader,
+    PopoverTrigger,
     Spacer,
+    Text,
     useColorModeValue,
+    VStack,
 } from '@chakra-ui/react';
+
+import { useIsLoggedIn, useLogout } from 'authentication';
+import { useFirstName, useFullName } from 'user';
 
 function Navbar() {
     const backgroundColor = useColorModeValue('white', 'gray.800');
+    const isLoggedIn = useIsLoggedIn();
+    const logout = useLogout();
+    const firstname = useFirstName();
+    const fullname = useFullName();
 
     return (
         <chakra.header
@@ -34,12 +51,48 @@ function Navbar() {
                         </Link>
                     </HStack>
                     <Spacer/>
-                    <HStack align="center" justify="right" paddingRight={8}>
-                        <Link to="/login">
-                            <Button variant="ghost">
-                                Login
-                            </Button>
-                        </Link>
+                    <HStack align="center" justify="right" paddingRight={8} spacing={4}>
+                        {
+                            isLoggedIn && firstname != null && (
+                                <Text>
+                                    {firstname}
+                                </Text>
+                            )
+                        }
+                        {
+                            !isLoggedIn && (
+                                <Link to="/login">
+                                    <Button variant="ghost">
+                                        Login
+                                    </Button>
+                                </Link>
+                            )
+                        }
+                        {
+                            isLoggedIn && fullname != null && (
+                                <Popover>
+                                    <PopoverTrigger>
+                                        <IconButton
+                                            aria-label="More"
+                                            icon={
+                                                <MdExpandMore fontSize="15px" />
+                                            }
+                                        />
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                        <PopoverArrow />
+                                        <PopoverHeader>{fullname}</PopoverHeader>
+                                        <PopoverBody>
+                                            <VStack align="end">
+                                                <Button onClick={logout}>
+                                                    Logout
+                                                </Button>
+                                            </VStack>
+                                        </PopoverBody>
+                                    </PopoverContent>
+                                </Popover>
+                            )
+                        }
                     </HStack>
                 </Flex>
             </Container>
