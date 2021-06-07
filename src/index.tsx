@@ -6,13 +6,16 @@ import App from 'App';
 import { AuthenticationProvider } from 'authentication';
 import { ConfigProvider } from 'config';
 import { GrahQLEnvironmentProvider } from 'environment';
+import { UserDataProvider } from 'user';
 
 ReactDOM.render(
     <React.StrictMode>
         <ConfigProvider>
             <AuthenticationProvider>
                 <GrahQLEnvironmentProvider>
-                    <App />
+                    <UserDataProvider>
+                        <App />
+                    </UserDataProvider>
                 </GrahQLEnvironmentProvider>
             </AuthenticationProvider>
         </ConfigProvider>
