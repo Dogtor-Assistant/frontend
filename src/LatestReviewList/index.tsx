@@ -19,9 +19,6 @@ type ReviewType = {
 function ReviewList() {
     
     return(<>
-        <Grid>
-            <Review />
-        </Grid>
 
     </>);
 }
