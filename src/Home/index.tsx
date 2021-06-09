@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/icons';
 
 import Footer from 'Footer';
+import Review from 'LatestReviewList/Review';
 
 function Search() {
     return (
@@ -188,9 +189,10 @@ function HomePageLatestReviews() {
                 <Box borderRadius="lg" borderWidth="1px" maxW="l" overflow="hidden">
                 
                     <Box p="6">
-                           Latest reviews for doctors
+                        <Review/>
 
                     </Box>
+
                 </Box>
             
             </Grid>
