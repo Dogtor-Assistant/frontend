@@ -20,7 +20,11 @@ import {
 } from '@chakra-ui/icons';
 
 import Footer from 'Footer';
+<<<<<<< HEAD
 import ReviewList from 'LatestReviewList';
+=======
+import Review from 'LatestReviewList/Review';
+>>>>>>> adding reviews (not finished) && adding Rating for stars
 
 function Search() {
     return (
@@ -188,6 +192,7 @@ function HomePageLatestReviews() {
 
             <Grid bg={backgroundColor} gap={6} >
                 
+<<<<<<< HEAD
                 <GridItem borderRadius="lg" borderWidth="1px" gridColumn='auto' maxW="l" overflow="hidden">
                 
                     <Box gridArea='auto' p="6">
@@ -196,6 +201,14 @@ function HomePageLatestReviews() {
                     </Box>
 
                 </GridItem>
+=======
+                    <Box p="6">
+                        <Review/>
+
+                    </Box>
+
+                </Box>
+>>>>>>> adding reviews (not finished) && adding Rating for stars
             
             </Grid>
         </Container>

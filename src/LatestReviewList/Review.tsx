@@ -5,7 +5,11 @@ import type { PreloadedQuery } from 'react-relay';
 import ReviewQuery from './__generated__/ReviewQuery.graphql';
 
 import React, { useEffect, useRef } from 'react';
+<<<<<<< HEAD
 import { Badge, Box } from '@chakra-ui/layout';
+=======
+import { Box } from '@chakra-ui/layout';
+>>>>>>> adding reviews (not finished) && adding Rating for stars
 
 import { usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
@@ -17,10 +21,18 @@ type LoadedProps = {
     data: PreloadedQuery<ReviewQueryType>
 }
 
+<<<<<<< HEAD
+=======
+type Props = {
+    
+}
+
+>>>>>>> adding reviews (not finished) && adding Rating for stars
 function LoadedReview(props: LoadedProps) {
     const data = usePreloadedQuery(
         graphql`
             query ReviewQuery {
+<<<<<<< HEAD
                  latestReviews{
                      id
                      rating
@@ -34,12 +46,16 @@ function LoadedReview(props: LoadedProps) {
                          lastname
                      }
                  }
+=======
+                 greeting
+>>>>>>> adding reviews (not finished) && adding Rating for stars
             }
         `,
         props.data,
     );
 
     return (<>
+<<<<<<< HEAD
         {
             data.latestReviews.map(review => (
                 <Box key={review.id} p="2">
@@ -92,6 +108,14 @@ function LoadedReview(props: LoadedProps) {
                 </Box>
             ))
         }
+=======
+        <p>{data.greeting}</p>
+        <Box p="6">
+                        
+            <Rating value={4}/>
+
+        </Box>
+>>>>>>> adding reviews (not finished) && adding Rating for stars
         
     </>
     );
@@ -115,7 +139,11 @@ function Review() {
 
     return (
         <Suspense boundaryRef={error}>
+<<<<<<< HEAD
             {data != null && <LoadedReview data={data} />}
+=======
+            {data != null && <LoadedReview data={data}/>}
+>>>>>>> adding reviews (not finished) && adding Rating for stars
         </Suspense>
     );
 }

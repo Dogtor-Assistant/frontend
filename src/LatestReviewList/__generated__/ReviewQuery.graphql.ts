@@ -5,6 +5,7 @@
 import { ConcreteRequest } from "relay-runtime";
 export type ReviewQueryVariables = {};
 export type ReviewQueryResponse = {
+<<<<<<< HEAD
     readonly latestReviews: ReadonlyArray<{
         readonly id: string;
         readonly rating: number;
@@ -18,6 +19,9 @@ export type ReviewQueryResponse = {
             readonly lastname: string;
         };
     }>;
+=======
+    readonly greeting: string;
+>>>>>>> adding reviews (not finished) && adding Rating for stars
 };
 export type ReviewQuery = {
     readonly response: ReviewQueryResponse;
@@ -28,6 +32,7 @@ export type ReviewQuery = {
 
 /*
 query ReviewQuery {
+<<<<<<< HEAD
   latestReviews {
     id
     rating
@@ -43,10 +48,14 @@ query ReviewQuery {
       id
     }
   }
+=======
+  greeting
+>>>>>>> adding reviews (not finished) && adding Rating for stars
 }
 */
 
 const node: ConcreteRequest = (function(){
+<<<<<<< HEAD
 var v0 = {
   "alias": null,
   "args": null,
@@ -90,6 +99,16 @@ v6 = [
   (v3/*: any*/),
   (v4/*: any*/),
   (v0/*: any*/)
+=======
+var v0 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "greeting",
+    "storageKey": null
+  }
+>>>>>>> adding reviews (not finished) && adding Rating for stars
 ];
 return {
   "fragment": {
@@ -97,6 +116,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "ReviewQuery",
+<<<<<<< HEAD
     "selections": [
       {
         "alias": null,
@@ -133,6 +153,9 @@ return {
         "storageKey": null
       }
     ],
+=======
+    "selections": (v0/*: any*/),
+>>>>>>> adding reviews (not finished) && adding Rating for stars
     "type": "Query",
     "abstractKey": null
   },
@@ -141,6 +164,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "ReviewQuery",
+<<<<<<< HEAD
     "selections": [
       {
         "alias": null,
@@ -180,13 +204,27 @@ return {
   },
   "params": {
     "cacheID": "cdb89ebf5c314649bc3b73e9604b8ba9",
+=======
+    "selections": (v0/*: any*/)
+  },
+  "params": {
+    "cacheID": "1f359a28a400942da6b8022f509a6167",
+>>>>>>> adding reviews (not finished) && adding Rating for stars
     "id": null,
     "metadata": {},
     "name": "ReviewQuery",
     "operationKind": "query",
+<<<<<<< HEAD
     "text": "query ReviewQuery {\n  latestReviews {\n    id\n    rating\n    content\n    doctor {\n      firstname\n      lastname\n      id\n    }\n    patient {\n      firstname\n      lastname\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 (node as any).hash = '3ae3bba638f7742bd2afc0139362e5ec';
+=======
+    "text": "query ReviewQuery {\n  greeting\n}\n"
+  }
+};
+})();
+(node as any).hash = 'cc6c538e624ded4e2018f87a3ba1a346';
+>>>>>>> adding reviews (not finished) && adding Rating for stars
 export default node;
