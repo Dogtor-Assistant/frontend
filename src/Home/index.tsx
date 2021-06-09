@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/icons';
 
 import Footer from 'Footer';
-import Review from 'LatestReviewList/Review';
+import ReviewList from 'LatestReviewList';
 
 function Search() {
     return (
@@ -181,6 +181,7 @@ function HomePageServices() {
 function HomePageLatestReviews() {
     const backgroundColor = useColorModeValue('white', 'gray.800');
     //TODO: Review Box need to be displayed in two column not only one col horizontal fix this!
+    //TODO: Extract only latest review from createdAT field from backend
     return (
         <Container maxW="container.xl">
             <h1><strong>Latest Reviews</strong></h1>
@@ -190,7 +191,7 @@ function HomePageLatestReviews() {
                 <GridItem borderRadius="lg" borderWidth="1px" gridColumn='auto' maxW="l" overflow="hidden">
                 
                     <Box gridArea='auto' p="6">
-                        <Review/>
+                        <ReviewList/>
 
                     </Box>
 

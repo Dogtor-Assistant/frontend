@@ -17,10 +17,6 @@ type LoadedProps = {
     data: PreloadedQuery<ReviewQueryType>
 }
 
-type Props = {
-     
-}
-
 function LoadedReview(props: LoadedProps) {
     const data = usePreloadedQuery(
         graphql`
