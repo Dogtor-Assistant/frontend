@@ -209,6 +209,7 @@ type Query {
   greeting: String!
   me: User
   node(id: ID!): Node
+<<<<<<< HEAD
   users(after: String, first: Int, before: String, last: Int): UsersConnection!
   patients(
     after: String
@@ -234,5 +235,7 @@ type Query {
     before: String
     last: Int
   ): ServicesConnection!
+=======
+>>>>>>> impl of review box
   latestReviews: [Review!]!
 }

@@ -185,12 +185,16 @@ function HomePageServices() {
 function HomePageLatestReviews() {
     const backgroundColor = useColorModeValue('white', 'gray.800');
     //TODO: Review Box need to be displayed in two column not only one col horizontal fix this!
+<<<<<<< HEAD
     //TODO: Extract only latest review from createdAT field from backend
+=======
+>>>>>>> impl of review box
     return (
         <Container maxW="container.xl">
             <h1><strong>Latest Reviews</strong></h1>
 
             <Grid bg={backgroundColor} gap={6} >
+<<<<<<< HEAD
                 
 <<<<<<< HEAD
                 <GridItem borderRadius="lg" borderWidth="1px" gridColumn='auto' maxW="l" overflow="hidden">
@@ -203,12 +207,22 @@ function HomePageLatestReviews() {
                 </GridItem>
 =======
                     <Box p="6">
+=======
+                
+                <GridItem borderRadius="lg" borderWidth="1px" gridColumn='auto' maxW="l" overflow="hidden">
+                
+                    <Box gridArea='auto' p="6">
+>>>>>>> impl of review box
                         <Review/>
 
                     </Box>
 
+<<<<<<< HEAD
                 </Box>
 >>>>>>> adding reviews (not finished) && adding Rating for stars
+=======
+                </GridItem>
+>>>>>>> impl of review box
             
             </Grid>
         </Container>

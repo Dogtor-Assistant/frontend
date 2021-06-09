@@ -25,11 +25,14 @@ function ReviewList() {
     
     return(<>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <Review/>
 =======
         <Grid>
             <Review />
         </Grid>
+=======
+>>>>>>> impl of review box
 
 >>>>>>> adding reviews (not finished) && adding Rating for stars
     </>);

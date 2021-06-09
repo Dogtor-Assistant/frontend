@@ -6,10 +6,14 @@ import ReviewQuery from './__generated__/ReviewQuery.graphql';
 
 import React, { useEffect, useRef } from 'react';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Badge, Box } from '@chakra-ui/layout';
 =======
 import { Box } from '@chakra-ui/layout';
 >>>>>>> adding reviews (not finished) && adding Rating for stars
+=======
+import { Badge, Box } from '@chakra-ui/layout';
+>>>>>>> impl of review box
 
 import { usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
@@ -24,7 +28,7 @@ type LoadedProps = {
 <<<<<<< HEAD
 =======
 type Props = {
-    
+     
 }
 
 >>>>>>> adding reviews (not finished) && adding Rating for stars
@@ -33,6 +37,9 @@ function LoadedReview(props: LoadedProps) {
         graphql`
             query ReviewQuery {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> impl of review box
                  latestReviews{
                      id
                      rating
@@ -46,15 +53,19 @@ function LoadedReview(props: LoadedProps) {
                          lastname
                      }
                  }
+<<<<<<< HEAD
 =======
                  greeting
 >>>>>>> adding reviews (not finished) && adding Rating for stars
+=======
+>>>>>>> impl of review box
             }
         `,
         props.data,
     );
 
     return (<>
+<<<<<<< HEAD
 <<<<<<< HEAD
         {
             data.latestReviews.map(review => (
@@ -111,11 +122,54 @@ function LoadedReview(props: LoadedProps) {
 =======
         <p>{data.greeting}</p>
         <Box p="6">
+=======
+        {
+            data.latestReviews.map(review => (
+                <Box key={review.id} p="2">
+>>>>>>> impl of review box
                         
-            <Rating value={4}/>
+                    <Box borderRadius="lg" borderWidth="1px" maxW="sm" overflow="hidden">
+                        
+                        <Box p="6">
+                            <Box alignItems="baseline" d="flex">
+                                <Badge borderRadius="full" colorScheme="teal" px="2">
+                                    New
+                                </Badge>
+                                <Box
+                                    color="gray.500"
+                                    fontSize="xs"
+                                    fontWeight="semibold"
+                                    letterSpacing="wide"
+                                    ml="2"
+                                    textTransform="uppercase"
+                                >
+                                    Dr. {review.doctor.firstname} &bull; {review.doctor.lastname}
+                                </Box>
+                            </Box>
 
+                            <Box
+                                as="h4"
+                                fontWeight="semibold"
+                                isTruncated
+                                lineHeight="tight"
+                                mt="1"
+                            >
+                                {review.content}
+                            </Box>
+
+<<<<<<< HEAD
         </Box>
 >>>>>>> adding reviews (not finished) && adding Rating for stars
+=======
+                            <Box alignItems="center" d="flex" mt="2">
+                                <Rating value={data.latestReviews ? review.rating : 2.5} />
+                            </Box>
+                        </Box>
+                    </Box>
+                </Box>
+            ))
+        }
+>>>>>>> impl of review box
         
     </>
     );
@@ -140,10 +194,14 @@ function Review() {
     return (
         <Suspense boundaryRef={error}>
 <<<<<<< HEAD
+<<<<<<< HEAD
             {data != null && <LoadedReview data={data} />}
 =======
             {data != null && <LoadedReview data={data}/>}
 >>>>>>> adding reviews (not finished) && adding Rating for stars
+=======
+            {data != null && <LoadedReview data={data} />}
+>>>>>>> impl of review box
         </Suspense>
     );
 }
