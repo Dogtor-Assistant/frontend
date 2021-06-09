@@ -1,13 +1,16 @@
 
 import React from 'react';
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 import Review from './Review';
 =======
 import { Grid, List } from '@chakra-ui/react';
+=======
+>>>>>>> removing unused-vars
 
-import Rating from 'Rating';
 import Review from './Review';
+<<<<<<< HEAD
 type Props = {
   review: ReviewType
 };
@@ -20,10 +23,13 @@ type ReviewType = {
     content: string
 }
 >>>>>>> adding reviews (not finished) && adding Rating for stars
+=======
+>>>>>>> removing unused-vars
 
 function ReviewList() {
     
     return(<>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         <Review/>
@@ -35,6 +41,9 @@ function ReviewList() {
 >>>>>>> impl of review box
 
 >>>>>>> adding reviews (not finished) && adding Rating for stars
+=======
+        <Review/>
+>>>>>>> removing unused-vars
     </>);
 }
 export default ReviewList;

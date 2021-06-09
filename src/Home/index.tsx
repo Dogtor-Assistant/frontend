@@ -21,10 +21,14 @@ import {
 
 import Footer from 'Footer';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import ReviewList from 'LatestReviewList';
 =======
 import Review from 'LatestReviewList/Review';
 >>>>>>> adding reviews (not finished) && adding Rating for stars
+=======
+import ReviewList from 'LatestReviewList';
+>>>>>>> removing unused-vars
 
 function Search() {
     return (
@@ -186,9 +190,13 @@ function HomePageLatestReviews() {
     const backgroundColor = useColorModeValue('white', 'gray.800');
     //TODO: Review Box need to be displayed in two column not only one col horizontal fix this!
 <<<<<<< HEAD
+<<<<<<< HEAD
     //TODO: Extract only latest review from createdAT field from backend
 =======
 >>>>>>> impl of review box
+=======
+    //TODO: Extract only latest review from createdAT field from backend
+>>>>>>> removing unused-vars
     return (
         <Container maxW="container.xl">
             <h1><strong>Latest Reviews</strong></h1>
@@ -201,6 +209,7 @@ function HomePageLatestReviews() {
                 
                     <Box gridArea='auto' p="6">
                         <ReviewList/>
+<<<<<<< HEAD
 
                     </Box>
 
@@ -214,6 +223,8 @@ function HomePageLatestReviews() {
                     <Box gridArea='auto' p="6">
 >>>>>>> impl of review box
                         <Review/>
+=======
+>>>>>>> removing unused-vars
 
                     </Box>
 

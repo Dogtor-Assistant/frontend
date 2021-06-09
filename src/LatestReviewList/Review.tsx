@@ -26,12 +26,15 @@ type LoadedProps = {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 type Props = {
      
 }
 
 >>>>>>> adding reviews (not finished) && adding Rating for stars
+=======
+>>>>>>> removing unused-vars
 function LoadedReview(props: LoadedProps) {
     const data = usePreloadedQuery(
         graphql`
