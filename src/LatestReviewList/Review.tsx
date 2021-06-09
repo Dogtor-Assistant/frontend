@@ -76,6 +76,17 @@ function LoadedReview(props: LoadedProps) {
                             <Box alignItems="center" d="flex" mt="2">
                                 <Rating value={data.latestReviews ? review.rating : 2.5} />
                             </Box>
+                            <Box
+                                color="gray.500"
+                                fontSize="xs"
+                                fontWeight="semibold"
+                                letterSpacing="wide"
+                                ml="1"
+                                textTransform="uppercase"
+                            >
+                                   Review from: {review.patient.firstname} &bull; {review.patient.lastname}
+                            </Box>
+                            
                         </Box>
                     </Box>
                 </Box>
