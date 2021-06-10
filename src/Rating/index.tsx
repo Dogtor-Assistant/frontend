@@ -8,6 +8,9 @@ interface IProps {
 }
 
 const Rating = ({ value, color }:IProps) => {
+    if (value >= 4) {
+        color='green';
+    }
     return (<>
         <div className="rating">
             <span>

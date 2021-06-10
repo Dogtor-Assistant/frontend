@@ -5,7 +5,7 @@ import type { PreloadedQuery } from 'react-relay';
 import ReviewQuery from './__generated__/ReviewQuery.graphql';
 
 import React, { useEffect, useRef } from 'react';
-import { Badge, Box } from '@chakra-ui/layout';
+import { Badge, Box, Grid } from '@chakra-ui/layout';
 
 import { usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
@@ -15,6 +15,10 @@ import Suspense from '../Suspense';
 
 type LoadedProps = {
     data: PreloadedQuery<ReviewQueryType>
+    color: string
+}
+type Props = {
+    color: string
 }
 
 function LoadedReview(props: LoadedProps) {
@@ -40,64 +44,66 @@ function LoadedReview(props: LoadedProps) {
     );
 
     return (<>
-        {
-            data.latestReviews.map(review => (
-                <Box key={review.id} p="2">
+        <Grid gap={1} overflow='auto' templateColumns="repeat(3, 1fr)">
+            {
+                data.latestReviews.map(review => (
+                    <Box key={review.id} p="2">
                         
-                    <Box borderRadius="lg" borderWidth="1px" maxW="sm" overflow="hidden">
+                        <Box borderRadius="lg" borderWidth="1px" maxW="sm" overflow="hidden">
                         
-                        <Box p="6">
-                            <Box alignItems="baseline" d="flex">
-                                <Badge borderRadius="full" colorScheme="teal" px="2">
+                            <Box p="6">
+                                <Box alignItems="baseline" d="flex">
+                                    <Badge borderRadius="full" colorScheme="teal" px="2">
                                     New
-                                </Badge>
+                                    </Badge>
+                                    <Box
+                                        color="gray.500"
+                                        fontSize="xs"
+                                        fontWeight="semibold"
+                                        letterSpacing="wide"
+                                        ml="2"
+                                        textTransform="uppercase"
+                                    >
+                                    Dr. {review.doctor.firstname} &bull; {review.doctor.lastname}
+                                    </Box>
+                                </Box>
+
+                                <Box
+                                    as="h4"
+                                    fontWeight="semibold"
+                                    isTruncated
+                                    lineHeight="tight"
+                                    mt="1"
+                                >
+                                    {review.content}
+                                </Box>
+
+                                <Box alignItems="center" d="flex" mt="2">
+                                    <Rating color={props.color} value={data.latestReviews ? review.rating : 2.5}/>
+                                </Box>
                                 <Box
                                     color="gray.500"
                                     fontSize="xs"
                                     fontWeight="semibold"
                                     letterSpacing="wide"
-                                    ml="2"
+                                    ml="1"
                                     textTransform="uppercase"
                                 >
-                                    Dr. {review.doctor.firstname} &bull; {review.doctor.lastname}
-                                </Box>
-                            </Box>
-
-                            <Box
-                                as="h4"
-                                fontWeight="semibold"
-                                isTruncated
-                                lineHeight="tight"
-                                mt="1"
-                            >
-                                {review.content}
-                            </Box>
-
-                            <Box alignItems="center" d="flex" mt="2">
-                                <Rating value={data.latestReviews ? review.rating : 2.5} />
-                            </Box>
-                            <Box
-                                color="gray.500"
-                                fontSize="xs"
-                                fontWeight="semibold"
-                                letterSpacing="wide"
-                                ml="1"
-                                textTransform="uppercase"
-                            >
                                    Review from: {review.patient.firstname} &bull; {review.patient.lastname}
-                            </Box>
+                                </Box>
                             
+                            </Box>
                         </Box>
                     </Box>
-                </Box>
-            ))
-        }
+                ))
+            }
+        </Grid>
         
     </>
     );
 }
 
-function Review() {
+function Review(props:Props) {
     const [
         data,
         loadQuery,
@@ -115,7 +121,7 @@ function Review() {
 
     return (
         <Suspense boundaryRef={error}>
-            {data != null && <LoadedReview data={data} />}
+            {data != null && <LoadedReview color={props.color} data={data}/>}
         </Suspense>
     );
 }
