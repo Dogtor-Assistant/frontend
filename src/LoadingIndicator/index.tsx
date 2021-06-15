@@ -17,6 +17,8 @@ function LoadingIndicator(props: Props) {
             height={size}
             options={{
                 animationData,
+                autoplay: true,
+                loop: true,
             }}
             width={size}
         />
