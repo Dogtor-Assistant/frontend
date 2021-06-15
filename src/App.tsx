@@ -1,17 +1,27 @@
 import React from 'react';
+import useMetaTags from 'react-metatags-hook';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { ChakraProvider } from '@chakra-ui/react';
+import { useColorModeValue } from '@chakra-ui/color-mode';
 
 import DebugMenu from 'DebugMenu';
 import Home from 'Home';
 import Login from 'Login';
 import Navbar from 'Navbar';
 
-import theme from 'utils/theme';
-
 function App() {
+    const themeColorName = useColorModeValue('white', 'gray.800');
+    const themeColor = `var(--chakra-colors-${themeColorName})`;
+    useMetaTags({
+        metas: [
+            {
+                content: themeColor,
+                name: 'theme-color',
+            },
+        ],
+    }, [themeColor]);
+
     return (
-        <ChakraProvider theme={theme}>
+        <>
             <Router>
                 <div>
                     <Navbar />
@@ -28,7 +38,7 @@ function App() {
                 </div>
             </Router>
             <DebugMenu />
-        </ChakraProvider>
+        </>
     );
 }
 
