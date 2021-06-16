@@ -2,3 +2,5 @@ public/* linguist-vendored
 .eslintrc.js linguist-vendored
 src/__generated__/* linguist-generated
 src/**/__generated__/* linguist-generated
+src/LoadingIndicator/dark.json linguist-vendored
+src/LoadingIndicator/light.json linguist-vendored
