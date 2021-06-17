@@ -12,7 +12,7 @@ import {
 } from 'relay-runtime';
 import { RelayEnvironmentProvider } from 'react-relay';
 
-import { useAuthenticatedToken } from 'authentication';
+import { useAuthenticatedToken, useIsLoggedIn } from 'authentication';
 import { useBackendURL } from 'config';
 
 interface Props {
@@ -48,10 +48,16 @@ export function GrahQLEnvironmentProvider({ children }: Props) {
         [url, accessToken],
     );
 
+    const network = useMemo(() => Network.create(fetchQuery), [fetchQuery]);
+
+    const isLoggedIn = useIsLoggedIn();
+    const store = useMemo(() => {
+        return new Store(new RecordSource());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLoggedIn]);
+
     const environment = useMemo(
         () => {
-            const network = Network.create(fetchQuery);
-            const store = new Store(new RecordSource());
             return new Environment(
                 {
                     network,
@@ -59,7 +65,7 @@ export function GrahQLEnvironmentProvider({ children }: Props) {
                 },
             );
         },
-        [fetchQuery],
+        [network, store],
     );
      
     return (
