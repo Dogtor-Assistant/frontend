@@ -16,7 +16,7 @@ interface Props {
 export type BackendConfig = typeof BACKEND_CONFIGS[number]
 
 type ConfigContextType = {
-    backendConfig: BackendConfig
+    backendConfig: BackendConfig,
     setBackendConfig: Dispatch<BackendConfig>,
 }
 

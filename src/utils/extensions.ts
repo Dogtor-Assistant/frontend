@@ -2,15 +2,15 @@ import type { Rect } from './types';
 
 declare global {
     interface Array<T> {
-        compactMap<O>(transform: (element: T) => O | null | undefined): Array<O>;
+        compactMap<O>(transform: (element: T) => O | null | undefined): Array<O>,
     }
 
     interface ReadonlyArray<T> {
-        compactMap<O>(transform: (element: T) => O | null | undefined): Array<O>;
+        compactMap<O>(transform: (element: T) => O | null | undefined): Array<O>,
     }
 
     interface HTMLElement {
-        getRect(): Rect
+        getRect(): Rect,
     }
 }
 

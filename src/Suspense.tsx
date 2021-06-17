@@ -17,7 +17,7 @@ import LoadingIndicator from 'LoadingIndicator';
 
 type Props = {
     children: ReactNode | Array<ReactNode>,
-    boundaryRef?: RefObject<ErrorBoundary>
+    boundaryRef?: RefObject<ErrorBoundary>,
 }
 
 function Placeholder() {

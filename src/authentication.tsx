@@ -17,9 +17,9 @@ interface Props {
 }
 
 type TokenType = {
-    accessToken: string
-    refreshToken: string
-    expiresAt: number
+    accessToken: string,
+    refreshToken: string,
+    expiresAt: number,
 }
 
 type TokenResponse = {
@@ -29,11 +29,11 @@ type TokenResponse = {
 }
 
 type LoginContextType = {
-    isLoggingIn: boolean
+    isLoggingIn: boolean,
     isLoggedIn: boolean,
     token: () => Promise<string | null>,
-    login: (username: string, password: string) => Promise<void>
-    logout: () => void
+    login: (username: string, password: string) => Promise<void>,
+    logout: () => void,
 }
 
 const LoginContext = React.createContext<LoginContextType>({

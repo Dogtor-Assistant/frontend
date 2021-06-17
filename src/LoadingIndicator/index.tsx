@@ -6,7 +6,7 @@ import dark from './dark.json';
 import light from './light.json';
 
 type Props = {
-    size?: number
+    size?: number,
 }
 
 function LoadingIndicator(props: Props) {
