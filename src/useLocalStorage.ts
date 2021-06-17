@@ -21,10 +21,10 @@ export default function useLocalStorage<S>(
         },
     );
 
-    const setItem = (newValue: S) => {
+    const setItem = useCallback((newValue: S) => {
         setValue(newValue);
         window.localStorage.setItem(key, JSON.stringify(newValue));
-    };
+    }, [key]);
 
     const handleStorage = useCallback(
         (event: StorageEvent) => {
