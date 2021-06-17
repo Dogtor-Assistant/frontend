@@ -4,6 +4,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 
 import App from 'App';
 
+import 'utils/extensions';
 import { AuthenticationProvider } from 'authentication';
 import { ConfigProvider } from 'config';
 import { GrahQLEnvironmentProvider } from 'environment';
