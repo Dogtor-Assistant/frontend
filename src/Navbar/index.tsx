@@ -94,6 +94,17 @@ function Navbar() {
                             )
                         }
                     </HStack>
+                    <HStack align="center" justify="right" paddingRight={8} spacing={4}>
+                        {
+                            !isLoggedIn && (
+                                <Link to="/signup">
+                                    <Button variant="ghost">
+                                        Sign up
+                                    </Button>
+                                </Link>
+                            )
+                        }
+                    </HStack>
                 </Flex>
             </Container>
         </chakra.header>

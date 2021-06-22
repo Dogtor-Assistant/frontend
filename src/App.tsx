@@ -6,6 +6,7 @@ import DebugMenu from 'DebugMenu';
 import Home from 'Home';
 import Login from 'Login';
 import Navbar from 'Navbar';
+import Signup from 'Signup';
 
 import theme from 'utils/theme';
 
@@ -23,6 +24,10 @@ function App() {
 
                         <Route path="/login">
                             <Login />
+                        </Route>
+
+                        <Route path="/signup">
+                            <Signup />
                         </Route>
                     </Switch>
                 </div>
