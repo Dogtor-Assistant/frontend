@@ -7,7 +7,7 @@ import React, { useContext } from 'react';
 
 import useLocalStorage from 'useLocalStorage';
 
-import { LOCAL_BACKEND_BASE_URL, PRODUCTION_BACKEND_BASE_URL } from 'utils/constants';
+import { LOCAL_BACKEND_BASE_URL, PRODUCTION_BACKEND_BASE_URL, STAGING_BACKEND_BASE_URL } from 'utils/constants';
 
 interface Props {
     children: ReactNode | ReactNode[] | null,
@@ -16,7 +16,7 @@ interface Props {
 export type BackendConfig = typeof BACKEND_CONFIGS[number]
 
 type ConfigContextType = {
-    backendConfig: BackendConfig
+    backendConfig: BackendConfig,
     setBackendConfig: Dispatch<BackendConfig>,
 }
 
@@ -51,6 +51,8 @@ export function useBackendBaseURL(): string {
         switch (backendConfig) {
         case 'Production':
             return PRODUCTION_BACKEND_BASE_URL;
+        case 'Staging':
+            return STAGING_BACKEND_BASE_URL;
         case 'Local':
             return LOCAL_BACKEND_BASE_URL;
         }

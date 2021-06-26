@@ -13,20 +13,20 @@ import { graphql } from 'babel-plugin-relay/macro';
 import Suspense from 'Suspense';
 
 type LoadedProps = {
-    data: PreloadedQuery<userQueryType>
-    children: ReactNode[] | ReactNode | null
+    data: PreloadedQuery<userQueryType>,
+    children: ReactNode[] | ReactNode | null,
 }
 
 type Props = {
-    children: ReactNode[] | ReactNode | null
+    children: ReactNode[] | ReactNode | null,
 }
 
 type UserContextType = {
     id?: string | undefined,
     firstname?: string | undefined,
     lastname?: string | undefined,
-    isPatient: boolean
-    isDoctor: boolean
+    isPatient: boolean,
+    isDoctor: boolean,
 }
 
 const UserContext = React.createContext<UserContextType>({

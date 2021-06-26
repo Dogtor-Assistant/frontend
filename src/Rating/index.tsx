@@ -3,8 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 interface IProps {
-    value: number
-    color:string
+    value: number,
+    color: string,
 }
 
 const Rating = ({ value, color }:IProps) => {

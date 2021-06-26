@@ -11,24 +11,19 @@ import {
     AlertIcon,
     AlertTitle,
     Center,
-    Spinner,
 } from '@chakra-ui/react';
+
+import LoadingIndicator from 'LoadingIndicator';
 
 type Props = {
     children: ReactNode | Array<ReactNode>,
-    boundaryRef?: RefObject<ErrorBoundary>
+    boundaryRef?: RefObject<ErrorBoundary>,
 }
 
 function Placeholder() {
     return (
-        <Center paddingBottom={8} paddingTop={8}>
-            <Spinner
-                color="blue.500"
-                emptyColor="gray.200"
-                size="xl"
-                speed="0.65s"
-                thickness="4px"
-            />
+        <Center h="100%" paddingBottom={8} paddingTop={8}>
+            <LoadingIndicator />
         </Center>
     );
 }

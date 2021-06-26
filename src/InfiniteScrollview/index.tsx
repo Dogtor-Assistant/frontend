@@ -1,0 +1,146 @@
+import type { StackProps } from '@chakra-ui/react';
+import type { ForwardedRef, ReactNode } from 'react';
+import type { KeyType } from 'react-relay/relay-hooks/helpers';
+import type { usePaginationFragmentHookType as HookType } from 'react-relay/relay-hooks/usePaginationFragment';
+import type { Disposable, OperationType } from 'relay-runtime';
+
+import React, {
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
+import useInfiniteScroll from 'react-infinite-scroll-hook';
+import { Center, useMergeRefs, VStack } from '@chakra-ui/react';
+
+import HorizonalScrollview from 'HorizonalScrollview';
+import LoadingIndicator from 'LoadingIndicator';
+
+import { numbersFrom } from 'utils/numbersFrom';
+import { omit } from 'utils/omit';
+import { pick } from 'utils/pick';
+
+type StackOptions = Omit<
+    Omit<
+        Omit<
+            Omit<
+                StackProps,
+                'overflowY'
+            >,
+            'overflowX'
+        >,
+        'overflow'
+    >,
+    'children'
+>;
+
+type Connection<
+    TQuery extends OperationType, TKey extends KeyType | null, TFragmentData
+> = Omit<HookType<TQuery, TKey, TFragmentData>, 'data'>;
+
+export interface Props<
+    TQuery extends OperationType, TKey extends KeyType | null, TFragmentData
+> extends StackOptions, Connection<TQuery, TKey, TFragmentData> {
+    disabledLoading?: true,
+    loadMoreCount?: number,
+    scrollDirection?: 'horizontal' | 'vertical',
+    marginBeforeLoadingMore?: number,
+    children: ReactNode[] | ReactNode | null,
+    loadingIndicatorRef?: ForwardedRef<HTMLDivElement>,
+}
+
+function InfiniteScrollview<
+    TQuery extends OperationType, TKey extends KeyType | null, TFragmentData
+>(props: Props<TQuery, TKey, TFragmentData>) {
+    const loadMoreCount = props.loadMoreCount ?? 20;
+
+    const {
+        scrollDirection,
+        children,
+        hasNext,
+        isLoadingNext,
+        marginBeforeLoadingMore,
+        loadNext,
+        loadingIndicatorRef,
+        ...stackProps
+    } = omit(props, 'hasPrevious', 'isLoadingPrevious', 'loadPrevious', 'refetch', 'loadMoreCount', 'disabledLoading');
+
+    const rootMargin = marginBeforeLoadingMore ?? 500;
+
+    const [error, setError] = useState<Error | null>(null);
+    const direction = scrollDirection ?? 'vertical';
+    const enabled = props.disabledLoading == null;
+
+    const disposable = useRef<Disposable | null>(null);
+
+    const loadMore = useCallback(() => {
+        if (!isLoadingNext) {
+            disposable.current = loadNext(
+                loadMoreCount,
+                {
+                    onComplete: error => {
+                        setError(error);
+                        disposable.current = null;
+                    },
+                },
+            );
+        }
+    }, [disposable, loadNext, loadMoreCount, isLoadingNext]);
+
+    useEffect(() => {
+        return () => {
+            disposable.current?.dispose();
+        };
+    }, []);
+
+    const [lastItemRef] = useInfiniteScroll({
+        disabled: !enabled && error != null,
+        hasNextPage: hasNext,
+        loading: isLoadingNext,
+        onLoadMore: loadMore,
+        rootMargin: scrollDirection === 'horizontal' ? `0px ${rootMargin}px 0px 0px` : `0px 0px ${rootMargin}px 0px`,
+    });
+
+    const finalLoadingIndicatorRef = useMergeRefs(lastItemRef, loadingIndicatorRef);
+
+    const heightRef = useRef<HTMLDivElement | null>(null);
+    const clientHeight = heightRef.current?.clientHeight;
+    const {
+        padding,
+        paddingTop,
+        paddingBottom,
+    } = numbersFrom(pick(stackProps, 'padding', 'paddingTop', 'paddingBottom'));
+
+    const loadingIndicatorHeight = clientHeight != null ?
+        clientHeight - 12 - 2 * (padding ?? 0) - (paddingTop ?? 0) - (paddingBottom ?? 0) :
+        undefined;
+
+    const loadingIndicatorContainerHeight = loadingIndicatorHeight ?? '100%';
+
+    switch (direction) {
+    case 'horizontal':
+        return (
+            <HorizonalScrollview ref={heightRef} {...stackProps}>
+                {children}
+                {enabled && (isLoadingNext || hasNext) && (
+                    <Center h={loadingIndicatorContainerHeight} ref={finalLoadingIndicatorRef}>
+                        <LoadingIndicator size={loadingIndicatorHeight}/>
+                    </Center>
+                )}
+            </HorizonalScrollview>
+        );
+    case 'vertical':
+        return (
+            <VStack ref={heightRef} {...stackProps} >
+                {children}
+                {enabled && (isLoadingNext || hasNext) && (
+                    <Center padding={8} ref={loadingIndicatorRef}>
+                        <LoadingIndicator />
+                    </Center>
+                )}
+            </VStack>
+        );
+    }
+}
+
+export default InfiniteScrollview;

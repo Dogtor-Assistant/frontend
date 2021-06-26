@@ -14,11 +14,11 @@ import Rating from 'Rating';
 import Suspense from '../Suspense';
 
 type LoadedProps = {
-    data: PreloadedQuery<ReviewQueryType>
-    color: string
+    data: PreloadedQuery<ReviewQueryType>,
+    color: string,
 }
 type Props = {
-    color: string
+    color: string,
 }
 
 function LoadedReview(props: LoadedProps) {
