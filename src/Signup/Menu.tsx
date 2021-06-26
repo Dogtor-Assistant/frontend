@@ -16,7 +16,6 @@ function Menu() {
     const backgroundColor = useColorModeValue('white', 'gray.800');
     const { url } = useRouteMatch();
 
-    //TODO: Fix Text content
     return(
         <Center>
             <VStack
@@ -37,12 +36,12 @@ function Menu() {
                         h="320px" m={2} w="30%">
                         <Heading as="h3" m={8}>Are you a Doctor ?</Heading>
                         <Text mx={4} my={2} noOfLines={4}>
-                            The quick brown fox jumps over the lazy dog is an English-language pangram—a
-                            sentence that contains all of the letters of the English alphabet. Owing to
-                            its existence, Chakra was created.
+                            You are now a few steps away from expanding your business and
+                            improving the quality of your services. Click Join Us and become
+                            one of us in 3 easy steps!
                         </Text>
                         <Link to={`${url}/doctor`}>
-                            <Button>
+                            <Button mt={4}>
                                 Join Us
                             </Button>
                         </Link>
@@ -51,12 +50,11 @@ function Menu() {
                         h="320px" m={2} w="30%">
                         <Heading as="h3" m={8}>Are you a Patient ?</Heading>
                         <Text mx={4} my={2} noOfLines={4}>
-                            The quick brown fox jumps over the lazy dog is an English-language pangram—a
-                            sentence that contains all of the letters of the English alphabet. Owing to
-                            its existence, Chakra was created.
+                            Still having problems organizing and keeping track of your medical procedures?
+                            Create an account now and you will not have to worry about them again!
                         </Text>
                         <Link to={`${url}/patient`}>
-                            <Button>
+                            <Button mt={4}>
                                 Create Account
                             </Button>
                         </Link>
