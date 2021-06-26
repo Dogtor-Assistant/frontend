@@ -5,8 +5,8 @@ import { Button } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { Stack } from '@chakra-ui/layout';
 
-const Nav: FC<{ back: () => void, next: () => void, step: number, submit: () => void }> =
-({ back, next, step, submit }): ReactElement => {
+const Nav: FC<{ back: () => void, next: () => void, step: number, submit: () => void, lim: number}> =
+({ back, next, step, submit, lim }): ReactElement => {
     return (
         <Stack direction="row" spacing={4}>
             { step > 1 &&
@@ -19,7 +19,7 @@ const Nav: FC<{ back: () => void, next: () => void, step: number, submit: () => 
                 Back
             </Button>
             }
-            { step < 3 &&
+            { step < lim &&
             <Button
                 colorScheme="blue"
                 onClick={next}
@@ -28,7 +28,7 @@ const Nav: FC<{ back: () => void, next: () => void, step: number, submit: () => 
                 Next
             </Button>
             }
-            {step === 3 &&
+            {step === lim &&
             <Button
                 colorScheme="blue"
                 onClick={submit}

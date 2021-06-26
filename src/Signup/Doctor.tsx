@@ -13,7 +13,7 @@ import {
 import { useMutation } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
-import StepOneForm from './Forms/StepOneFormDoc';
+import StepOneForm from './Forms/StepOneForm';
 import StepThreeForm from './Forms/StepThreeFormDoc';
 import StepTwoForm from './Forms/StepTwoFormDoc';
 import Nav from './Nav';
@@ -98,7 +98,7 @@ const Doctor: FC = (): ReactElement => {
                         setLastName={setLastName} setPassword={setPassword}
 
                     />
-                    <Nav back={back} next={next} step={step} submit={submit}/>
+                    <Nav back={back} lim={3} next={next} step={step} submit={submit}/>
                 </VStack>
             </Center>
         );
@@ -118,7 +118,7 @@ const Doctor: FC = (): ReactElement => {
                         webpage={webpage} zipCode={zipCode}
 
                     />
-                    <Nav back={back} next={next} step={step} submit={submit}/>
+                    <Nav back={back} lim={3} next={next} step={step} submit={submit}/>
                 </VStack>
             </Center>
         );
@@ -133,7 +133,7 @@ const Doctor: FC = (): ReactElement => {
                         setSlots={setSlots} setSpecialities={setSpecialities}
                         slots={slots} specialities={specialities}
                     />
-                    <Nav back={back} next={next} step={step} submit={submit}/>
+                    <Nav back={back} lim={3} next={next} step={step} submit={submit}/>
                 </VStack>
             </Center>
         );
