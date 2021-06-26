@@ -1,3 +1,4 @@
+import type { DoctorUserCreateMutation, Weekday } from './__generated__/DoctorUserCreateMutation.graphql';
 import type { FC, ReactElement } from 'react';
 
 import { useState } from 'react';
@@ -26,6 +27,9 @@ import {
     DeleteIcon,
 } from '@chakra-ui/icons';
 
+import { useMutation } from 'react-relay';
+import { graphql } from 'babel-plugin-relay/macro';
+
 const Doctor: FC = (): ReactElement => {
     const [email, setEmail] = useState('');
     const [firstName, setFirstName] = useState('');
@@ -40,10 +44,18 @@ const Doctor: FC = (): ReactElement => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [webpage, setWebpage] = useState('');
 
-    const emptySlots: { day: number, start: string, stop: string }[] = [];
+    const emptySlots: { day: Weekday, slotStart: string, slotStop: string }[] = [];
     const [slots, setSlots] = useState(emptySlots);
     const emptySpecial: string[] = [];
     const [specialities, setSpecialities] = useState(emptySpecial);
+
+    const [commit] = useMutation<DoctorUserCreateMutation>(graphql`
+    mutation DoctorUserCreateMutation($input: UserDoctorInput!){
+        createUserDoctor(input: $input) {
+            id
+        }
+    }
+    `);
 
     const next = (): void => {
         setStep(prevStep => prevStep + 1);
@@ -51,10 +63,6 @@ const Doctor: FC = (): ReactElement => {
       
     const back = (): void => {
         setStep(prevStep => prevStep - 1);
-    };
-
-    const submit = (): void => {
-        console.log('Send Doctor Info to server');
     };
 
     switch (step) {
@@ -71,7 +79,7 @@ const Doctor: FC = (): ReactElement => {
                         setLastName={setLastName} setPassword={setPassword}
 
                     />
-                    <Nav back={back} next={next} step={step} submit={submit}/>
+                    <Nav back={back} next={next} step={step} submit={() => { return undefined; }}/>
                 </VStack>
             </Center>
         );
@@ -91,7 +99,7 @@ const Doctor: FC = (): ReactElement => {
                         webpage={webpage} zipCode={zipCode}
 
                     />
-                    <Nav back={back} next={next} step={step} submit={submit}/>
+                    <Nav back={back} next={next} step={step} submit={() => { return undefined; }}/>
                 </VStack>
             </Center>
         );
@@ -106,7 +114,31 @@ const Doctor: FC = (): ReactElement => {
                         setSlots={setSlots} setSpecialities={setSpecialities}
                         slots={slots} specialities={specialities}
                     />
-                    <Nav back={back} next={next} step={step} submit={submit}/>
+                    <Nav back={back} next={next} step={step} submit={() => {
+                        commit({
+                            onCompleted(data) {
+                                console.log(data);
+                            },
+                            variables: {
+                                'input': {
+                                    'address': {
+                                        'city': city,
+                                        'streetName': streetName,
+                                        'streetNumber': streetNumber,
+                                        'zipCode': zipCode,
+                                    },
+                                    'email': email,
+                                    'firstName': firstName,
+                                    'lastName': lastName,
+                                    'offeredSlots': slots,
+                                    'password': password,
+                                    'phoneNumber': phoneNumber,
+                                    'specialities': specialities,
+                                    'webpage': webpage,
+                                },
+                            },
+                        });
+                    }}/>
                 </VStack>
             </Center>
         );
@@ -305,9 +337,9 @@ const StepTwoForm: FC<stepTwoFormProps> =
 };
 
 type stepThreeFormProps = {
-    setSlots: React.Dispatch<React.SetStateAction<{ day: number, start: string, stop: string }[]>>,
+    setSlots: React.Dispatch<React.SetStateAction<{ day: Weekday, slotStart: string, slotStop: string }[]>>,
     setSpecialities: React.Dispatch<React.SetStateAction<string[]>>,
-    slots: Array<{ day: number, start: string, stop: string }>,
+    slots: Array<{ day: Weekday, slotStart: string, slotStop: string }>,
     specialities: Array<string>,
 }
 
@@ -329,7 +361,7 @@ const StepThreeForm: FC<stepThreeFormProps> =
             return;
         }
 
-        const slotIn = { day: dayIn, start: startIn, stop: stopIn };
+        const slotIn = { day: dayNamesArr[dayIn] as Weekday, slotStart: startIn, slotStop: stopIn };
 
         const newSlots = [...slots, slotIn];
 
@@ -373,7 +405,7 @@ const StepThreeForm: FC<stepThreeFormProps> =
                     {slots.map((s, i) => {
                         return (
                             <Flex alignItems={'center'} key={i} mt={6} pl={4}>
-                                <Text>{dayNamesArr[s.day]} {s.start} - {s.stop}</Text>
+                                <Text>{s.day} {s.slotStart} - {s.slotStop}</Text>
                                 <Spacer />
                                 <IconButton
                                     aria-label="Delete Speciality"
