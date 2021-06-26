@@ -4,14 +4,11 @@ import type { FC, ReactElement } from 'react';
 import React from 'react';
 import { useState } from 'react';
 import {
-    Button,
     Center,
     Heading,
-    Stack,
     Text,
     VStack,
 } from '@chakra-ui/react';
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 
 import { useMutation } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
@@ -19,6 +16,7 @@ import { graphql } from 'babel-plugin-relay/macro';
 import StepOneForm from './Forms/StepOneFormDoc';
 import StepThreeForm from './Forms/StepThreeFormDoc';
 import StepTwoForm from './Forms/StepTwoFormDoc';
+import Nav from './Nav';
 
 const Doctor: FC = (): ReactElement => {
     const [email, setEmail] = useState('');
@@ -58,7 +56,12 @@ const Doctor: FC = (): ReactElement => {
     const submit = (): void => {
         commit({
             onCompleted(data) {
+                // TODO: Redirect user to landing user page + token
                 console.log(data);
+            },
+            onError(error) {
+                // TODO: Handle error function to return proper error help
+                console.log(error);
             },
             variables: {
                 'input': {
@@ -143,41 +146,6 @@ const Doctor: FC = (): ReactElement => {
             </Center>
         );
     }
-};
-
-const Nav: FC<{ back: () => void, next: () => void, step: number, submit: () => void }> =
-({ back, next, step, submit }): ReactElement => {
-    return (
-        <Stack direction="row" spacing={4}>
-            { step > 1 &&
-            <Button
-                colorScheme="blue"
-                leftIcon={<ChevronLeftIcon />}
-                onClick={back}
-                variant="outline"
-            >
-                Back
-            </Button>
-            }
-            { step < 3 &&
-            <Button
-                colorScheme="blue"
-                onClick={next}
-                rightIcon={<ChevronRightIcon />}
-                variant="outline">
-                Next
-            </Button>
-            }
-            {step === 3 &&
-            <Button
-                colorScheme="blue"
-                onClick={submit}
-                variant="solid">
-                Submit
-            </Button>
-            }
-        </Stack>
-    );
 };
 
 export default Doctor;
