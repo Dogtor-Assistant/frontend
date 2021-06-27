@@ -42,16 +42,18 @@ const StepTwoForm: FC<stepTwoFormProps> =
     const [webpageError, setWebpageError] = useState(false);
     
     useEffect(() => {
+        const webpageValid = webpage === '' ? true : validator.isURL(webpage, {
+            protocols: ['http', 'https'],
+            require_host: true,
+            require_protocol: true,
+        });
+
         setValidForm(!(streetName === '') &&
             !isNaN(streetNumber) &&
             !isNaN(zipCode) &&
             !(city === '') &&
             validator.isMobilePhone(phoneNumber, 'any', { strictMode: true }) &&
-            validator.isURL(webpage, {
-                protocols: ['http', 'https'],
-                require_host: true,
-                require_protocol: true,
-            }));
+            webpageValid);
     }, [city, phoneNumber, setValidForm, streetName, streetNumber, webpage, zipCode]);
 
     return (
@@ -141,11 +143,14 @@ const StepTwoForm: FC<stepTwoFormProps> =
                 <FormLabel>Webpage</FormLabel>
                 <Input
                     onBlur={() => {
-                        setWebpageError(!validator.isURL(webpage, {
-                            protocols: ['http', 'https'],
-                            require_host: true,
-                            require_protocol: true,
-                        }));
+                        if (webpage !== '')
+                        {
+                            setWebpageError(!validator.isURL(webpage, {
+                                protocols: ['http', 'https'],
+                                require_host: true,
+                                require_protocol: true,
+                            }));
+                        }
                     }}
                     onChange={event => {
                         setWebpage(event.target.value);
