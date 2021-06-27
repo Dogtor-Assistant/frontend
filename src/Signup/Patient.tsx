@@ -1,8 +1,10 @@
 import type { ActivityLevel, PatientUserCreateMutation } from './__generated__/PatientUserCreateMutation.graphql';
 import type { Gender, Insurance } from './__generated__/PatientUserCreateMutation.graphql';
 import type { FC, ReactElement } from 'react';
+import type { PayloadError } from 'relay-runtime';
 
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
     Center,
     Heading,
@@ -21,6 +23,8 @@ import StepTwoForm from './Forms/StepTwoFormPat';
 import Nav from './Nav';
 
 const Patient: FC = (): ReactElement => {
+    const history = useHistory();
+    
     const [validFormOne, setValidFormOne] = useState(false);
     const [validFormTwo, setValidFormTwo] = useState(false);
     const [validFormThree, setValidFormThree] = useState(false);
@@ -75,14 +79,15 @@ const Patient: FC = (): ReactElement => {
         setStep(prevStep => prevStep - 1);
     };
 
+    const handleError = (err: PayloadError[]) => {
+        console.log(err);
+    };
+
     const submit = (): void => {
         commit({
             onCompleted(data, err) {
-                // TODO: Handle error function to return proper error help
-                console.log(err);
-
-                // TODO: Redirect user to landing user page + token
-                console.log(data);
+                if (err) handleError(err);
+                else history.push('/signup/success');
             },
             variables: {
                 'input': {

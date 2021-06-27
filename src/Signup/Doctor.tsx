@@ -1,8 +1,10 @@
 import type { DoctorUserCreateMutation, Weekday } from './__generated__/DoctorUserCreateMutation.graphql';
 import type { FC, ReactElement } from 'react';
+import type { PayloadError } from 'relay-runtime';
 
 import React from 'react';
 import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
     Center,
     Heading,
@@ -20,7 +22,8 @@ import StepTwoForm from './Forms/StepTwoFormDoc';
 import Nav from './Nav';
 
 const Doctor: FC = (): ReactElement => {
-
+    const history = useHistory();
+        
     const [validFormOne, setValidFormOne] = useState(false);
     const [validFormTwo, setValidFormTwo] = useState(false);
     const [validFormThree, setValidFormThree] = useState(false);
@@ -63,14 +66,15 @@ const Doctor: FC = (): ReactElement => {
         setStep(prevStep => prevStep - 1);
     };
 
+    const handleError = (err: PayloadError[]) => {
+        console.log(err);
+    };
+
     const submit = (): void => {
         commit({
             onCompleted(data, err) {
-                // TODO: Handle error function to return proper error help
-                console.log(err);
-
-                // TODO: Redirect user to landing user page + token
-                console.log(data);
+                if (err) handleError(err);
+                else history.push('/signup/success');
             },
             variables: {
                 'input': {

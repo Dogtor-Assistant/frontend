@@ -4,6 +4,7 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Doctor from './Doctor';
 import Menu from './Menu';
 import Patient from './Patient';
+import SignupSuccess from './SignupSuccess';
 
 function Signup() {
     const { path } = useRouteMatch();
@@ -19,6 +20,9 @@ function Signup() {
                 </Route>
                 <Route path={`${path}/doctor`}>
                     <Doctor />
+                </Route>
+                <Route path={`${path}/success`}>
+                    <SignupSuccess />
                 </Route>
             </Switch>
         </div>
