@@ -1,3 +1,5 @@
+import type { ActivityLevel, PatientUserCreateMutation } from './__generated__/PatientUserCreateMutation.graphql';
+import type { Gender, Insurance } from './__generated__/PatientUserCreateMutation.graphql';
 import type { FC, ReactElement } from 'react';
 
 import React, { useState } from 'react';
@@ -8,9 +10,10 @@ import {
     VStack,
 } from '@chakra-ui/react';
 
-import { graphql } from 'relay-runtime';
 import { useMutation } from 'react-relay';
+import { graphql } from 'babel-plugin-relay/macro';
 
+import LoadingIndicator from 'LoadingIndicator';
 import StepFourForm from './Forms/StepFourFormDoc';
 import StepOneForm from './Forms/StepOneForm';
 import StepThreeForm from './Forms/StepThreeFormPat';
@@ -44,13 +47,21 @@ const Patient: FC = (): ReactElement => {
     const [medications, setMedications] = useState(emptyStrArray);
     const [surgeries, setSurgeries] = useState(emptyStrArray);
 
-    /*const [commit] = useMutation<DoctorUserCreateMutation>(graphql`
-    mutation DoctorUserCreateMutation($input: UserDoctorInput!){
-        createUserDoctor(input: $input) {
+    const activityLvlArr: ActivityLevel[] = ['VeryLow', 'Low', 'Medium', 'High', 'VeryHigh'];
+    const genderArr: Gender[] = ['Female', 'Male', 'TransgenderFemale', 'TransgenderMale', 'NonBinary'];
+    const insuranceArr: Insurance[] = ['Public', 'Private'];
+
+    const [commit, isInFlight] = useMutation<PatientUserCreateMutation>(graphql`
+    mutation PatientUserCreateMutation($input: UserPatientInput!){
+        createUserPatient(input: $input) {
             id
         }
     }
-    `);*/
+    `);
+
+    if (isInFlight) {
+        return <LoadingIndicator />;
+    }
 
     const next = (): void => {
         setStep(prevStep => prevStep + 1);
@@ -61,34 +72,41 @@ const Patient: FC = (): ReactElement => {
     };
 
     const submit = (): void => {
-        /*commit({
-            onCompleted(data) {
+        commit({
+            onCompleted(data, err) {
+                // TODO: Handle error function to return proper error help
+                console.log(err);
+
                 // TODO: Redirect user to landing user page + token
                 console.log(data);
             },
-            onError(error) {
-                // TODO: Handle error function to return proper error help
-                console.log(error);
-            },
             variables: {
                 'input': {
+                    'activityLvl': activityLvlArr[activityLvl],
                     'address': {
                         'city': city,
                         'streetName': streetName,
                         'streetNumber': streetNumber,
                         'zipCode': zipCode,
                     },
+                    'allergies': allergies,
+                    'birthDate': birthDate.toISOString(),
                     'email': email,
                     'firstName': firstName,
+                    'gender': genderArr[gender],
+                    'height': height,
+                    'insurance': insuranceArr[insurance],
                     'lastName': lastName,
-                    'offeredSlots': slots,
+                    'medConditions': medConditions,
+                    'medications': medications,
                     'password': password,
                     'phoneNumber': phoneNumber,
-                    'specialities': specialities,
-                    'webpage': webpage,
+                    'smoker': smoker,
+                    'surgeries': surgeries,
+                    'weight': weight,
                 },
             },
-        });*/
+        });
     };
 
     switch (step) {

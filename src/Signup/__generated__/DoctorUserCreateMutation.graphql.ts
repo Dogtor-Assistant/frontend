@@ -13,7 +13,7 @@ export type UserDoctorInput = {
     phoneNumber: string;
     webpage?: unknown | null;
     specialities: Array<string>;
-    offeredSlots: Array<OfferedSlotInput>;
+    offeredSlots: Array<OfferedSlotInput | null>;
 };
 export type AddressInput = {
     streetName: string;

@@ -13,6 +13,7 @@ import {
 import { useMutation } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
+import LoadingIndicator from 'LoadingIndicator';
 import StepOneForm from './Forms/StepOneForm';
 import StepThreeForm from './Forms/StepThreeFormDoc';
 import StepTwoForm from './Forms/StepTwoFormDoc';
@@ -37,13 +38,17 @@ const Doctor: FC = (): ReactElement => {
     const emptySpecial: string[] = [];
     const [specialities, setSpecialities] = useState(emptySpecial);
 
-    const [commit] = useMutation<DoctorUserCreateMutation>(graphql`
+    const [commit, isInFlight] = useMutation<DoctorUserCreateMutation>(graphql`
     mutation DoctorUserCreateMutation($input: UserDoctorInput!){
         createUserDoctor(input: $input) {
             id
         }
     }
     `);
+
+    if (isInFlight) {
+        return <LoadingIndicator />;
+    }
 
     const next = (): void => {
         setStep(prevStep => prevStep + 1);
@@ -55,13 +60,12 @@ const Doctor: FC = (): ReactElement => {
 
     const submit = (): void => {
         commit({
-            onCompleted(data) {
+            onCompleted(data, err) {
+                // TODO: Handle error function to return proper error help
+                console.log(err);
+
                 // TODO: Redirect user to landing user page + token
                 console.log(data);
-            },
-            onError(error) {
-                // TODO: Handle error function to return proper error help
-                console.log(error);
             },
             variables: {
                 'input': {
