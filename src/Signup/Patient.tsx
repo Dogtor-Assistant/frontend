@@ -6,6 +6,8 @@ import type { PayloadError } from 'relay-runtime';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
+    Alert,
+    AlertIcon,
     Center,
     Heading,
     Text,
@@ -28,6 +30,9 @@ const Patient: FC = (): ReactElement => {
     const [validFormOne, setValidFormOne] = useState(false);
     const [validFormTwo, setValidFormTwo] = useState(false);
     const [validFormThree, setValidFormThree] = useState(false);
+
+    const [alertEmail, setAlertEmail] = useState(false);
+    const [alertPhone, setAlertPhone] = useState(false);
 
     const [email, setEmail] = useState('');
     const [firstName, setFirstName] = useState('');
@@ -80,10 +85,15 @@ const Patient: FC = (): ReactElement => {
     };
 
     const handleError = (err: PayloadError[]) => {
-        console.log(err);
+        // Check for duplicate key errors
+        if (err[0].message.includes('email')) setAlertEmail(true);
+        else if (err[0].message.includes('phoneNumber')) setAlertPhone(true);
+        else setStep(-1);
     };
 
     const submit = (): void => {
+        setAlertEmail(false);
+        setAlertPhone(false);
         commit({
             onCompleted(data, err) {
                 if (err) handleError(err);
@@ -189,6 +199,18 @@ const Patient: FC = (): ReactElement => {
                         setSurgeries={setSurgeries} surgeries={surgeries}
                     />
                     <Nav back={back} lim={4} next={next} step={step} submit={submit} valid={true}/>
+                    { alertEmail &&
+                    <Alert status="error">
+                        <AlertIcon />
+                        The email you entered is taken!
+                    </Alert>
+                    }
+                    { alertPhone &&
+                    <Alert status="error">
+                        <AlertIcon />
+                        The phone number you entered is taken!
+                    </Alert>
+                    }
                 </VStack>
             </Center>
         );
@@ -196,8 +218,11 @@ const Patient: FC = (): ReactElement => {
     default:
         return (
             <Center>
-                <Heading>Patient Registration</Heading>
-                <Text>Error 500</Text>
+                <VStack>
+                    <Heading>Patient Registration</Heading>
+                    <Text>Error 500 - Sorry something went wrong</Text>
+                    <Text>Please try again later!</Text>
+                </VStack>
             </Center>
         );
     }
