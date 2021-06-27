@@ -20,6 +20,11 @@ import StepTwoForm from './Forms/StepTwoFormDoc';
 import Nav from './Nav';
 
 const Doctor: FC = (): ReactElement => {
+
+    const [validFormOne, setValidFormOne] = useState(false);
+    const [validFormTwo, setValidFormTwo] = useState(false);
+    const [validFormThree, setValidFormThree] = useState(false);
+
     const [email, setEmail] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -100,9 +105,9 @@ const Doctor: FC = (): ReactElement => {
                         lastName={lastName} password={password}
                         setEmail={setEmail} setFirstName={setFirstName}
                         setLastName={setLastName} setPassword={setPassword}
-
+                        setValidForm={setValidFormOne}
                     />
-                    <Nav back={back} lim={3} next={next} step={step} submit={submit}/>
+                    <Nav back={back} lim={3} next={next} step={step} submit={submit} valid={validFormOne}/>
                 </VStack>
             </Center>
         );
@@ -117,12 +122,12 @@ const Doctor: FC = (): ReactElement => {
                         city={city} phoneNumber={phoneNumber}
                         setCity={setCity} setPhoneNumber={setPhoneNumber}
                         setStreetName={setStreetName} setStreetNumber={setStreetNumber}
-                        setWebpage={setWebpage} setZipCode={setZipCode}
-                        streetName={streetName} streetNumber={streetNumber}
-                        webpage={webpage} zipCode={zipCode}
+                        setValidForm={setValidFormTwo} setWebpage={setWebpage}
+                        setZipCode={setZipCode} streetName={streetName}
+                        streetNumber={streetNumber} webpage={webpage} zipCode={zipCode}
 
                     />
-                    <Nav back={back} lim={3} next={next} step={step} submit={submit}/>
+                    <Nav back={back} lim={3} next={next} step={step} submit={submit} valid={validFormTwo}/>
                 </VStack>
             </Center>
         );
@@ -134,10 +139,10 @@ const Doctor: FC = (): ReactElement => {
                     <Heading>Doctor Registration</Heading>
                     <Heading size="md">Step 3</Heading>
                     <StepThreeForm
-                        setSlots={setSlots} setSpecialities={setSpecialities}
+                        setSlots={setSlots} setSpecialities={setSpecialities} setValidForm={setValidFormThree}
                         slots={slots} specialities={specialities}
                     />
-                    <Nav back={back} lim={3} next={next} step={step} submit={submit}/>
+                    <Nav back={back} lim={3} next={next} step={step} submit={submit} valid={validFormThree}/>
                 </VStack>
             </Center>
         );

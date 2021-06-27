@@ -1,6 +1,7 @@
 import type { Weekday } from '../__generated__/DoctorUserCreateMutation.graphql';
 import type { FC, ReactElement } from 'react';
 
+import { useEffect, useRef } from 'react';
 import React, { useState } from 'react';
 import {
     Box,
@@ -22,13 +23,14 @@ import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 type stepThreeFormProps = {
     setSlots: React.Dispatch<React.SetStateAction<{ day: Weekday, slotStart: string, slotStop: string }[]>>,
     setSpecialities: React.Dispatch<React.SetStateAction<string[]>>,
+    setValidForm: React.Dispatch<React.SetStateAction<boolean>>,
     slots: Array<{ day: Weekday, slotStart: string, slotStop: string }>,
     specialities: Array<string>,
 }
 
 const StepThreeForm: FC<stepThreeFormProps> =
 ({
-    setSlots, setSpecialities, slots, specialities,
+    setSlots, setSpecialities, setValidForm, slots, specialities,
 }): ReactElement => {
     const [specialityIn, setSpecialityIn] = useState('');
     const [dayIn, setDayIn] = useState(-1);
@@ -36,6 +38,13 @@ const StepThreeForm: FC<stepThreeFormProps> =
     const [stopIn, setStopIn] = useState('');
 
     const dayNamesArr = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    const [specialitiesError, setSpecialitiesError] = useState(false);
+    
+    useEffect(() => {
+        setValidForm(specialities.length >= 1);
+        setSpecialitiesError(specialities.length < 1);
+    }, [setValidForm, setSpecialitiesError, specialities]);
 
     // Add Slot
     const addSlot = () => {
@@ -231,6 +240,9 @@ const StepThreeForm: FC<stepThreeFormProps> =
                         })}
                         <Input
                             mt={6}
+                            onBlur={() => {
+                                setSpecialitiesError(specialities.length < 1);
+                            }}
                             onChange={event => {
                                 setSpecialityIn(event.target.value);
                             }}
@@ -246,7 +258,9 @@ const StepThreeForm: FC<stepThreeFormProps> =
                         >
                         Add Speciality
                         </Button>
-                        <FormHelperText>Please enter at least 1 speciality</FormHelperText>
+                        { specialitiesError &&
+                        <FormHelperText color="red.200">Please enter at least 1 speciality</FormHelperText>
+                        }
                     </FormControl>
                 </Box>
             </VStack>
