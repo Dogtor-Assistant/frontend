@@ -14,13 +14,17 @@ import { useMutation } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
 import LoadingIndicator from 'LoadingIndicator';
-import StepFourForm from './Forms/StepFourFormDoc';
+import StepFourForm from './Forms/StepFourFormPat';
 import StepOneForm from './Forms/StepOneForm';
 import StepThreeForm from './Forms/StepThreeFormPat';
 import StepTwoForm from './Forms/StepTwoFormPat';
 import Nav from './Nav';
 
 const Patient: FC = (): ReactElement => {
+    const [validFormOne, setValidFormOne] = useState(false);
+    const [validFormTwo, setValidFormTwo] = useState(false);
+    const [validFormThree, setValidFormThree] = useState(false);
+
     const [email, setEmail] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -38,7 +42,7 @@ const Patient: FC = (): ReactElement => {
     const [height, setHeight] = useState(NaN);
     const [weight, setWeight] = useState(NaN);
     const [gender, setGender] = useState(-1);
-    const [activityLvl, setActivityLvl] = useState(2);
+    const [activityLvl, setActivityLvl] = useState(-1);
     const [smoker, setSmoker] = useState(false);
 
     const emptyStrArray: string[] = [];
@@ -121,9 +125,9 @@ const Patient: FC = (): ReactElement => {
                         lastName={lastName} password={password}
                         setEmail={setEmail} setFirstName={setFirstName}
                         setLastName={setLastName} setPassword={setPassword}
-
+                        setValidForm={setValidFormOne}
                     />
-                    <Nav back={back} lim={4} next={next} step={step} submit={submit}/>
+                    <Nav back={back} lim={4} next={next} step={step} submit={submit} valid={validFormOne}/>
                 </VStack>
             </Center>
         );
@@ -139,11 +143,11 @@ const Patient: FC = (): ReactElement => {
                         phoneNumber={phoneNumber} setCity={setCity}
                         setInsurance={setInsurance} setPhoneNumber={setPhoneNumber}
                         setStreetName={setStreetName} setStreetNumber={setStreetNumber}
-                        setZipCode={setZipCode} streetName={streetName}
-                        streetNumber={streetNumber} zipCode={zipCode}
-
+                        setValidForm={setValidFormTwo} setZipCode={setZipCode}
+                        streetName={streetName} streetNumber={streetNumber}
+                        zipCode={zipCode}
                     />
-                    <Nav back={back} lim={4} next={next} step={step} submit={submit}/>
+                    <Nav back={back} lim={4} next={next} step={step} submit={submit} valid={validFormTwo}/>
                 </VStack>
             </Center>
         );
@@ -159,9 +163,10 @@ const Patient: FC = (): ReactElement => {
                         gender={gender} height={height}
                         setActivityLvl={setActivityLvl} setBirthDate={setBirthDate}
                         setGender={setGender} setHeight={setHeight} setSmoker={setSmoker}
-                        setWeight={setWeight} smoker={smoker} weight={weight}
+                        setValidForm={setValidFormThree} setWeight={setWeight} smoker={smoker}
+                        weight={weight}
                     />
-                    <Nav back={back} lim={4} next={next} step={step} submit={submit}/>
+                    <Nav back={back} lim={4} next={next} step={step} submit={submit} valid={validFormThree}/>
                 </VStack>
             </Center>
         );
@@ -178,7 +183,7 @@ const Patient: FC = (): ReactElement => {
                         setMedConditions={setMedConditions} setMedications={setMedications}
                         setSurgeries={setSurgeries} surgeries={surgeries}
                     />
-                    <Nav back={back} lim={4} next={next} step={step} submit={submit}/>
+                    <Nav back={back} lim={4} next={next} step={step} submit={submit} valid={true}/>
                 </VStack>
             </Center>
         );

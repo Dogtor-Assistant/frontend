@@ -2,6 +2,7 @@ import type { FC, ReactElement } from 'react';
 
 import React from 'react';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import {
     FormControl,
     FormHelperText,
@@ -14,6 +15,8 @@ import {
     Switch,
 } from '@chakra-ui/react';
 
+import validator from 'validator';
+
 type stepThreeFormProps = {
     setBirthDate: React.Dispatch<React.SetStateAction<Date>>,
     setHeight: React.Dispatch<React.SetStateAction<number>>,
@@ -21,6 +24,7 @@ type stepThreeFormProps = {
     setGender: React.Dispatch<React.SetStateAction<number>>,
     setActivityLvl: React.Dispatch<React.SetStateAction<number>>,
     setSmoker: React.Dispatch<React.SetStateAction<boolean>>,
+    setValidForm: React.Dispatch<React.SetStateAction<boolean>>,
     height: number,
     weight: number,
     gender: number,
@@ -30,14 +34,24 @@ type stepThreeFormProps = {
 
 const StepThreeForm: FC<stepThreeFormProps> =
 ({
-    setBirthDate, setHeight, setWeight, setGender, setActivityLvl, setSmoker,
+    setBirthDate, setHeight, setWeight, setGender, setActivityLvl, setSmoker, setValidForm,
     height, weight, gender, activityLvl, smoker,
 }): ReactElement => {
 
     const [birthDateTemp, setBirthDateTemp] = useState('');
+    const [birthDateError, setBirthDateError] = useState(false);
+
+    useEffect(() => {
+        if (birthDateTemp !== '')
+            setValidForm(validator.isDate(birthDateTemp, {
+                format: 'DD/MM/YYYY',
+                strictMode: true,
+            }));
+        else setValidForm(true);
+    }, [birthDateTemp, setValidForm]);
 
     const stringToDate = (date: string): Date => {
-        const values = date.split('.');
+        const values = date.split('/');
         return new Date(parseInt(values[2]), parseInt(values[1])-1, parseInt(values[0]));
     };
 
@@ -47,16 +61,27 @@ const StepThreeForm: FC<stepThreeFormProps> =
                 <FormLabel>Date of Birth</FormLabel>
                 <Input
                     onBlur={() => {
-                        setBirthDate(stringToDate(birthDateTemp));
+                        if (birthDateTemp !== '')
+                        {
+                            setBirthDateError(!validator.isDate(birthDateTemp, {
+                                format: 'DD/MM/YYYY',
+                                strictMode: true,
+                            }));
+                            setBirthDate(stringToDate(birthDateTemp));
+                        }
                     }}
                     onChange={event => {
                         setBirthDateTemp(event.target.value);
                     }}
-                    placeholder="dd.mm.yyyy"
+                    placeholder="dd/mm/yyyy"
                     type="text"
                     value={birthDateTemp}
                 />
-                <FormHelperText>Please enter your date of birth in the specified format dd.mm.yyyy</FormHelperText>
+                { birthDateError &&
+                <FormHelperText color="red.200">
+                    Please enter your date of birth in the specified format dd/mm/yyyy
+                </FormHelperText>
+                }
             </FormControl>
             <FormControl mt={6}>
                 <FormLabel>Gender</FormLabel>
