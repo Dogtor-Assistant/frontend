@@ -7,6 +7,7 @@ import {
     Button,
     Flex,
     FormControl,
+    FormHelperText,
     FormLabel,
     HStack,
     IconButton,
@@ -208,7 +209,7 @@ const StepThreeForm: FC<stepThreeFormProps> =
                     </Button>
                 </Box>
                 <Box>
-                    <FormControl>
+                    <FormControl isRequired>
                         <FormLabel mt={6}>Specialities</FormLabel>
                         {specialities.map((s, i) => {
                             return (
@@ -236,16 +237,17 @@ const StepThreeForm: FC<stepThreeFormProps> =
                             type="text"
                             value={specialityIn}
                         />
-                    </FormControl>
-                    <Button
-                        colorScheme="blue"
-                        leftIcon={<AddIcon />}
-                        mt={6}
-                        onClick={addSpeciality}
-                        variant="ghost"
-                    >
+                        <Button
+                            colorScheme="blue"
+                            leftIcon={<AddIcon />}
+                            mt={6}
+                            onClick={addSpeciality}
+                            variant="ghost"
+                        >
                         Add Speciality
-                    </Button>
+                        </Button>
+                        <FormHelperText>Please enter at least 1 speciality</FormHelperText>
+                    </FormControl>
                 </Box>
             </VStack>
         </div>

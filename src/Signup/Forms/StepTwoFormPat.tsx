@@ -33,7 +33,7 @@ const StepTwoForm: FC<stepTwoFormProps> =
 }): ReactElement => {
     return (
         <div>
-            <FormControl>
+            <FormControl isRequired>
                 <FormLabel>Street Name</FormLabel>
                 <Input
                     onChange={event => {
@@ -43,7 +43,7 @@ const StepTwoForm: FC<stepTwoFormProps> =
                     value={streetName}
                 />
             </FormControl>
-            <FormControl mt={6}>
+            <FormControl isRequired mt={6}>
                 <FormLabel>Street Number</FormLabel>
                 <Input
                     onChange={event => {
@@ -53,7 +53,7 @@ const StepTwoForm: FC<stepTwoFormProps> =
                     value={streetNumber}
                 />
             </FormControl>
-            <FormControl mt={6}>
+            <FormControl isRequired mt={6}>
                 <FormLabel>ZIP Code</FormLabel>
                 <Input
                     onChange={event => {
@@ -63,7 +63,7 @@ const StepTwoForm: FC<stepTwoFormProps> =
                     value={zipCode}
                 />
             </FormControl>
-            <FormControl my={6}>
+            <FormControl isRequired my={6}>
                 <FormLabel>City</FormLabel>
                 <Input
                     onChange={event => {
@@ -73,7 +73,7 @@ const StepTwoForm: FC<stepTwoFormProps> =
                     value={city}
                 />
             </FormControl>
-            <FormControl my={6}>
+            <FormControl isRequired my={6}>
                 <FormLabel>Phone Number</FormLabel>
                 <Input
                     onChange={event => {
@@ -83,7 +83,7 @@ const StepTwoForm: FC<stepTwoFormProps> =
                     value={phoneNumber}
                 />
             </FormControl>
-            <FormControl my={6}>
+            <FormControl isRequired my={6}>
                 <FormLabel>Insurance</FormLabel>
                 <RadioGroup
                     onChange={event => {

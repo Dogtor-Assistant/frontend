@@ -114,10 +114,10 @@ const StepFourForm: FC<stepFourFormProps> =
 
     return (
         <div>
-            <VStack align="left" mb={6}>
+            <VStack align="stretch" mb={6}>
                 <Box>
                     <FormControl>
-                        <FormLabel mt={6}>Allergies</FormLabel>
+                        <FormLabel>Allergies</FormLabel>
                         {allergies.map((s, i) => {
                             return (
                                 <Flex alignItems={'center'} key={i} mt={6} pl={4}>

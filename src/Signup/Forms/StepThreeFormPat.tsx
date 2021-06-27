@@ -4,6 +4,7 @@ import React from 'react';
 import { useState } from 'react';
 import {
     FormControl,
+    FormHelperText,
     FormLabel,
     HStack,
     Input,
@@ -43,7 +44,7 @@ const StepThreeForm: FC<stepThreeFormProps> =
     return (
         <div>
             <FormControl>
-                <FormLabel>BirthDate</FormLabel>
+                <FormLabel>Date of Birth</FormLabel>
                 <Input
                     onBlur={() => {
                         setBirthDate(stringToDate(birthDateTemp));
@@ -55,6 +56,7 @@ const StepThreeForm: FC<stepThreeFormProps> =
                     type="text"
                     value={birthDateTemp}
                 />
+                <FormHelperText>Please enter your date of birth in the specified format dd.mm.yyyy</FormHelperText>
             </FormControl>
             <FormControl mt={6}>
                 <FormLabel>Gender</FormLabel>

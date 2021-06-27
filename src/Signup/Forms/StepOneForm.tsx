@@ -20,7 +20,7 @@ const StepOneForm: FC<stepOneFormProps> =
 }): ReactElement => {
     return (
         <div>
-            <FormControl>
+            <FormControl isRequired>
                 <FormLabel>Email</FormLabel>
                 <Input
                     onChange={event => {
@@ -30,7 +30,7 @@ const StepOneForm: FC<stepOneFormProps> =
                     value={email}
                 />
             </FormControl>
-            <FormControl mt={6}>
+            <FormControl isRequired mt={6}>
                 <FormLabel>First Name</FormLabel>
                 <Input
                     onChange={event => {
@@ -40,7 +40,7 @@ const StepOneForm: FC<stepOneFormProps> =
                     value={firstName}
                 />
             </FormControl>
-            <FormControl mt={6}>
+            <FormControl isRequired mt={6}>
                 <FormLabel>Last Name</FormLabel>
                 <Input
                     onChange={event => {
@@ -50,7 +50,7 @@ const StepOneForm: FC<stepOneFormProps> =
                     value={lastName}
                 />
             </FormControl>
-            <FormControl my={6}>
+            <FormControl isRequired my={6}>
                 <FormLabel>Password</FormLabel>
                 <Input
                     onChange={event => {
