@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
@@ -12,9 +12,13 @@ import LoadingIndicator from 'LoadingIndicator';
 
 function SignupSuccess() {
     const history = useHistory();
+    const isFirstRun = useRef(true);
     
     useEffect(() => {
-        setInterval(() => history.push('/login'), 3000);
+        if (isFirstRun.current) {
+            isFirstRun.current = false;
+            setTimeout(() => { history.push('/login'); }, 3000);
+        }
     });
 
     return (
