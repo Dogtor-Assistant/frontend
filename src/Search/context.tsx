@@ -8,10 +8,10 @@ import React, {
     useState,
 } from 'react';
 
-type SearchArguments = {
-    query: string | null,
-    cities: string[] | null,
-    specialities: string[] | null,
+export type SearchArguments = {
+    readonly query: string | null,
+    readonly cities: readonly string[] | null,
+    readonly specialities: readonly string[] | null,
 }
 
 type ContextType = {
