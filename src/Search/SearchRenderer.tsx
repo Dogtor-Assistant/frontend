@@ -13,7 +13,9 @@ import { graphql } from 'babel-plugin-relay/macro';
 import Suspense from 'Suspense';
 import SearchResultsContainer from './SearchResultsContainer';
 
-import { useAppliedSearchArguments } from './context';
+import useSearchArguments from './useSearchArguments';
+
+import { useAppliedSearchArguments, useUpdate } from './context';
 
 type LoadedProps = {
     data: PreloadedQuery<SearchRendererQueryType>,
@@ -33,6 +35,7 @@ function LoadedSearchRenderer(props: LoadedProps) {
                     specialities: $specialities
                 ) {
                     id
+                    ...useSearchArguments_search
                     ...SearchResultsContainer_search
                 }
             }
@@ -45,6 +48,12 @@ function LoadedSearchRenderer(props: LoadedProps) {
     useEffect(() => {
         history.replace(`search?id=${id}`);
     }, [id, history]);
+
+    const update = useUpdate();
+    const searchArguments = useSearchArguments(data.search);
+    useEffect(() => {
+        update(searchArguments);
+    }, [searchArguments, update]);
 
     return (
         <SearchResultsContainer search={data.search}/>
