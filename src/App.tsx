@@ -7,6 +7,7 @@ import DebugMenu from 'DebugMenu';
 import Home from 'Home';
 import Login from 'Login';
 import Navbar from 'Navbar';
+import Signup from 'Signup';
 
 function App() {
     const themeColorName = useColorModeValue('white', 'gray.800');
@@ -33,6 +34,10 @@ function App() {
 
                         <Route path="/login">
                             <Login />
+                        </Route>
+
+                        <Route path="/signup">
+                            <Signup />
                         </Route>
                     </Switch>
                 </div>
