@@ -3,17 +3,14 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from "relay-runtime";
+import { FragmentRefs } from "relay-runtime";
 export type SearchFromIdQueryVariables = {
     searchId: string;
 };
 export type SearchFromIdQueryResponse = {
     readonly node: ({
         readonly __typename: "Search";
-        readonly scope: {
-            readonly query: string | null;
-            readonly cities: ReadonlyArray<string> | null;
-            readonly specialities: ReadonlyArray<string> | null;
-        };
+        readonly " $fragmentRefs": FragmentRefs<"SearchFromId_SearchRootFromFragment_search">;
     } | {
         /*This will never be '%other', but we need some
         value in case none of the concrete values match.*/
@@ -34,13 +31,21 @@ query SearchFromIdQuery(
   node(id: $searchId) {
     __typename
     ... on Search {
-      scope {
-        query
-        cities
-        specialities
-      }
+      ...SearchFromId_SearchRootFromFragment_search
     }
     id
+  }
+}
+
+fragment SearchFromId_SearchRootFromFragment_search on Search {
+  ...useSearchArguments_search
+}
+
+fragment useSearchArguments_search on Search {
+  scope {
+    cities
+    query
+    specialities
   }
 }
 */
@@ -66,45 +71,6 @@ v2 = {
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
-},
-v3 = {
-  "kind": "InlineFragment",
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "SearchScope",
-      "kind": "LinkedField",
-      "name": "scope",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "query",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "cities",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "specialities",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    }
-  ],
-  "type": "Search",
-  "abstractKey": null
 };
 return {
   "fragment": {
@@ -122,7 +88,18 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v3/*: any*/)
+          {
+            "kind": "InlineFragment",
+            "selections": [
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "SearchFromId_SearchRootFromFragment_search"
+              }
+            ],
+            "type": "Search",
+            "abstractKey": null
+          }
         ],
         "storageKey": null
       }
@@ -152,21 +129,59 @@ return {
             "name": "id",
             "storageKey": null
           },
-          (v3/*: any*/)
+          {
+            "kind": "InlineFragment",
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "SearchScope",
+                "kind": "LinkedField",
+                "name": "scope",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "cities",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "query",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "specialities",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "type": "Search",
+            "abstractKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "e1a20239223e8d8ee8fb85d0710eb453",
+    "cacheID": "e5081a23653b676325ea254a802c2490",
     "id": null,
     "metadata": {},
     "name": "SearchFromIdQuery",
     "operationKind": "query",
-    "text": "query SearchFromIdQuery(\n  $searchId: ID!\n) {\n  node(id: $searchId) {\n    __typename\n    ... on Search {\n      scope {\n        query\n        cities\n        specialities\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query SearchFromIdQuery(\n  $searchId: ID!\n) {\n  node(id: $searchId) {\n    __typename\n    ... on Search {\n      ...SearchFromId_SearchRootFromFragment_search\n    }\n    id\n  }\n}\n\nfragment SearchFromId_SearchRootFromFragment_search on Search {\n  ...useSearchArguments_search\n}\n\nfragment useSearchArguments_search on Search {\n  scope {\n    cities\n    query\n    specialities\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '026b056916bb33214b244035215c6802';
+(node as any).hash = '7b3d0413d9d6e781f5166e75f7b6d2df';
 export default node;

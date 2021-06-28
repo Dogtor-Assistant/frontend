@@ -1,3 +1,6 @@
+import type {
+    SearchFromId_SearchRootFromFragment_search$key,
+} from './__generated__/SearchFromId_SearchRootFromFragment_search.graphql';
 import type { SearchFromIdQuery as SearchFromIdQueryType } from './__generated__/SearchFromIdQuery.graphql';
 import type { ErrorBoundary } from 'react-error-boundary';
 import type { PreloadedQuery } from 'react-relay';
@@ -6,19 +9,42 @@ import SearchFromIdQuery from './__generated__/SearchFromIdQuery.graphql';
 
 import React, { useEffect, useRef } from 'react';
 
-import { usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { useFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
 import Suspense from 'Suspense';
+import SearchRoot from './SearchRoot';
 
-import { SearchContextProvider } from './context';
+import useSearchArguments from './useSearchArguments';
 
 type LoadedProps = {
     data: PreloadedQuery<SearchFromIdQueryType>,
 }
 
+type SearchProps = {
+    search: SearchFromId_SearchRootFromFragment_search$key,
+}
+
 type Props = {
     searchId: string,
+}
+
+function SearchRootFromFragment(props: SearchProps) {
+    const search = useFragment(
+        graphql`
+            fragment SearchFromId_SearchRootFromFragment_search on Search {
+                ...useSearchArguments_search
+            }
+        `,
+        props.search,
+    );
+
+    const initialArguments = useSearchArguments(search);
+    return (
+        <SearchRoot
+            initial={initialArguments}
+        />
+    );
 }
 
 function LoadedSearchFromId(props: LoadedProps) {
@@ -28,11 +54,7 @@ function LoadedSearchFromId(props: LoadedProps) {
                 node(id: $searchId) {
                     __typename
                     ... on Search {
-                        scope {
-                            query
-                            cities
-                            specialities
-                        }
+                        ...SearchFromId_SearchRootFromFragment_search
                     }
                 }
             }
@@ -44,22 +66,8 @@ function LoadedSearchFromId(props: LoadedProps) {
         return null;
     }
 
-    const {
-        query,
-        cities,
-        specialities,
-    } = data.node.scope;
-
     return (
-        <SearchContextProvider
-            initial={{
-                cities,
-                query,
-                specialities,
-            }}
-        >
-            
-        </SearchContextProvider>
+        <SearchRootFromFragment search={data.node}/>
     );
 }
 
