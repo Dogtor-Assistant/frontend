@@ -5,7 +5,9 @@ import React from 'react';
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
-import SearchResultsList from './SearchResultsList';
+import Empty from './Empty';
+import Results from './Results';
+import Suggestions from './Suggestions';
 
 import useResultMode from './useResultMode';
 
@@ -18,7 +20,8 @@ function SearchResultsContainer(props: Props) {
         graphql`
             fragment SearchResultsContainer_search on Search {
                 ...useResultMode_search
-                ...SearchResultsList_search
+                ...Results_search
+                ...Suggestions_search
             }
         `,
         props.search,
@@ -28,11 +31,11 @@ function SearchResultsContainer(props: Props) {
 
     switch (mode) {
     case 'empty':
-        return <p>Empty Results</p>;
+        return <Empty />;
     case 'suggestions':
-        return <p>Here go the suggestions</p>;
+        return <Suggestions search={search} />;
     case 'results':
-        return <SearchResultsList search={search}/>;
+        return <Results search={search} />;
     }
 }
 

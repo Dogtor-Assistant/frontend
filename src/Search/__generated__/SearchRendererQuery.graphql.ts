@@ -41,9 +41,14 @@ fragment DoctorResultRow_doctor on Doctor {
   rating
 }
 
+fragment Results_search on Search {
+  ...SearchResultsList_search
+}
+
 fragment SearchResultsContainer_search on Search {
   ...useResultMode_search
-  ...SearchResultsList_search
+  ...Results_search
+  ...Suggestions_search
 }
 
 fragment SearchResultsList_search on Search {
@@ -62,6 +67,13 @@ fragment SearchResultsList_search on Search {
     }
   }
   id
+}
+
+fragment Suggestions_search on Search {
+  suggestions {
+    cities
+    specialities
+  }
 }
 
 fragment useResultMode_search on Search {
@@ -374,12 +386,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ad5c1dd92488b496e86fd5007a647ed0",
+    "cacheID": "7dd5b22d30d6ff20f82efc5dd7a2b243",
     "id": null,
     "metadata": {},
     "name": "SearchRendererQuery",
     "operationKind": "query",
-    "text": "query SearchRendererQuery(\n  $query: String\n  $cities: [String!]\n  $specialities: [String!]\n) {\n  search(query: $query, cities: $cities, specialities: $specialities) {\n    id\n    ...useSearchArguments_search\n    ...SearchResultsContainer_search\n  }\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  rating\n}\n\nfragment SearchResultsContainer_search on Search {\n  ...useResultMode_search\n  ...SearchResultsList_search\n}\n\nfragment SearchResultsList_search on Search {\n  results(first: 20) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment useResultMode_search on Search {\n  suggestions {\n    specialities\n    cities\n  }\n  firstResult: results(first: 1) {\n    edges {\n      __typename\n    }\n  }\n}\n\nfragment useSearchArguments_search on Search {\n  scope {\n    cities\n    query\n    specialities\n  }\n}\n"
+    "text": "query SearchRendererQuery(\n  $query: String\n  $cities: [String!]\n  $specialities: [String!]\n) {\n  search(query: $query, cities: $cities, specialities: $specialities) {\n    id\n    ...useSearchArguments_search\n    ...SearchResultsContainer_search\n  }\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  rating\n}\n\nfragment Results_search on Search {\n  ...SearchResultsList_search\n}\n\nfragment SearchResultsContainer_search on Search {\n  ...useResultMode_search\n  ...Results_search\n  ...Suggestions_search\n}\n\nfragment SearchResultsList_search on Search {\n  results(first: 20) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment Suggestions_search on Search {\n  suggestions {\n    cities\n    specialities\n  }\n}\n\nfragment useResultMode_search on Search {\n  suggestions {\n    specialities\n    cities\n  }\n  firstResult: results(first: 1) {\n    edges {\n      __typename\n    }\n  }\n}\n\nfragment useSearchArguments_search on Search {\n  scope {\n    cities\n    query\n    specialities\n  }\n}\n"
   }
 };
 })();

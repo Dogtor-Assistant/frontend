@@ -5,7 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type SearchResultsContainer_search = {
-    readonly " $fragmentRefs": FragmentRefs<"useResultMode_search" | "SearchResultsList_search">;
+    readonly " $fragmentRefs": FragmentRefs<"useResultMode_search" | "Results_search" | "Suggestions_search">;
     readonly " $refType": "SearchResultsContainer_search";
 };
 export type SearchResultsContainer_search$data = SearchResultsContainer_search;
@@ -30,11 +30,16 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "SearchResultsList_search"
+      "name": "Results_search"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "Suggestions_search"
     }
   ],
   "type": "Search",
   "abstractKey": null
 };
-(node as any).hash = '1c7d51956b7dccf98e147f6407b7c0a1';
+(node as any).hash = '1aa924562782ba353d9f846f639db2bb';
 export default node;
