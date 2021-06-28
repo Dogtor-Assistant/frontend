@@ -1,7 +1,12 @@
 
 import type { ReactNode } from 'react';
 
-import React, { createContext, useCallback, useState } from 'react';
+import React, {
+    createContext,
+    useCallback,
+    useContext,
+    useState,
+} from 'react';
 
 type SearchArguments = {
     query: string | null,
@@ -63,4 +68,36 @@ export function SearchContextProvider({ initial, children }: Props) {
             {children}
         </Context.Provider>
     );
+}
+
+export function useAppliedSearchArguments() {
+    const { applied } = useContext(Context);
+    return applied;
+}
+
+export function useCurrentSearchArguments() {
+    const { current } = useContext(Context);
+    return current;
+}
+
+export function useUpdate() {
+    const { update } = useContext(Context);
+    return update;
+}
+
+export function useApply() {
+    const { apply } = useContext(Context);
+    return apply;
+}
+
+export function useForcedUpdate() {
+    const { apply, update } = useContext(Context);
+    const forcedUpdate = useCallback(
+        (partial: Partial<SearchArguments>) => {
+            update(partial);
+            apply();
+        },
+        [update, apply],
+    );
+    return forcedUpdate;
 }
