@@ -50,10 +50,13 @@ function LoadedSearchRenderer(props: LoadedProps) {
     }, [id, history]);
 
     const update = useUpdate();
+    const appliedArguments = useAppliedSearchArguments();
     const searchArguments = useSearchArguments(data.search);
     useEffect(() => {
-        update(searchArguments);
-    }, [searchArguments, update]);
+        if (appliedArguments.query !== searchArguments.query) {
+            update(searchArguments);
+        }
+    }, [searchArguments, update, appliedArguments]);
 
     return (
         <SearchResultsContainer search={data.search}/>
