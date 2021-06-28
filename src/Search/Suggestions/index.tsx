@@ -1,9 +1,19 @@
 import type { Suggestions_search$key } from './__generated__/Suggestions_search.graphql';
 
 import React from 'react';
+import {
+    Button,
+    Container,
+    Text,
+    VStack,
+} from '@chakra-ui/react';
 
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
+
+import { useForcedUpdate } from 'Search/context';
+import CitiesSuggestions from './CitiesSuggestions';
+import SpecialitiesSuggestions from './SpecialitiesSuggestions';
 
 type Props = {
     search: Suggestions_search$key,
@@ -14,20 +24,33 @@ function Suggestions(props: Props) {
         graphql`
             fragment Suggestions_search on Search {
                 suggestions {
-                    cities
-                    specialities
+                    ...SpecialitiesSuggestions_suggestions
+                    ...CitiesSuggestions_suggestions
                 }
             }
         `,
         props.search,
     );
 
+    const update = useForcedUpdate();
+
     return (
-        <p>
-            Suggestions:
-            {search.suggestions.specialities?.join(', ') ?? 'No Suggested Speciality'}
-            {search.suggestions.cities?.join(', ') ?? 'No Suggested City'}
-        </p>
+        <Container>
+            <VStack align="left" w="80%">
+                <Text>
+                    Suggestions
+                </Text>
+                <SpecialitiesSuggestions suggestions={search.suggestions} />
+                <CitiesSuggestions suggestions={search.suggestions} />
+                <Button
+                    onClick={() => {
+                        update({ query: null });
+                    }}
+                >
+                    Search
+                </Button>
+            </VStack>
+        </Container>
     );
 }
 
