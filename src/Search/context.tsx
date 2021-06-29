@@ -18,8 +18,7 @@ export type SearchArguments = {
 type ContextType = {
     applied: SearchArguments,
     current: SearchArguments,
-    apply: () => void,
-    update: (partial: Partial<SearchArguments>) => void,
+    update: (partial: Partial<SearchArguments>, force?: true) => void,
 }
 
 const emptySearchArguments: SearchArguments = {
@@ -30,7 +29,6 @@ const emptySearchArguments: SearchArguments = {
 
 const Context = createContext<ContextType>({
     applied: emptySearchArguments,
-    apply: () => { /* np-op */},
     current: emptySearchArguments,
     update: () => { /* np-op */},
 });
@@ -44,24 +42,21 @@ export function SearchContextProvider({ initial, children }: Props) {
     const [applied, setApplied] = useState(initial ?? emptySearchArguments);
     const [current, setCurrent] = useState(initial ?? emptySearchArguments);
 
-    const update = useCallback((partial: Partial<SearchArguments>) => {
-        setCurrent(value => {
-            return {
-                ...value,
-                ...partial,
-            };
-        });
-    }, [setCurrent]);
-
-    const apply = useCallback(() => {
-        setApplied(current);
-    }, [setApplied, current]);
+    const update = useCallback((partial: Partial<SearchArguments>, force?: true) => {
+        const value = {
+            ...current,
+            ...partial,
+        };
+        setCurrent(value);
+        if (force) {
+            setApplied(value);
+        }
+    }, [current, setCurrent, setApplied]);
 
     return (
         <Context.Provider
             value={{
                 applied,
-                apply,
                 current,
                 update,
             }}
@@ -84,23 +79,6 @@ export function useCurrentSearchArguments() {
 export function useUpdate() {
     const { update } = useContext(Context);
     return update;
-}
-
-export function useApply() {
-    const { apply } = useContext(Context);
-    return apply;
-}
-
-export function useForcedUpdate() {
-    const { apply, update } = useContext(Context);
-    const forcedUpdate = useCallback(
-        (partial: Partial<SearchArguments>) => {
-            update(partial);
-            apply();
-        },
-        [update, apply],
-    );
-    return forcedUpdate;
 }
 
 type MultiSelectFilterHookType<T> = [

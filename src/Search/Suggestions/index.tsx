@@ -11,7 +11,7 @@ import {
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
-import { useAppliedSearchArguments, useForcedUpdate } from 'Search/context';
+import { useAppliedSearchArguments, useUpdate } from 'Search/context';
 import CitiesSuggestions from './CitiesSuggestions';
 import SpecialitiesSuggestions from './SpecialitiesSuggestions';
 
@@ -33,7 +33,7 @@ function Suggestions(props: Props) {
     );
 
     const { query } = useAppliedSearchArguments();
-    const update = useForcedUpdate();
+    const update = useUpdate();
 
     return (
         <Container>
@@ -49,7 +49,7 @@ function Suggestions(props: Props) {
                 <CitiesSuggestions suggestions={search.suggestions} />
                 <Button
                     onClick={() => {
-                        update({ query: null });
+                        update({ query: null }, true);
                     }}
                 >
                     Search
