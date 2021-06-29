@@ -11,7 +11,7 @@ import {
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
-import { useForcedUpdate } from 'Search/context';
+import { useAppliedSearchArguments, useForcedUpdate } from 'Search/context';
 import CitiesSuggestions from './CitiesSuggestions';
 import SpecialitiesSuggestions from './SpecialitiesSuggestions';
 
@@ -32,13 +32,18 @@ function Suggestions(props: Props) {
         props.search,
     );
 
+    const { query } = useAppliedSearchArguments();
     const update = useForcedUpdate();
 
     return (
         <Container>
             <VStack align="left" w="80%">
-                <Text>
-                    Suggestions
+                <Text fontSize="3xl">
+                    Hmmm...
+                </Text>
+                <Text fontSize="xl">
+                    Sorry, we could not find any doctors by searching for &quot;{query}&quot;.
+                    Please let us help with that. Here are a couple of things we can help you with:
                 </Text>
                 <SpecialitiesSuggestions suggestions={search.suggestions} />
                 <CitiesSuggestions suggestions={search.suggestions} />
