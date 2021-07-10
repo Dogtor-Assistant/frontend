@@ -76,9 +76,10 @@ const CustomModal = ({
                 <ModalCloseButton />
                 <ModalHeader>
                     {
-                        `Appointment ${ (typeof eventType.start === 'string') ?
-                            eventType.start : ''}-${typeof eventType.end === 'string' ?
-                            eventType.end : ''}`
+                        `Appointment ${(typeof eventType.start === 'string' && eventType.start.length > 6) ?
+                            eventType.start.split('T')[1].substring(0, 5) : ''}-
+                        ${(typeof eventType.end === 'string' && eventType.end.length > 6) ?
+            eventType.end.split('T')[1].substring(0, 5) : ''}`
                     }
                 </ModalHeader>
                 <Divider/>
