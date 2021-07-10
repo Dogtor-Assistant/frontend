@@ -21,9 +21,6 @@ import { useFirstName, useIsDoctor } from 'user';
 
 function App() {
 
-    const isDoctor = useIsDoctor();
-    const firstname = useFirstName();
-    const isLoggedIn = useIsLoggedIn();
     const themeColorName = useColorModeValue('white', 'gray.800');
     const themeColor = `var(--chakra-colors-${themeColorName})`;
     useMetaTags({
