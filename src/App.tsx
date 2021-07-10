@@ -1,15 +1,29 @@
 import React from 'react';
 import useMetaTags from 'react-metatags-hook';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+    BrowserRouter as Router,
+    Redirect,
+    Route,
+    Switch,
+} from 'react-router-dom';
 import { useColorModeValue } from '@chakra-ui/color-mode';
 
 import DebugMenu from 'DebugMenu';
 import Home from 'Home';
 import Login from 'Login';
 import Navbar from 'Navbar';
+import Calendar from 'Scheduler/Calendar';
 import Signup from 'Signup';
+import SchedulerRoute from './SchedulerRoute';
+
+import { useIsLoggedIn } from 'authentication';
+import { useFirstName, useIsDoctor } from 'user';
 
 function App() {
+
+    const isDoctor = useIsDoctor();
+    const firstname = useFirstName();
+    const isLoggedIn = useIsLoggedIn();
     const themeColorName = useColorModeValue('white', 'gray.800');
     const themeColor = `var(--chakra-colors-${themeColorName})`;
     useMetaTags({
@@ -39,6 +53,9 @@ function App() {
                         <Route path="/signup">
                             <Signup />
                         </Route>
+
+                        <SchedulerRoute component={Calendar} exact path="/scheduler" />
+
                     </Switch>
                 </div>
             </Router>

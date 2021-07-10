@@ -14,6 +14,7 @@ export type userQueryResponse = {
         } | null;
         readonly doctorProfile: {
             readonly __typename: string;
+            readonly id: string;
         } | null;
     } | null;
 };
@@ -72,12 +73,19 @@ v3 = {
   "storageKey": null
 },
 v4 = [
-  (v3/*: any*/)
-],
-v5 = [
   (v3/*: any*/),
   (v0/*: any*/)
-];
+],
+v5 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Doctor",
+  "kind": "LinkedField",
+  "name": "doctorProfile",
+  "plural": false,
+  "selections": (v4/*: any*/),
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -103,19 +111,12 @@ return {
             "kind": "LinkedField",
             "name": "patientProfile",
             "plural": false,
-            "selections": (v4/*: any*/),
+            "selections": [
+              (v3/*: any*/)
+            ],
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Doctor",
-            "kind": "LinkedField",
-            "name": "doctorProfile",
-            "plural": false,
-            "selections": (v4/*: any*/),
-            "storageKey": null
-          }
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
@@ -147,19 +148,10 @@ return {
             "kind": "LinkedField",
             "name": "patientProfile",
             "plural": false,
-            "selections": (v5/*: any*/),
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Doctor",
-            "kind": "LinkedField",
-            "name": "doctorProfile",
-            "plural": false,
-            "selections": (v5/*: any*/),
-            "storageKey": null
-          }
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
@@ -175,5 +167,5 @@ return {
   }
 };
 })();
-(node as any).hash = '0432c674ff5e07987083fcd8e5df76e2';
+(node as any).hash = '892dd7f209a9e75bbb33581eab4c04ec';
 export default node;

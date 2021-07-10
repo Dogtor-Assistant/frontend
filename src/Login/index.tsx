@@ -14,8 +14,10 @@ import {
 } from '@chakra-ui/react';
 
 import { useIsLoggedIn, useIsLoggingIn, useLogin } from 'authentication';
+import { useIsDoctor } from 'user';
 
 function Login() {
+    const isDoctor = useIsDoctor();
     const isLoggedIn = useIsLoggedIn();
     const isLoggingIn = useIsLoggingIn();
     const loginImpl = useLogin();
@@ -37,9 +39,15 @@ function Login() {
 
     useEffect(() => {
         if (isLoggedIn) {
-            history.push('/');
+            
+            if(isDoctor) {
+                history.push('/scheduler');
+            }else{
+                history.push('/');
+            }
         }
-    }, [isLoggedIn, history]);
+        
+    }, [isLoggedIn, history, isDoctor]);
 
     return (
         <Center>
