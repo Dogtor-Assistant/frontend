@@ -37,7 +37,7 @@ type AppointmentType = {
         },
 
     },
-    onClose: ()=>void, //UseDisclosureProps['onClose'],
+    onClose: ()=>void,
 }
 
 const AppointmentDone = ({ event, onClose }:AppointmentType) => {

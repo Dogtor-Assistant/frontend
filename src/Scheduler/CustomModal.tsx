@@ -23,8 +23,8 @@ import {
 } from '@chakra-ui/react';
 import { CalendarIcon } from '@chakra-ui/icons';
 
-// import AppointmentDelete from './AppointmentDelete';
-// import AppointmentDone from './AppointmentDone';
+import AppointmentDelete from './AppointmentDelete';
+import AppointmentDone from './AppointmentDone';
 // import AppointmentFollowup from './AppointmentFollowup';
 
 type Props = {
@@ -155,8 +155,8 @@ const CustomModal = ({
                         Follow up
                         </Button>
                         {/* <AppointmentFollowup/> */}
-                        {/* <AppointmentDone event={eventType} onClose={handleOnCloseDone}/>
-                        <AppointmentDelete event={eventType} onClose={handleOnCloseDelete}/> */}
+                        <AppointmentDone event={eventType} onClose={handleOnCloseDone}/>
+                        <AppointmentDelete event={eventType} onClose={handleOnCloseDelete}/>
                     </ButtonGroup>
                 </ModalFooter>
             </ModalContent>
