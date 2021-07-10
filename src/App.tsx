@@ -1,11 +1,6 @@
 import React from 'react';
 import useMetaTags from 'react-metatags-hook';
-import {
-    BrowserRouter as Router,
-    Redirect,
-    Route,
-    Switch,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { useColorModeValue } from '@chakra-ui/color-mode';
 
 import DebugMenu from 'DebugMenu';
@@ -15,9 +10,6 @@ import Navbar from 'Navbar';
 import Calendar from 'Scheduler/Calendar';
 import Signup from 'Signup';
 import SchedulerRoute from './SchedulerRoute';
-
-import { useIsLoggedIn } from 'authentication';
-import { useFirstName, useIsDoctor } from 'user';
 
 function App() {
 

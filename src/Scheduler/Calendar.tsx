@@ -18,39 +18,40 @@ import { usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
 import Suspense from 'Suspense';
+import CustomModal from './CustomModal';
 
 import { useDoctorId } from 'user';
 
 type LoadedProps = {
-data: PreloadedQuery<CalendarQueryType>,
+    data: PreloadedQuery<CalendarQueryType>,
 
 }
 
 type Props = {
-eventType:{
-    id:string,
-    title: string,
-    start: string | number | Date | number[],
-    end: string | number | Date | number[],
-    lastName: string,
-    firstName: string,
-    patient: {
-        activityLevel: ActivityLevel,
-        address: {
-            city: string,
-            streetName: string,
-            streetNumber: number,
-            zipCode: number,
+    eventType:{
+        id:string,
+        title: string,
+        start: string | number | Date | number[],
+        end: string | number | Date | number[],
+        lastName: string,
+        firstName: string,
+        patient: {
+            activityLevel: ActivityLevel,
+            address: {
+                city: string,
+                streetName: string,
+                streetNumber: number,
+                zipCode: number,
+            },
+            firstname: string,
+            gender: Gender,
+            height: number,
+            id: string,
+            isSmoker: boolean,
+            lastname: string,
+            surgeries: [string],
+            weight: number,
         },
-        firstname: string,
-        gender: Gender,
-        height: number,
-        id: string,
-        isSmoker: boolean,
-        lastname: string,
-        surgeries: [string],
-        weight: number,
-    },
 
     },
 }
@@ -124,41 +125,57 @@ function LoadedCalendar(props: LoadedProps) {
 
     console.log(selectedEvent);
 
+    const handleFollowupClick = () => {
+        onOpenFollowupModal();
+        /** handle this shit */
+    };
+    const handleOnCloseDone = () => {
+        setEvents(events.filter(e => e.id !== selectedEvent.id));
+        onClose();
+    };
+
+    const handleOnCloseDelete = () => {
+        setEvents(events.filter(e => e.id !== selectedEvent.id));
+        onClose();
+    };
+
+    console.log(selectedEvent);
+
     const data = usePreloadedQuery(
         graphql`
         query CalendarQuery($docId:ID!) {
                 node(id:$docId){
-                ...on Doctor{
-                    appointments {
-                        id
-                        patient{
+                    ...on Doctor{
+                        appointments {
                             id
-                            firstname
-                            lastname
-                            surgeries
-                            isSmoker
-                            address{
-                                city
-                                zipCode
-                                streetName
-                                streetNumber
-                            }
-                            gender
-                            height
-                            weight
-                            activityLevel
+                            patient{
+                                id
+                                firstname
+                                lastname
+                                surgeries
+                                isSmoker
+                                address{
+                                    city
+                                    zipCode
+                                    streetName
+                                    streetNumber
+                                }
+                                gender
+                                height
+                                weight
+                                activityLevel
 
+                            }
+                            expectedTime{
+                                start
+                                duration
+                            }
+                            actualTime{
+                                start
+                                duration
+                            }
+                            isDone
                         }
-                        expectedTime{
-                            start
-                            duration
-                        }
-                        actualTime{
-                            start
-                            duration
-                        }
-                        isDone
-                    }
 
                     }
                 }
@@ -218,6 +235,12 @@ function LoadedCalendar(props: LoadedProps) {
                 ]}
                 schedulerLicenseKey='GPL-My-Project-Is-Open-Source'
             />
+            <CustomModal eventType={selectedEvent}
+                handleFollowupClick={handleFollowupClick}
+                handleOnCloseDelete={handleOnCloseDelete}
+                handleOnCloseDone={handleOnCloseDone}
+                isOpen={isOpen}
+                onClose={onClose}/>
         </Container>
     );
 }
