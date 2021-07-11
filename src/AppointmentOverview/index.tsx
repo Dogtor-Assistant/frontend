@@ -63,7 +63,6 @@ function AppointmentOverview() {
 function Overview() {
     const doctor = useState('Kate');
     const date = useState('19.02.2020 13:45');
-    const services = useState(['A', 'B', 'C']);
 
     return (
         <Container maxW="container.l">
@@ -233,10 +232,10 @@ function ShowServices(services: string[]) {
         <HStack spacing={4}>
             {['A', 'B', 'C'].map(value => (
                 <Tag
-                    key={value}
                     borderRadius="full"
-                    variant="solid"
                     colorScheme="green"
+                    key={value}
+                    variant="solid"
                 >
                     <TagLabel>{value}</TagLabel>
                     <TagCloseButton />
@@ -252,7 +251,7 @@ function SelectServices() {
 
     return (
         <Center>
-            <IconButton aria-label="Edit DateTime" onClick={onOpen} color="green.300" icon={<AddIcon />} size="sm" />
+            <IconButton aria-label="Edit DateTime" color="green.300" icon={<AddIcon />} onClick={onOpen} size="sm" />
             <Drawer
                 isOpen={isOpen}
                 onClose={onClose}
@@ -268,7 +267,7 @@ function SelectServices() {
                     </DrawerBody>
 
                     <DrawerFooter>
-                        <Button variant="outline" mr={3} onClick={onClose}>
+                        <Button mr={3} onClick={onClose} variant="outline">
                         Cancel
                         </Button>
                         <Button colorScheme="green">Save</Button>
@@ -284,7 +283,7 @@ function SelectDate() {
 
     return (
         <Center>
-            <IconButton aria-label="Edit DateTime" onClick={onOpen} color="green.300" icon={<EditIcon />} size="sm" />
+            <IconButton aria-label="Edit DateTime" color="green.300" icon={<EditIcon />} onClick={onOpen} size="sm" />
             <Drawer
                 isOpen={isOpen}
                 onClose={onClose}
@@ -300,7 +299,7 @@ function SelectDate() {
                     </DrawerBody>
 
                     <DrawerFooter>
-                        <Button variant="outline" mr={3} onClick={onClose}>
+                        <Button mr={3} onClick={onClose} variant="outline">
                         Cancel
                         </Button>
                         <Button bg="green">Save</Button>
