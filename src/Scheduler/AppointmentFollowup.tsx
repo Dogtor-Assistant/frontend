@@ -1,9 +1,29 @@
 import type { ActivityLevel, Gender } from '../Signup/__generated__/PatientUserCreateMutation.graphql';
 import type { AppointmentFollowupMutation } from './__generated__/AppointmentFollowupMutation.graphql';
 
-import React from 'react';
-import { Button } from '@chakra-ui/button';
-import { AddIcon } from '@chakra-ui/icons';
+import React, { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import {
+    Box,
+    Button,
+    Divider,
+    Drawer,
+    DrawerBody,
+    DrawerCloseButton,
+    DrawerContent,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerOverlay,
+    Flex,
+    FormLabel,
+    IconButton,
+    Select,
+    Spacer,
+    Stack,
+    Text,
+    Textarea,
+} from '@chakra-ui/react';
+import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useToast } from '@chakra-ui/toast';
 
 import { useMutation } from 'react-relay';
@@ -39,6 +59,7 @@ type AppointmentType = {
         },
 
     },
+    
     onClose: ()=>void,
     onCloseFollowupModal: ()=>void,
 
@@ -48,12 +69,19 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
 
     const toast = useToast();
 
+    const [startDate, setStartDate] = useState(new Date());
+    const [notes, setNotes] = useState('');
+    const [serviceSelected, setServiceSelected] = useState('');
+    const [servicesAdded, setServicesAdded] = useState(['']);
+    const [services, setServices] = useState(['service1', 'service2']);
     const [commit, isInFlight] = useMutation<AppointmentFollowupMutation>(graphql`
     mutation AppointmentFollowupMutation($followupInput: FollowupInput!){
         assignFollowup(followupInput: $followupInput)
         }
     `);
-
+    console.log(servicesAdded);
+    console.log(notes);
+    console.log(startDate);
     const handleFollowupClick = (): void => {
         const result = confirm('Confirm to assign a follow up!');
         if (result) {
@@ -62,18 +90,18 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
                     if(assignFollowup && onClose && onCloseFollowupModal) {
                         
                         toast({
-                            description: 'Appointment marked as Done and been saved.',
+                            description: 'A followup has been saved.',
                             duration: 9000,
                             isClosable: true,
                             status: 'success',
-                            title: 'Appointment marked as Done.',
+                            title: 'Successfully.',
                         });
                         onClose();
                         onCloseFollowupModal();
                         
                     }else{
                         toast({
-                            description: 'Appointment could not be marked as Done.',
+                            description: 'Could not save followup.',
                             duration: 9000,
                             isClosable: true,
                             status: 'error',
@@ -83,10 +111,10 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
                 },
                 variables: {
                     'followupInput': {
-                        doctorNotes:'',
+                        doctorNotes: notes, //done
                         /** here goes the input */
                         doctorRef: '',
-                        patientRef: '',
+                        patientRef: event.patient.id, //done
                         services: [{
                             serviceId:'',
                             serviceName: '',
@@ -97,16 +125,107 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
             });
         }
     };
+
+    const handleAddService = () => {
+        if (serviceSelected === '') {
+            return;
+        }
+        const newServicesAdded = [...servicesAdded.filter(s => s), serviceSelected && serviceSelected];
+        setServicesAdded(newServicesAdded);
+        setServiceSelected('');
+    };
+
+    const handleRemoveService = (i: number) => {
+        const removedArr = [...servicesAdded].filter(s => servicesAdded.indexOf(s) !== i);
+        setServicesAdded(removedArr);
+    };
     return (
         isInFlight ? <LoadingIndicator /> :
-            <Button
-                colorScheme='green'
-                leftIcon={<AddIcon />}
-                mr={3}
-                onClick={handleFollowupClick}
-            >
-            Save Followup
-            </Button>
+            <DrawerContent>
+                <DrawerCloseButton />
+                <DrawerHeader>Create new followup</DrawerHeader>
+                <DrawerBody>
+                    <Stack spacing='24px'>
+
+                        <Box>
+                            <FormLabel htmlFor='doctor'>Select Doctor</FormLabel>
+                            <Select defaultValue='segun' id='doctor'>
+                                <option value='segun'>Segun Adebayo</option>
+                                <option value='kola'>Kola Tioluwani</option>
+                            </Select>
+                        </Box>
+                        <Spacer/>
+
+                        {servicesAdded.map((s, i) => {
+                            return (
+                                <Flex alignItems={'center'} key={i} mt={6} pl={4}>
+                                    <Text>{s}</Text>
+                                    <Spacer />
+                                    <IconButton
+                                        aria-label="Delete Service"
+                                        colorScheme="blue"
+                                        icon={<DeleteIcon />}
+                                        marginEnd="0"
+                                        onClick={() => handleRemoveService(i)}
+                                        textAlign="center"
+                                        variant="solid"
+                                    >
+                                    </IconButton>
+                                </Flex>
+                            );
+                        })}
+                        <FormLabel>Provided Services</FormLabel>
+
+                        <Select
+                            id='services'
+                            onChange={event => {
+                                if (!event.target.value) setServiceSelected('');
+                                else setServiceSelected(event.target.value);
+                            }}
+                            placeholder="Service" >
+                            {services.map((service, idx) => <option key={idx} value={service}>{service}</option>)}
+                        </Select>
+
+                        <Button
+                            colorScheme="blue"
+                            leftIcon={<AddIcon />}
+                            mt={6}
+                            onClick={handleAddService}
+                            variant="ghost"
+
+                        >Add Service</Button>
+                        <Spacer/>
+
+                        <FormLabel htmlFor='date'>Select a Date</FormLabel>
+                        
+                        <DatePicker
+                            onChange={date => date instanceof Date && setStartDate(date)}
+                            selected={startDate}/>
+
+                        <Box>
+                            <FormLabel htmlFor='notes'>Notes</FormLabel>
+                            <Textarea id='notes' onChange={e => {
+                                setNotes(e.target.value);
+                            }}/>
+                        </Box>
+                    </Stack>
+                </DrawerBody>
+                <Divider/>
+                <DrawerFooter borderTopWidth='1px'>
+                    <Button mr={3} onClick={onCloseFollowupModal} variant='outline'>
+                    Cancel
+                    </Button>
+                
+                    <Button
+                        colorScheme='green'
+                        leftIcon={<i className="fas fa-save"></i>}
+                        mr={3}
+                        onClick={handleFollowupClick}
+                    >
+                     Save Followup
+                    </Button>
+                </DrawerFooter>
+            </DrawerContent>
     );
 
 };

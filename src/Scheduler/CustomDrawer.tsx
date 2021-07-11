@@ -1,23 +1,8 @@
 import type { ActivityLevel, Gender } from '../Signup/__generated__/PatientUserCreateMutation.graphql';
 
 import React from 'react';
-import {
-    Box,
-    Button,
-    Divider,
-    Drawer,
-    DrawerBody,
-    DrawerCloseButton,
-    DrawerContent,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerOverlay,
-    FormLabel,
-    Input,
-    Select,
-    Stack,
-    Textarea,
-} from '@chakra-ui/react';
+import { Drawer, DrawerContent, DrawerOverlay } from '@chakra-ui/react';
+import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 
 import AppointmentFollowup from './AppointmentFollowup';
 
@@ -70,40 +55,10 @@ const CustomDrawer = ({
         >
             <DrawerOverlay />
             <DrawerContent>
-                <DrawerCloseButton />
-                <DrawerHeader>Create your account</DrawerHeader>
-
-                <DrawerBody>
-                    <Stack spacing='24px'>
-                        <Box>
-                            <FormLabel htmlFor='username'>Name</FormLabel>
-                            <Input id='username' placeholder='Please enter user name' />
-                        </Box>
-
-                        <Box>
-                            <FormLabel htmlFor='owner'>Select Owner</FormLabel>
-                            <Select defaultValue='segun' id='owner'>
-                                <option value='segun'>Segun Adebayo</option>
-                                <option value='kola'>Kola Tioluwani</option>
-                            </Select>
-                        </Box>
-
-                        <Box>
-                            <FormLabel htmlFor='desc'>Description</FormLabel>
-                            <Textarea id='desc' />
-                        </Box>
-                    </Stack>
-                </DrawerBody>
-                <Divider/>
-                <DrawerFooter borderTopWidth='1px'>
-                    <Button mr={3} onClick={onCloseFollowupModal} variant='outline'>
-                    Cancel
-                    </Button>
-                    <AppointmentFollowup
-                        event={eventType}
-                        onClose={onClose}
-                        onCloseFollowupModal={onCloseFollowupModal}/>
-                </DrawerFooter>
+                <AppointmentFollowup
+                    event={eventType}
+                    onClose={onClose}
+                    onCloseFollowupModal={onCloseFollowupModal}/>
             </DrawerContent>
         </Drawer>
     );
