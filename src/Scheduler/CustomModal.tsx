@@ -25,7 +25,7 @@ import { CalendarIcon } from '@chakra-ui/icons';
 
 import AppointmentDelete from './AppointmentDelete';
 import AppointmentDone from './AppointmentDone';
-// import AppointmentFollowup from './AppointmentFollowup';
+import CustomDrawer from './CustomDrawer';
 
 type Props = {
     eventType:{
@@ -56,18 +56,24 @@ type Props = {
     },
     onClose: () => void,
     isOpen: boolean,
+    isOpenFollowupModal: boolean,
+    onCloseFollowupModal: ()=>void,
     handleOnCloseDone: ()=>void,
     handleOnCloseDelete: ()=>void,
-    handleFollowupClick: ()=>void,
+    onOpenFollowupModal: ()=>void,
+    // handleFollowupClick: ()=>void,
 }
 
 const CustomModal = ({
     eventType,
     onClose,
     isOpen,
+    isOpenFollowupModal,
+    onCloseFollowupModal,
     handleOnCloseDone,
     handleOnCloseDelete,
-    handleFollowupClick,
+    onOpenFollowupModal,
+    // handleFollowupClick,
 }: Props) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} size='xl'>
@@ -150,11 +156,16 @@ const CustomModal = ({
                         <Button
                             colorScheme='green'
                             leftIcon={<CalendarIcon />}
-                            onClick={handleFollowupClick}
+                            onClick={onOpenFollowupModal}
                         >
                         Follow up
                         </Button>
-                        {/* <AppointmentFollowup/> */}
+                        <CustomDrawer
+                            eventType={eventType}
+                            // handleFollowupClick={handleFollowupClick}
+                            isOpenFollowupModal={isOpenFollowupModal}
+                            onClose={onClose}
+                            onCloseFollowupModal={onCloseFollowupModal}/>
                         <AppointmentDone event={eventType} onClose={handleOnCloseDone}/>
                         <AppointmentDelete event={eventType} onClose={handleOnCloseDelete}/>
                     </ButtonGroup>

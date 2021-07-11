@@ -6,7 +6,7 @@ import type { PreloadedQuery } from 'react-relay';
 import CalendarQuery from './__generated__/CalendarQuery.graphql';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Button, Container } from '@chakra-ui/react';
+import { Container } from '@chakra-ui/react';
 import FullCalendar from '@fullcalendar/react';
 import { useDisclosure } from '@chakra-ui/hooks';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -93,7 +93,6 @@ function LoadedCalendar(props: LoadedProps) {
     const handleEventClick = ({ event }: EventInput) => {
         console.log(event);
         const selectedEvent = events.find(e => e.id === event.id) || {};
-        console.log(selectedEvent);
 
         setSelectedEvent({
             end:selectedEvent.end || '',
@@ -125,10 +124,10 @@ function LoadedCalendar(props: LoadedProps) {
 
     console.log(selectedEvent);
 
-    const handleFollowupClick = () => {
-        onOpenFollowupModal();
-        /** handle this shit */
-    };
+    // const handleFollowupClick = () => {
+    //     onOpenFollowupModal();
+    //     /** handle this shit */
+    // };
     const handleOnCloseDone = () => {
         setEvents(events.filter(e => e.id !== selectedEvent.id));
         onClose();
@@ -138,8 +137,6 @@ function LoadedCalendar(props: LoadedProps) {
         setEvents(events.filter(e => e.id !== selectedEvent.id));
         onClose();
     };
-
-    console.log(selectedEvent);
 
     const data = usePreloadedQuery(
         graphql`
@@ -236,11 +233,14 @@ function LoadedCalendar(props: LoadedProps) {
                 schedulerLicenseKey='GPL-My-Project-Is-Open-Source'
             />
             <CustomModal eventType={selectedEvent}
-                handleFollowupClick={handleFollowupClick}
+                // handleFollowupClick={handleFollowupClick}
                 handleOnCloseDelete={handleOnCloseDelete}
                 handleOnCloseDone={handleOnCloseDone}
                 isOpen={isOpen}
-                onClose={onClose}/>
+                isOpenFollowupModal={isOpenFollowupModal}
+                onClose={onClose}
+                onCloseFollowupModal={onCloseFollowupModal}
+                onOpenFollowupModal={onOpenFollowupModal}/>
         </Container>
     );
 }
