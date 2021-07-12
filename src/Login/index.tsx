@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 
 import { useIsLoggedIn, useIsLoggingIn, useLogin } from 'authentication';
+import { useIsDoctor, useIsPatient } from 'user';
 
 function Login() {
     const isLoggedIn = useIsLoggedIn();
@@ -25,6 +26,9 @@ function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const isDoctor = useIsDoctor();
+    const isPatient = useIsPatient();
+    
     const login = useCallback(async () => {
         try {
             await loginImpl(username, password);
@@ -37,9 +41,10 @@ function Login() {
 
     useEffect(() => {
         if (isLoggedIn) {
-            history.push('/');
+            if (isDoctor) { /* redirect to doctor homepage */ history.push('/doctor');}
+            else if (isPatient) { history.push('/patient'); }
         }
-    }, [isLoggedIn, history]);
+    }, [isLoggedIn, history, isDoctor, isPatient]);
 
     return (
         <Center>
