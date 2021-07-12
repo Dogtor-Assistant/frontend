@@ -22,7 +22,7 @@ import {
 import Footer from 'Footer';
 import ReviewList from 'LatestReviewList';
 
-function Search() {
+export function Search() {
     return (
         <Container paddingTop={8}>
             <InputGroup size="lg">
