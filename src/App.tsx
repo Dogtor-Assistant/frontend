@@ -7,6 +7,7 @@ import DebugMenu from 'DebugMenu';
 import Home from 'Home';
 import Login from 'Login';
 import Navbar from 'Navbar';
+import PatientPage from 'PatientPage';
 import Signup from 'Signup';
 
 function App() {
@@ -38,6 +39,10 @@ function App() {
 
                         <Route path="/signup">
                             <Signup />
+                        </Route>
+
+                        <Route path="/patient">
+                            <PatientPage />
                         </Route>
                     </Switch>
                 </div>
