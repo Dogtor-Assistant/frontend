@@ -50,10 +50,10 @@ function LoadedPastApp(props: LoadedProps) {
     return (
         <Center>
             <Grid gap={6} w={600}>
-                { data.patientPreviousAppointments === [] &&
-              <Text>No past appointments!</Text>
+                { data.patientPreviousAppointments.length === 0 &&
+                <Center><Text>No upcoming appointments!</Text></Center>
                 }
-                { data.patientPreviousAppointments !== [] &&
+                { data.patientPreviousAppointments.length !== 0 &&
               data.patientPreviousAppointments.map(app => {
                   const appDate = app.expectedTime.start != null ? new Date(app.expectedTime.start) : null;
 

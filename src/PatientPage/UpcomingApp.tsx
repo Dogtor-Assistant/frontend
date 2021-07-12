@@ -51,10 +51,10 @@ function LoadedUpcomingApp(props: LoadedProps) {
     return (
         <Center>
             <Grid gap={6} w={600}>
-                { data.patientUpcomingAppointments === [] &&
-              <Text>No upcoming appointments!</Text>
+                { data.patientUpcomingAppointments.length === 0 &&
+                <Center><Text>No upcoming appointments!</Text></Center>
                 }
-                { data.patientUpcomingAppointments !== [] &&
+                { data.patientUpcomingAppointments.length !== 0 &&
               data.patientUpcomingAppointments.map(app => {
                   const appDate = app.expectedTime.start != null ? new Date(app.expectedTime.start) : null;
 
