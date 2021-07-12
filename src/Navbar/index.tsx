@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { MdExpandMore } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
     Button,
     chakra,
@@ -30,6 +30,8 @@ import {
 } from 'user';
 
 function Navbar() {
+    const history = useHistory();
+    
     const backgroundColor = useColorModeValue('white', 'gray.800');
     const isLoggedIn = useIsLoggedIn();
     const logout = useLogout();
@@ -98,7 +100,7 @@ function Navbar() {
                                                 { isPatient &&
                                                 <Link to="/patient">Patient Timeline</Link>
                                                 }
-                                                <Button onClick={logout}>
+                                                <Button onClick={() => { logout(); history.push('/'); }}>
                                                     Logout
                                                 </Button>
                                             </VStack>

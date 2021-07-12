@@ -7,7 +7,6 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import useLocalStorage from 'useLocalStorage';
 
@@ -200,8 +199,6 @@ export function useLogin(): ((username: string, password: string) => Promise<voi
 }
 
 export function useLogout(): () => void {
-    const history = useHistory();
     const context = useContext(LoginContext);
-    history.push('/');
     return context.logout;
 }
