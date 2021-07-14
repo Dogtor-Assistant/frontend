@@ -28,12 +28,12 @@ function DoctorResultRow(props: Props) {
     const ratingColor = useColorModeValue('dark', 'gray.800');
 
     return (
-        <Box p="2">
-            <Box borderRadius="lg" borderWidth="1px" maxW="sm" overflow="hidden">
-                <Box p="6">
-                    <Box alignItems="baseline" d="flex">
+        <Box p="2" w="100%">
+            <Box borderRadius="lg" borderWidth="1px" overflow="hidden" w="100%">
+                <Box p="6" w="100%">
+                    <Box alignItems="baseline" d="flex" w="100%">
                         <Badge borderRadius="full" colorScheme="teal" px="2">
-                                    New
+                            New
                         </Badge>
                         <Box
                             color="gray.500"

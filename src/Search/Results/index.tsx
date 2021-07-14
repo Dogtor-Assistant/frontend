@@ -1,6 +1,7 @@
 import type { Results_search$key } from './__generated__/Results_search.graphql';
 
 import React from 'react';
+import { Container } from '@chakra-ui/react';
 
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
@@ -22,7 +23,9 @@ function Results(props: Props) {
     );
 
     return (
-        <SearchResultsList search={search} />
+        <Container maxW="container.lg">
+            <SearchResultsList search={search} />
+        </Container>
     );
 }
 
