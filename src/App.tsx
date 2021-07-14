@@ -9,7 +9,8 @@ import Login from 'Login';
 import Navbar from 'Navbar';
 import Calendar from 'Scheduler/Calendar';
 import Signup from 'Signup';
-import SchedulerRoute from './SchedulerRoute';
+import DoctorRoute from './DoctorRoute';
+import NotFound from './Notfound/NotFound';
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
                     <Navbar />
 
                     <Switch>
+                        
                         <Route exact path="/">
                             <Home />
                         </Route>
@@ -43,7 +45,9 @@ function App() {
                             <Signup />
                         </Route>
 
-                        <SchedulerRoute component={Calendar} exact path="/scheduler" />
+                        <DoctorRoute component={Calendar} exact path="/doctor" />
+
+                        <Route component={NotFound} />
 
                     </Switch>
                 </div>

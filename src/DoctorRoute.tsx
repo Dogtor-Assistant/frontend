@@ -4,7 +4,7 @@ import { Redirect, Route } from 'react-router-dom';
 import { useIsLoggedIn } from './authentication';
 import { useIsDoctor } from './user';
 
-const SchedulerRoute: React.FC<{
+const DoctorRoute: React.FC<{
         component: React.FC,
         path: string,
         exact: boolean,
@@ -17,4 +17,4 @@ const SchedulerRoute: React.FC<{
             <Route component={props.component} exact={props.exact} path={props.path} />) :
             (<Redirect to="/login" />);
     };
-export default SchedulerRoute;
+export default DoctorRoute;

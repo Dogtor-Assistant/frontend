@@ -31,7 +31,8 @@ import { useToast } from '@chakra-ui/toast';
 import { useMutation } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
-import DatePicker from '../DatePicker/DatePicker';
+import DatePicker from '../DatePicker/DatePickerComponent';
+import DatePickerComponent from '../DatePicker/DatePickerComponent';
 import LoadingIndicator from '../LoadingIndicator';
 
 // import 'react-datepicker/dist/react-datepicker.css';
@@ -84,9 +85,8 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
         assignFollowup(followupInput: $followupInput)
         }
     `);
-    console.log(servicesAdded);
-    console.log(notes);
-    console.log(startDate);
+    
+    console.log(startDate.toISOString());
     const handleFollowupClick = (): void => {
         const result = confirm('Confirm to assign a follow up!');
         if (result) {
@@ -124,7 +124,7 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
                             serviceId:'',
                             serviceName: '',
                         }],
-                        suggestedDate: '',
+                        suggestedDate: startDate.toISOString(),
                     },
                 },
             });
@@ -203,11 +203,9 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
                         
                         <FormControl>
                             <FormLabel htmlFor='date'>Click to Select a Date</FormLabel>
-                            <DatePicker
-                                isClearable
-                                onChange={setStartDate}
-                                selectedDate={startDate}
-                                showPopperArrow={true}
+                            <DatePickerComponent
+                                pickedDate={startDate}
+                                setPickedDate={setStartDate}
                             />
                         </FormControl>
 

@@ -41,7 +41,7 @@ function Login() {
         if (isLoggedIn) {
             
             if(isDoctor) {
-                history.push('/scheduler');
+                history.push('/doctor');
             }else{
                 history.push('/');
             }
