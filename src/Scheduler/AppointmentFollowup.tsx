@@ -2,7 +2,7 @@ import type { ActivityLevel, Gender } from '../Signup/__generated__/PatientUserC
 import type { AppointmentFollowupMutation } from './__generated__/AppointmentFollowupMutation.graphql';
 
 import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
+// import DatePicker from 'react-custom-date-picker';
 import {
     Box,
     Button,
@@ -15,6 +15,8 @@ import {
     DrawerHeader,
     DrawerOverlay,
     Flex,
+    FormControl,
+    FormHelperText,
     FormLabel,
     IconButton,
     Select,
@@ -29,7 +31,10 @@ import { useToast } from '@chakra-ui/toast';
 import { useMutation } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
+import DatePicker from '../DatePicker/DatePicker';
 import LoadingIndicator from '../LoadingIndicator';
+
+// import 'react-datepicker/dist/react-datepicker.css';
 
 type AppointmentType = {
     
@@ -156,7 +161,7 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
                         </Box>
                         <Spacer/>
 
-                        {servicesAdded.map((s, i) => {
+                        {servicesAdded[0] !== '' && servicesAdded.map((s, i) => {
                             return (
                                 <Flex alignItems={'center'} key={i} mt={6} pl={4}>
                                     <Text>{s}</Text>
@@ -195,12 +200,16 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
 
                         >Add Service</Button>
                         <Spacer/>
-
-                        <FormLabel htmlFor='date'>Select a Date</FormLabel>
                         
-                        <DatePicker
-                            onChange={date => date instanceof Date && setStartDate(date)}
-                            selected={startDate}/>
+                        <FormControl>
+                            <FormLabel htmlFor='date'>Click to Select a Date</FormLabel>
+                            <DatePicker
+                                isClearable
+                                onChange={setStartDate}
+                                selectedDate={startDate}
+                                showPopperArrow={true}
+                            />
+                        </FormControl>
 
                         <Box>
                             <FormLabel htmlFor='notes'>Notes</FormLabel>
