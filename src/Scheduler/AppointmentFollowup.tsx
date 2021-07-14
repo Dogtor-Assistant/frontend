@@ -140,7 +140,7 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
                 <DrawerHeader>Create new followup</DrawerHeader>
                 <DrawerBody>
                     <Stack spacing='24px'>
-
+                        {/* TODO: query the doctors and than handle the select service */}
                         <Box>
                             <FormLabel htmlFor='doctor'>Select Doctor</FormLabel>
                             <Select defaultValue='segun' id='doctor'>

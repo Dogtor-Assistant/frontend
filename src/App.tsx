@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { useColorModeValue } from '@chakra-ui/color-mode';
 
 import DebugMenu from 'DebugMenu';
+import Footer from 'Footer';
 import Home from 'Home';
 import Login from 'Login';
 import Navbar from 'Navbar';
@@ -50,6 +51,8 @@ function App() {
                         <Route component={NotFound} />
 
                     </Switch>
+                    
+                    <Footer/>
                 </div>
             </Router>
             <DebugMenu />
