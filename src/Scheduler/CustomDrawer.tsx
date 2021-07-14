@@ -2,7 +2,6 @@ import type { ActivityLevel, Gender } from '../Signup/__generated__/PatientUserC
 
 import React from 'react';
 import { Drawer, DrawerContent, DrawerOverlay } from '@chakra-ui/react';
-import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 
 import AppointmentFollowup from './AppointmentFollowup';
 
@@ -36,7 +35,6 @@ type Props = {
     onClose: () => void,
     isOpenFollowupModal: boolean,
     onCloseFollowupModal: ()=>void,
-    // handleFollowupClick: ()=>void,
 }
 
 const CustomDrawer = ({
@@ -44,7 +42,6 @@ const CustomDrawer = ({
     onClose,
     onCloseFollowupModal,
     isOpenFollowupModal,
-    // handleFollowupClick,
 }: Props) => {
     return (
         <Drawer

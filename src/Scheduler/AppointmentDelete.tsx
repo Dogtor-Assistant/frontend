@@ -1,4 +1,3 @@
-import type { ActivityLevel, Gender } from '../Signup/__generated__/PatientUserCreateMutation.graphql';
 import type { AppointmentDeleteMutation } from './__generated__/AppointmentDeleteMutation.graphql';
 
 import React from 'react';
@@ -10,39 +9,14 @@ import { useMutation } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
 type AppointmentType = {
-    event:{
-        id:string,
-        title: string,
-        start: string | number | Date | number[],
-        end: string | number | Date | number[],
-        lastName: string,
-        firstName: string,
-        patient: {
-            activityLevel: ActivityLevel,
-            address: {
-                city: string,
-                streetName: string,
-                streetNumber: number,
-                zipCode: number,
-            },
-            firstname: string,
-            gender: Gender,
-            height: number,
-            id: string,
-            isSmoker: boolean,
-            lastname: string,
-            surgeries: [string],
-            weight: number,
-        },
-
-    },
+    eventId:string,
     onClose: ()=>void,
 }
 
-const AppointmentDelete = ({ event, onClose }:AppointmentType) => {
+const AppointmentDelete = ({ eventId, onClose }:AppointmentType) => {
     
     const toast = useToast();
-    const [commit] = useMutation<AppointmentDeleteMutation>(graphql`
+    const [commit, isInFlight] = useMutation<AppointmentDeleteMutation>(graphql`
     mutation AppointmentDeleteMutation($id: ID!){
         deleteAppointmentById(id: $id)
     }
@@ -75,7 +49,7 @@ const AppointmentDelete = ({ event, onClose }:AppointmentType) => {
                     }
                 },
                 variables: {
-                    'id': event.id,
+                    'id': eventId,
                 },
             });
         }
@@ -85,11 +59,11 @@ const AppointmentDelete = ({ event, onClose }:AppointmentType) => {
         
         <Button
             colorScheme='red'
+            isLoading={isInFlight}
             leftIcon={<DeleteIcon />}
             mr={3}
             onClick={handleDeleteClick}
         >
-        
         Delete
         </Button>
     );

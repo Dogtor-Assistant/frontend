@@ -61,7 +61,6 @@ type Props = {
     handleOnCloseDone: ()=>void,
     handleOnCloseDelete: ()=>void,
     onOpenFollowupModal: ()=>void,
-    // handleFollowupClick: ()=>void,
 }
 
 const CustomModal = ({
@@ -73,7 +72,6 @@ const CustomModal = ({
     handleOnCloseDone,
     handleOnCloseDelete,
     onOpenFollowupModal,
-    // handleFollowupClick,
 }: Props) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} size='xl'>
@@ -162,12 +160,11 @@ const CustomModal = ({
                         </Button>
                         <CustomDrawer
                             eventType={eventType}
-                            // handleFollowupClick={handleFollowupClick}
                             isOpenFollowupModal={isOpenFollowupModal}
                             onClose={onClose}
                             onCloseFollowupModal={onCloseFollowupModal}/>
-                        <AppointmentDone event={eventType} onClose={handleOnCloseDone}/>
-                        <AppointmentDelete event={eventType} onClose={handleOnCloseDelete}/>
+                        <AppointmentDone eventId={eventType.id} onClose={handleOnCloseDone}/>
+                        <AppointmentDelete eventId={eventType.id} onClose={handleOnCloseDelete}/>
                     </ButtonGroup>
                 </ModalFooter>
             </ModalContent>

@@ -1,4 +1,3 @@
-import type { ActivityLevel, Gender } from '../Signup/__generated__/PatientUserCreateMutation.graphql';
 import type { AppointmentDoneMutation } from './__generated__/AppointmentDoneMutation.graphql';
 
 import React from 'react';
@@ -10,41 +9,15 @@ import { useMutation } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
 type AppointmentType = {
-    
-    event:{
-        id:string,
-        title: string,
-        start: string | number | Date | number[],
-        end: string | number | Date | number[],
-        lastName: string,
-        firstName: string,
-        patient: {
-            activityLevel: ActivityLevel,
-            address: {
-                city: string,
-                streetName: string,
-                streetNumber: number,
-                zipCode: number,
-            },
-            firstname: string,
-            gender: Gender,
-            height: number,
-            id: string,
-            isSmoker: boolean,
-            lastname: string,
-            surgeries: [string],
-            weight: number,
-        },
-
-    },
+    eventId:string,
     onClose: ()=>void,
 }
 
-const AppointmentDone = ({ event, onClose }:AppointmentType) => {
+const AppointmentDone = ({ eventId, onClose }:AppointmentType) => {
     
     const toast = useToast();
 
-    const [commit] = useMutation<AppointmentDoneMutation>(graphql`
+    const [commit, isInFlight] = useMutation<AppointmentDoneMutation>(graphql`
     mutation AppointmentDoneMutation($id: ID!){
         makeAppointmentAsDone(id: $id)
     }
@@ -79,7 +52,7 @@ const AppointmentDone = ({ event, onClose }:AppointmentType) => {
                     }
                 },
                 variables: {
-                    'id': event.id,
+                    'id': eventId,
                 },
             });
         }
@@ -87,11 +60,11 @@ const AppointmentDone = ({ event, onClose }:AppointmentType) => {
     return (
         <Button
             colorScheme='green'
+            isLoading={isInFlight}
             leftIcon={<CheckIcon />}
             mr={3}
             onClick={handleDoneClick}
         >
-        
         Done
         </Button>
     );

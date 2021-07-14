@@ -124,10 +124,6 @@ function LoadedCalendar(props: LoadedProps) {
 
     console.log(selectedEvent);
 
-    // const handleFollowupClick = () => {
-    //     onOpenFollowupModal();
-    //     /** handle this shit */
-    // };
     const handleOnCloseDone = () => {
         setEvents(events.filter(e => e.id !== selectedEvent.id));
         onClose();
@@ -233,7 +229,6 @@ function LoadedCalendar(props: LoadedProps) {
                 schedulerLicenseKey='GPL-My-Project-Is-Open-Source'
             />
             <CustomModal eventType={selectedEvent}
-                // handleFollowupClick={handleFollowupClick}
                 handleOnCloseDelete={handleOnCloseDelete}
                 handleOnCloseDone={handleOnCloseDone}
                 isOpen={isOpen}

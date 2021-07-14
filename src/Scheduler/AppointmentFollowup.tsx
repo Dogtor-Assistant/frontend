@@ -2,21 +2,17 @@ import type { ActivityLevel, Gender } from '../Signup/__generated__/PatientUserC
 import type { AppointmentFollowupMutation } from './__generated__/AppointmentFollowupMutation.graphql';
 
 import React, { useState } from 'react';
-// import DatePicker from 'react-custom-date-picker';
 import {
     Box,
     Button,
     Divider,
-    Drawer,
     DrawerBody,
     DrawerCloseButton,
     DrawerContent,
     DrawerFooter,
     DrawerHeader,
-    DrawerOverlay,
     Flex,
     FormControl,
-    FormHelperText,
     FormLabel,
     IconButton,
     Select,
@@ -31,14 +27,10 @@ import { useToast } from '@chakra-ui/toast';
 import { useMutation } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
-import DatePicker from '../DatePicker/DatePickerComponent';
 import DatePickerComponent from '../DatePicker/DatePickerComponent';
 import LoadingIndicator from '../LoadingIndicator';
 
-// import 'react-datepicker/dist/react-datepicker.css';
-
 type AppointmentType = {
-    
     event:{
         id:string,
         title: string,
@@ -63,12 +55,9 @@ type AppointmentType = {
             surgeries: [string],
             weight: number,
         },
-
     },
-    
     onClose: ()=>void,
     onCloseFollowupModal: ()=>void,
-
 }
 
 const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:AppointmentType) => {
@@ -80,13 +69,13 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
     const [serviceSelected, setServiceSelected] = useState('');
     const [servicesAdded, setServicesAdded] = useState(['']);
     const [services, setServices] = useState(['service1', 'service2']);
+
     const [commit, isInFlight] = useMutation<AppointmentFollowupMutation>(graphql`
     mutation AppointmentFollowupMutation($followupInput: FollowupInput!){
         assignFollowup(followupInput: $followupInput)
         }
     `);
-    
-    console.log(startDate.toISOString());
+
     const handleFollowupClick = (): void => {
         const result = confirm('Confirm to assign a follow up!');
         if (result) {
@@ -225,6 +214,7 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
                 
                     <Button
                         colorScheme='green'
+                        isLoading={isInFlight}
                         leftIcon={<i className="fas fa-save"></i>}
                         mr={3}
                         onClick={handleFollowupClick}
