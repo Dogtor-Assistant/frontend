@@ -1,23 +1,13 @@
-import type { userQuery as userQueryType } from './__generated__/userQuery.graphql';
+import type { user_data$key } from './__generated__/user_data.graphql';
 import type { ReactNode } from 'react';
-import type { ErrorBoundary } from 'react-error-boundary';
-import type { PreloadedQuery } from 'react-relay';
 
-import userQuery from './__generated__/userQuery.graphql';
+import React, { useContext } from 'react';
 
-import React, { useContext, useEffect, useRef } from 'react';
-
-import { usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
-import Suspense from 'Suspense';
-
-type LoadedProps = {
-    data: PreloadedQuery<userQueryType>,
-    children: ReactNode[] | ReactNode | null,
-}
-
 type Props = {
+    data: user_data$key,
     children: ReactNode[] | ReactNode | null,
 }
 
@@ -29,21 +19,17 @@ type UserContextType = {
     isDoctor: boolean,
     patientId?: string | undefined,
     doctorId?: string | undefined,
-    cities: readonly string[],
-    specialities: readonly string[],
 }
 
 const UserContext = React.createContext<UserContextType>({
-    cities: [],
     isDoctor: false,
     isPatient: false,
-    specialities: [],
 });
 
-function LoadedUserProvider(props: LoadedProps) {
-    const data = usePreloadedQuery(
+export function UserDataProvider(props: Props) {
+    const data = useFragment(
         graphql`
-            query userQuery {
+            fragment user_data on Query {
                 me {
                     id
                     firstname
@@ -57,9 +43,6 @@ function LoadedUserProvider(props: LoadedProps) {
                         id
                     }
                 }
-
-                cities
-                specialities
             }
         `,
         props.data,
@@ -68,7 +51,6 @@ function LoadedUserProvider(props: LoadedProps) {
     return (
         <UserContext.Provider
             value={{
-                cities: data.cities,
                 doctorId: data.me?.doctorProfile != null ? data.me?.doctorProfile.id : undefined,
                 firstname: data.me?.firstname,
                 id: data.me?.id,
@@ -76,38 +58,10 @@ function LoadedUserProvider(props: LoadedProps) {
                 isPatient: data.me?.patientProfile != null,
                 lastname: data.me?.lastname,
                 patientId: data.me?.patientProfile != null ? data.me?.patientProfile.id : undefined,
-                specialities: data.specialities,
             }}
         >
             {props.children}
         </UserContext.Provider>
-    );
-}
-
-export function UserDataProvider(props: Props) {
-    const [
-        data,
-        loadQuery,
-        dispose,
-    ] = useQueryLoader<userQueryType>(userQuery);
-
-    const error = useRef<ErrorBoundary>(null);
-    useEffect(() => {
-        error.current?.reset();
-        loadQuery({ });
-        return () => {
-            dispose();
-        };
-    }, [dispose, loadQuery]);
-
-    return (
-        <Suspense boundaryRef={error}>
-            {data != null && (
-                <LoadedUserProvider data={data}>
-                    {props.children}
-                </LoadedUserProvider>
-            )}
-        </Suspense>
     );
 }
 
@@ -151,14 +105,4 @@ export function useDoctorId(): string | undefined {
 export function usePatientId(): string | undefined {
     const { patientId } = useContext(UserContext);
     return patientId;
-}
-
-export function useCities() {
-    const { cities } = useContext(UserContext);
-    return cities;
-}
-
-export function useSpecialities() {
-    const { specialities } = useContext(UserContext);
-    return specialities;
 }
