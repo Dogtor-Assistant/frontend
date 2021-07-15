@@ -10,8 +10,8 @@ import Login from 'Login';
 import Navbar from 'Navbar';
 import Calendar from 'Scheduler/Calendar';
 import Signup from 'Signup';
-import DoctorRoute from './DoctorRoute';
 import NotFound from './Notfound/NotFound';
+import { DoctorRoute, PatientRoute } from './ProtectedRoutes/DoctorRoute';
 
 function App() {
 
