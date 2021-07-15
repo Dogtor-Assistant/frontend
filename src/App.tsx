@@ -49,11 +49,10 @@ function App() {
 
                         <DoctorRoute component={Calendar} exact path="/doctor" />
 
+                        <PatientRoute component={PatientPage} exact path="/patient" />
+
                         <Route component={NotFound} />
 
-                        <Route path="/patient">
-                            <PatientPage />
-                        </Route>
                     </Switch>
                     
                     <Footer/>

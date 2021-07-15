@@ -30,11 +30,11 @@ export type CalendarQueryResponse = {
                 readonly activityLevel: ActivityLevel | null;
             };
             readonly expectedTime: {
-                readonly start: unknown | null;
+                readonly start: string | null;
                 readonly duration: number | null;
             };
             readonly actualTime: {
-                readonly start: unknown | null;
+                readonly start: string | null;
                 readonly duration: number | null;
             } | null;
             readonly isDone: boolean;

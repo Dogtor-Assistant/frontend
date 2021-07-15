@@ -66,10 +66,17 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
 
     const [startDate, setStartDate] = useState(new Date());
     const [notes, setNotes] = useState('');
-    const [serviceSelected, setServiceSelected] = useState('');
-    const [servicesAdded, setServicesAdded] = useState(['']);
-    const [services, setServices] = useState(['service1', 'service2']);
+    const [serviceIdSelected, setServiceIdSelected] = useState('');
+    const [servicesAdded, setServicesAdded] = useState([{ id: '', serviceName: '' }]);
 
+    const [doctor, setDoctor] = useState({
+        doctorId: '',
+        doctorName: '',
+        services: [{ id: '1', serviceName: 'Service1' }, { id: '2', serviceName: 'Service2' }],
+    });
+    const [services, setServices] = useState(doctor.services);
+    console.log(services);
+    
     const [commit, isInFlight] = useMutation<AppointmentFollowupMutation>(graphql`
     mutation AppointmentFollowupMutation($followupInput: FollowupInput!){
         assignFollowup(followupInput: $followupInput)
@@ -121,18 +128,28 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
     };
 
     const handleAddService = () => {
-        if (serviceSelected === '') {
+        if (serviceIdSelected === '') {
             return;
         }
-        const newServicesAdded = [...servicesAdded.filter(s => s), serviceSelected && serviceSelected];
-        setServicesAdded(newServicesAdded);
-        setServiceSelected('');
+
+        const exist = servicesAdded.filter(s => s.id === serviceIdSelected);
+        console.log('exists', exist);
+        if (exist.length === 0) {
+            const newServicesAdded = [...servicesAdded.filter(s => s.id),
+                services.filter(s => s.id === serviceIdSelected)[0]];
+            
+            setServicesAdded(newServicesAdded);
+            // setServiceIdSelected('');
+        }
+        
     };
 
-    const handleRemoveService = (i: number) => {
-        const removedArr = [...servicesAdded].filter(s => servicesAdded.indexOf(s) !== i);
+    const handleRemoveService = (serviceId: string) => {
+        const removedArr = [...servicesAdded].filter(s => s.id !== serviceId);
         setServicesAdded(removedArr);
     };
+    console.log(servicesAdded);
+    console.log(serviceIdSelected);
     return (
         isInFlight ? <LoadingIndicator /> :
             <DrawerContent>
@@ -150,22 +167,23 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
                         </Box>
                         <Spacer/>
 
-                        {servicesAdded[0] !== '' && servicesAdded.map((s, i) => {
+                        {servicesAdded.map(s => {
                             return (
-                                <Flex alignItems={'center'} key={i} mt={6} pl={4}>
-                                    <Text>{s}</Text>
-                                    <Spacer />
-                                    <IconButton
-                                        aria-label="Delete Service"
-                                        colorScheme="blue"
-                                        icon={<DeleteIcon />}
-                                        marginEnd="0"
-                                        onClick={() => handleRemoveService(i)}
-                                        textAlign="center"
-                                        variant="solid"
-                                    >
-                                    </IconButton>
-                                </Flex>
+                                s.id !== '' && (
+                                    <Flex alignItems={'center'} key={s.id} mt={6} pl={4}>
+                                        <Text>{s.serviceName}</Text>
+                                        <Spacer />
+                                        <IconButton
+                                            aria-label="Delete Service"
+                                            colorScheme="blue"
+                                            icon={<DeleteIcon />}
+                                            marginEnd="0"
+                                            onClick={() => handleRemoveService(s.id)}
+                                            textAlign="center"
+                                            variant="solid"
+                                        >
+                                        </IconButton>
+                                    </Flex>)
                             );
                         })}
                         <FormLabel>Provided Services</FormLabel>
@@ -173,11 +191,14 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
                         <Select
                             id='services'
                             onChange={event => {
-                                if (!event.target.value) setServiceSelected('');
-                                else setServiceSelected(event.target.value);
+                                if (!event.target.value) setServiceIdSelected('');
+                                else setServiceIdSelected(event.target.value);
                             }}
                             placeholder="Service" >
-                            {services.map((service, idx) => <option key={idx} value={service}>{service}</option>)}
+                            {
+                                services.map(service => <option key={service.id}
+                                    value={service.id}>{service.serviceName}</option>)
+                            }
                         </Select>
 
                         <Button

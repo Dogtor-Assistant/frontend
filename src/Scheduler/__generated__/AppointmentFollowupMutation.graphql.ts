@@ -7,7 +7,7 @@ export type FollowupInput = {
     doctorRef: string;
     patientRef: string;
     services: Array<ServiceInput>;
-    suggestedDate: unknown;
+    suggestedDate: string;
     doctorNotes?: string | null;
 };
 export type ServiceInput = {
