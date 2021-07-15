@@ -29,11 +29,15 @@ type UserContextType = {
     isDoctor: boolean,
     patientId?: string | undefined,
     doctorId?: string | undefined,
+    cities: readonly string[],
+    specialities: readonly string[],
 }
 
 const UserContext = React.createContext<UserContextType>({
+    cities: [],
     isDoctor: false,
     isPatient: false,
+    specialities: [],
 });
 
 function LoadedUserProvider(props: LoadedProps) {
@@ -53,6 +57,9 @@ function LoadedUserProvider(props: LoadedProps) {
                         id
                     }
                 }
+
+                cities
+                specialities
             }
         `,
         props.data,
@@ -61,6 +68,7 @@ function LoadedUserProvider(props: LoadedProps) {
     return (
         <UserContext.Provider
             value={{
+                cities: data.cities,
                 doctorId: data.me?.doctorProfile != null ? data.me?.doctorProfile.id : undefined,
                 firstname: data.me?.firstname,
                 id: data.me?.id,
@@ -68,6 +76,7 @@ function LoadedUserProvider(props: LoadedProps) {
                 isPatient: data.me?.patientProfile != null,
                 lastname: data.me?.lastname,
                 patientId: data.me?.patientProfile != null ? data.me?.patientProfile.id : undefined,
+                specialities: data.specialities,
             }}
         >
             {props.children}
@@ -142,4 +151,14 @@ export function useDoctorId(): string | undefined {
 export function usePatientId(): string | undefined {
     const { patientId } = useContext(UserContext);
     return patientId;
+}
+
+export function useCities() {
+    const { cities } = useContext(UserContext);
+    return cities;
+}
+
+export function useSpecialities() {
+    const { specialities } = useContext(UserContext);
+    return specialities;
 }

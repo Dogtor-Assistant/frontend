@@ -18,6 +18,8 @@ export type userQueryResponse = {
             readonly id: string;
         } | null;
     } | null;
+    readonly cities: ReadonlyArray<string>;
+    readonly specialities: ReadonlyArray<string>;
 };
 export type userQuery = {
     readonly response: userQueryResponse;
@@ -41,6 +43,8 @@ query userQuery {
       id
     }
   }
+  cities
+  specialities
 }
 */
 
@@ -108,6 +112,20 @@ v2 = [
       }
     ],
     "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "cities",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "specialities",
+    "storageKey": null
   }
 ];
 return {
@@ -128,14 +146,14 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "1f1159e3a0275d0c147f80156945fd0b",
+    "cacheID": "e51a437f26595b848a0767757336b1e0",
     "id": null,
     "metadata": {},
     "name": "userQuery",
     "operationKind": "query",
-    "text": "query userQuery {\n  me {\n    id\n    firstname\n    lastname\n    patientProfile {\n      __typename\n      id\n    }\n    doctorProfile {\n      __typename\n      id\n    }\n  }\n}\n"
+    "text": "query userQuery {\n  me {\n    id\n    firstname\n    lastname\n    patientProfile {\n      __typename\n      id\n    }\n    doctorProfile {\n      __typename\n      id\n    }\n  }\n  cities\n  specialities\n}\n"
   }
 };
 })();
-(node as any).hash = '253d330493e8349f8dbbe331a79e1df1';
+(node as any).hash = '6c9c85f9c5504fe7dd8dcc622df81a37';
 export default node;
