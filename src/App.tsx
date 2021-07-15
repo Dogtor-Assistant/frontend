@@ -8,6 +8,7 @@ import Footer from 'Footer';
 import Home from 'Home';
 import Login from 'Login';
 import Navbar from 'Navbar';
+import PatientPage from 'PatientPage';
 import Calendar from 'Scheduler/Calendar';
 import Signup from 'Signup';
 import NotFound from './Notfound/NotFound';
@@ -50,6 +51,9 @@ function App() {
 
                         <Route component={NotFound} />
 
+                        <Route path="/patient">
+                            <PatientPage />
+                        </Route>
                     </Switch>
                     
                     <Footer/>

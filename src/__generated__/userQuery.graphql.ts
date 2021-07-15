@@ -11,6 +11,7 @@ export type userQueryResponse = {
         readonly lastname: string;
         readonly patientProfile: {
             readonly __typename: string;
+            readonly id: string;
         } | null;
         readonly doctorProfile: {
             readonly __typename: string;
@@ -51,76 +52,71 @@ var v0 = {
   "name": "id",
   "storageKey": null
 },
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "firstname",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "lastname",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v4 = [
-  (v3/*: any*/),
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "__typename",
+    "storageKey": null
+  },
   (v0/*: any*/)
 ],
-v5 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Doctor",
-  "kind": "LinkedField",
-  "name": "doctorProfile",
-  "plural": false,
-  "selections": (v4/*: any*/),
-  "storageKey": null
-};
+v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "User",
+    "kind": "LinkedField",
+    "name": "me",
+    "plural": false,
+    "selections": [
+      (v0/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "firstname",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "lastname",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Patient",
+        "kind": "LinkedField",
+        "name": "patientProfile",
+        "plural": false,
+        "selections": (v1/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Doctor",
+        "kind": "LinkedField",
+        "name": "doctorProfile",
+        "plural": false,
+        "selections": (v1/*: any*/),
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "userQuery",
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "User",
-        "kind": "LinkedField",
-        "name": "me",
-        "plural": false,
-        "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
-          (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Patient",
-            "kind": "LinkedField",
-            "name": "patientProfile",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/)
-            ],
-            "storageKey": null
-          },
-          (v5/*: any*/)
-        ],
-        "storageKey": null
-      }
-    ],
+    "selections": (v2/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -129,33 +125,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "userQuery",
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "User",
-        "kind": "LinkedField",
-        "name": "me",
-        "plural": false,
-        "selections": [
-          (v0/*: any*/),
-          (v1/*: any*/),
-          (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Patient",
-            "kind": "LinkedField",
-            "name": "patientProfile",
-            "plural": false,
-            "selections": (v4/*: any*/),
-            "storageKey": null
-          },
-          (v5/*: any*/)
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v2/*: any*/)
   },
   "params": {
     "cacheID": "1f1159e3a0275d0c147f80156945fd0b",
@@ -167,5 +137,5 @@ return {
   }
 };
 })();
-(node as any).hash = '892dd7f209a9e75bbb33581eab4c04ec';
+(node as any).hash = '253d330493e8349f8dbbe331a79e1df1';
 export default node;
