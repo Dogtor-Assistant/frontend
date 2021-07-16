@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
-import { Container } from '@chakra-ui/react';
+import React from 'react';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import AppDate from './AppDate';
+import Confirmation from './Confirmation';
+import Menu from './Menu';
 
 function BookAppointment() {
+    const { path } = useRouteMatch();
+    
     return (
-        <Container maxW="container.l">
-            <AppDate/>
-        </Container>
+        <div>
+            <Switch>
+                <Route exact path={path}>
+                    <Menu />
+                </Route>
+                <Route path={`${path}/success`}>
+                    <Confirmation />
+                </Route>
+            </Switch>
+        </div>
     );
 }
 

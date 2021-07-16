@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
 
-function Date() {
+function AppDate() {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
@@ -46,4 +46,4 @@ function Date() {
     );
 }
 
-export default Date;
+export default AppDate;

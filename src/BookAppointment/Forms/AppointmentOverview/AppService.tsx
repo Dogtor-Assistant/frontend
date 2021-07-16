@@ -12,14 +12,14 @@ import {
     IconButton,
     useDisclosure,
 } from '@chakra-ui/react';
-import { EditIcon } from '@chakra-ui/icons';
+import { AddIcon } from '@chakra-ui/icons';
 
-function Date() {
+function AppService() {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <Center>
-            <IconButton aria-label="Edit DateTime" color="green.300" icon={<EditIcon />} onClick={onOpen} size="sm" />
+            <IconButton aria-label="Edit DateTime" color="green.300" icon={<AddIcon />} onClick={onOpen} size="sm" />
             <Drawer
                 isOpen={isOpen}
                 onClose={onClose}
@@ -28,7 +28,7 @@ function Date() {
                 <DrawerOverlay />
                 <DrawerContent>
                     <DrawerCloseButton />
-                    <DrawerHeader>Select Date</DrawerHeader>
+                    <DrawerHeader>Select Services</DrawerHeader>
 
                     <DrawerBody>
                         
@@ -38,7 +38,7 @@ function Date() {
                         <Button mr={3} onClick={onClose} variant="outline">
                         Cancel
                         </Button>
-                        <Button bg="green">Save</Button>
+                        <Button colorScheme="green">Save</Button>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
@@ -46,4 +46,4 @@ function Date() {
     );
 }
 
-export default Date;
+export default AppService;

@@ -3,6 +3,7 @@ import useMetaTags from 'react-metatags-hook';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { useColorModeValue } from '@chakra-ui/color-mode';
 
+import BookAppointment from 'BookAppointment';
 import DebugMenu from 'DebugMenu';
 import Home from 'Home';
 import Login from 'Login';
@@ -38,6 +39,10 @@ function App() {
 
                         <Route path="/signup">
                             <Signup />
+                        </Route>
+
+                        <Route path="/bookappointment">
+                            <BookAppointment />
                         </Route>
                     </Switch>
                 </div>
