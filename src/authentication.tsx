@@ -120,6 +120,7 @@ export function AuthenticationProvider({ children }: Props) {
             return token;
         } catch (error) {
             loginPromise.current = null;
+            setIsLoggingIn(false);
             throw error;
         }
     }, [authURL, setToken]);

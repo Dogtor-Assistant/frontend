@@ -27,6 +27,8 @@ type UserContextType = {
     lastname?: string | undefined,
     isPatient: boolean,
     isDoctor: boolean,
+    patientId?: string | undefined,
+    doctorId?: string | undefined,
 }
 
 const UserContext = React.createContext<UserContextType>({
@@ -44,9 +46,11 @@ function LoadedUserProvider(props: LoadedProps) {
                     lastname
                     patientProfile {
                         __typename
+                        id
                     }
                     doctorProfile {
                         __typename
+                        id
                     }
                 }
             }
@@ -57,11 +61,13 @@ function LoadedUserProvider(props: LoadedProps) {
     return (
         <UserContext.Provider
             value={{
+                doctorId: data.me?.doctorProfile != null ? data.me?.doctorProfile.id : undefined,
                 firstname: data.me?.firstname,
                 id: data.me?.id,
                 isDoctor: data.me?.doctorProfile != null,
                 isPatient: data.me?.patientProfile != null,
                 lastname: data.me?.lastname,
+                patientId: data.me?.patientProfile != null ? data.me?.patientProfile.id : undefined,
             }}
         >
             {props.children}
@@ -126,4 +132,14 @@ export function useIsDoctor(): boolean {
 export function useIsPatient(): boolean {
     const { isPatient } = useContext(UserContext);
     return isPatient;
+}
+
+export function useDoctorId(): string | undefined {
+    const { doctorId } = useContext(UserContext);
+    return doctorId;
+}
+
+export function usePatientId(): string | undefined {
+    const { patientId } = useContext(UserContext);
+    return patientId;
 }

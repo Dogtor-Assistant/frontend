@@ -14,6 +14,7 @@
     "@types/node": "^12.20.13",
     "@types/react": "^17.0.8",
     "@types/react-dom": "^17.0.5",
+    "axios": "^0.21.1",
     "font-awesome": "^4.7.0",
     "framer-motion": "^4.1.17",
     "react": "^16.0.0",
@@ -36,9 +37,9 @@
     "build": "react-scripts build",
     "lint": "eslint . --ignore-pattern node_modules/ --ignore-pattern build/ --ext .js,.jsx,.ts,.tsx",
     "autofix": "eslint . --ignore-pattern node_modules/ --ignore-pattern build/ --ext .js,.jsx,.ts,.tsx --fix",
-    "relay": "relay-compiler --src ./src --schema ./data/schema.graphql --extensions ts tsx --language typescript",
-    "validate-relay": "relay-compiler --validate  --src ./src --schema ./data/schema.graphql --extensions ts tsx --language typescript",
-    "relay-watch": "relay-compiler --src ./src --schema ./data/schema.graphql --extensions ts tsx --language typescript --watch"
+    "relay": "relay-compiler --src ./src --schema ./data/schema.graphql --extensions ts tsx --language typescript --customScalars.DateTime=String",
+    "validate-relay": "relay-compiler --validate  --src ./src --schema ./data/schema.graphql --extensions ts tsx --language typescript --customScalars.DateTime=String",
+    "relay-watch": "relay-compiler --src ./src --schema ./data/schema.graphql --extensions ts tsx --language typescript --customScalars.DateTime=String --watch"
   },
   "eslintConfig": {
     "extends": [

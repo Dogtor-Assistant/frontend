@@ -14,7 +14,7 @@ export type UserPatientInput = {
     address: AddressInput;
     phoneNumber: string;
     insurance: Insurance;
-    birthDate?: unknown | null;
+    birthDate?: string | null;
     gender?: Gender | null;
     height?: number | null;
     weight?: number | null;
@@ -30,6 +30,8 @@ export type AddressInput = {
     streetNumber: number;
     city: string;
     zipCode: number;
+    lat: number;
+    lon: number;
 };
 export type PatientUserCreateMutationVariables = {
     input: UserPatientInput;

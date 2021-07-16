@@ -2,8 +2,6 @@ interface Node {
   id: ID!
 }
 
-scalar Duration
-
 scalar DateTime
 
 scalar URL
@@ -52,7 +50,7 @@ type Address {
 
 type AppointmentTime {
   start: DateTime
-  duration: Duration
+  duration: Int
 }
 
 type Appointment implements Node {
@@ -65,6 +63,7 @@ type Appointment implements Node {
   notes: String
   sharedData: Boolean!
   selectedServices: [Service!]!
+  isDone: Boolean!
 }
 
 type Checkup implements Node {
@@ -85,6 +84,8 @@ type Doctor implements Node {
   topServices: [Service!]!
   topReviews: [Review!]!
   webpage: URL
+  appointments: [Appointment!]!
+  services: [Service!]!
 }
 
 type Followup implements Node {
@@ -114,6 +115,7 @@ type Patient implements Node {
   allergies: [String!]!
   surgeries: [String!]!
   isSmoker: Boolean
+  address: Address!
 }
 
 type Review implements Node {
@@ -126,6 +128,13 @@ type Review implements Node {
 
 type Service implements Node {
   id: ID!
+  name: String!
+  doctor: Doctor!
+  description: String
+  estimatedDuration: Int
+  publicCovered: Boolean
+  privateCovered: Boolean
+  timesSelected: Int!
 }
 
 type User implements Node {
@@ -226,6 +235,8 @@ input AddressInput {
   streetNumber: Int!
   city: String!
   zipCode: Int!
+  lat: Float!
+  lon: Float!
 }
 
 input OfferedSlotInput {
@@ -266,6 +277,19 @@ input UserPatientInput {
   surgeries: [String]!
 }
 
+input ServiceInput {
+  serviceId: ID!
+  serviceName: String!
+}
+
+input FollowupInput {
+  doctorRef: ID!
+  patientRef: ID!
+  services: [ServiceInput!]!
+  suggestedDate: DateTime!
+  doctorNotes: String
+}
+
 type Query {
   greeting: String!
   me: User
@@ -277,9 +301,14 @@ type Query {
   reviews(after: String, first: Int, before: String, last: Int): ReviewsConnection!
   services(after: String, first: Int, before: String, last: Int): ServicesConnection!
   latestReviews: [Review!]!
+  patientUpcomingAppointments(id: ID!): [Appointment!]!
+  patientPreviousAppointments(id: ID!): [Appointment!]!
 }
 
 type Mutation {
   createUserDoctor(input: UserDoctorInput!): User
+  deleteAppointmentById(id: ID!): Boolean!
+  makeAppointmentAsDone(id: ID!): Boolean!
+  assignFollowup(followupInput: FollowupInput!): Boolean!
   createUserPatient(input: UserPatientInput!): User
 }

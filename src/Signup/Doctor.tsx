@@ -23,6 +23,9 @@ import StepThreeForm from './Forms/StepThreeFormDoc';
 import StepTwoForm from './Forms/StepTwoFormDoc';
 import Nav from './Nav';
 
+import axios from 'axios';
+import { GEOLOC_KEY } from 'utils/constants';
+
 const Doctor: FC = (): ReactElement => {
     const history = useHistory();
 
@@ -81,30 +84,50 @@ const Doctor: FC = (): ReactElement => {
     const submit = (): void => {
         setAlertEmail(false);
         setAlertPhone(false);
-        commit({
-            onCompleted(data, err) {
-                if (err) handleError(err);
-                else history.push('/signup/success');
+
+        // Get lat & lon from given address
+        const url = `http://open.mapquestapi.com/geocoding/v1/address?key=${GEOLOC_KEY}`;
+        let lat = 0;
+        let lon = 0;
+
+        axios.post(url, {
+            'location': `${streetNumber} ${streetName}, ${city}`,
+            'options': {
+                'thumbMaps': false,
             },
-            variables: {
-                'input': {
-                    'address': {
-                        'city': city,
-                        'streetName': streetName,
-                        'streetNumber': streetNumber,
-                        'zipCode': zipCode,
+        }).
+            then(function(response) {
+                lat = response.data.results[0].locations[0].latLng.lat;
+                lon = response.data.results[0].locations[0].latLng.lng;
+
+                commit({
+                    onCompleted(data, err) {
+                        if (err) handleError(err);
+                        else history.push('/signup/success');
                     },
-                    'email': email,
-                    'firstName': firstName,
-                    'lastName': lastName,
-                    'offeredSlots': slots,
-                    'password': password,
-                    'phoneNumber': phoneNumber,
-                    'specialities': specialities,
-                    'webpage': webpage,
-                },
-            },
-        });
+                    variables: {
+                        'input': {
+                            'address': {
+                                'city': city,
+                                'lat': lat,
+                                'lon': lon,
+                                'streetName': streetName,
+                                'streetNumber': streetNumber,
+                                'zipCode': zipCode,
+                            },
+                            'email': email,
+                            'firstName': firstName,
+                            'lastName': lastName,
+                            'offeredSlots': slots,
+                            'password': password,
+                            'phoneNumber': phoneNumber,
+                            'specialities': specialities,
+                            'webpage': webpage,
+                        },
+                    },
+                });
+            }).
+            catch(() => setStep(-1));
     };
 
     switch (step) {

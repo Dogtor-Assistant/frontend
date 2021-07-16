@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { MdExpandMore } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
     Button,
     chakra,
@@ -22,14 +22,24 @@ import {
 } from '@chakra-ui/react';
 
 import { useIsLoggedIn, useLogout } from 'authentication';
-import { useFirstName, useFullName } from 'user';
+import {
+    useFirstName,
+    useFullName,
+    useIsDoctor,
+    useIsPatient,
+} from 'user';
 
 function Navbar() {
+    const history = useHistory();
+    
     const backgroundColor = useColorModeValue('white', 'gray.800');
     const isLoggedIn = useIsLoggedIn();
     const logout = useLogout();
     const firstname = useFirstName();
     const fullname = useFullName();
+
+    const isDoctor = useIsDoctor();
+    const isPatient = useIsPatient();
 
     return (
         <chakra.header
@@ -84,7 +94,13 @@ function Navbar() {
                                         <PopoverHeader>{fullname}</PopoverHeader>
                                         <PopoverBody>
                                             <VStack align="end">
-                                                <Button onClick={logout}>
+                                                { isDoctor &&
+                                                <Link to="/doctor">Doctor Schedule</Link>
+                                                }
+                                                { isPatient &&
+                                                <Link to="/patient">Patient Timeline</Link>
+                                                }
+                                                <Button onClick={() => { logout(); history.push('/'); }}>
                                                     Logout
                                                 </Button>
                                             </VStack>
