@@ -65,7 +65,6 @@ function LoadedSearchRenderer(props: LoadedProps) {
 
 function SearchRenderer() {
     const applied = useAppliedSearchArguments();
-    const previous = useRef<PreloadedQuery<SearchRendererQueryType> | null>(null);
     const [
         data,
         loadQuery,
@@ -81,16 +80,9 @@ function SearchRenderer() {
         });
     }, [loadQuery, applied]);
 
-    useEffect(() => {
-        if (error.current != null && data != null) {
-            previous.current?.dispose();
-            previous.current = data;
-        }
-    }, [data]);
-
     return (
         <Suspense boundaryRef={error}>
-            {data != null && <LoadedSearchRenderer data={previous?.current ?? data}/>}
+            {data != null && <LoadedSearchRenderer data={data}/>}
         </Suspense>
     );
 }

@@ -6,7 +6,7 @@ import { Container } from '@chakra-ui/react';
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
-import CityPicker from './Filters/Common/CityPicker';
+import { useShouldShowBarValue } from 'Search/context';
 import SearchResultsList from './SearchResultsList';
 
 type Props = {
@@ -14,6 +14,8 @@ type Props = {
 }
 
 function Results(props: Props) {
+    useShouldShowBarValue(true);
+    
     const search = useFragment(
         graphql`
             fragment Results_search on Search {
@@ -25,7 +27,6 @@ function Results(props: Props) {
 
     return (
         <Container maxW="container.lg">
-            <CityPicker />
             <SearchResultsList search={search} />
         </Container>
     );

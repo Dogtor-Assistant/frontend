@@ -11,7 +11,7 @@ import {
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
-import { useAppliedSearchArguments, useUpdate } from 'Search/context';
+import { useAppliedSearchArguments, useShouldShowBarValue, useUpdate } from 'Search/context';
 import CitiesSuggestions from './CitiesSuggestions';
 import SpecialitiesSuggestions from './SpecialitiesSuggestions';
 
@@ -20,6 +20,8 @@ type Props = {
 }
 
 function Suggestions(props: Props) {
+    useShouldShowBarValue(false);
+
     const search = useFragment(
         graphql`
             fragment Suggestions_search on Search {

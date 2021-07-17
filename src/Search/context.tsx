@@ -1,10 +1,11 @@
 
-import type { ReactNode } from 'react';
+import type { Dispatch, ReactNode, SetStateAction } from 'react';
 
 import React, {
     createContext,
     useCallback,
     useContext,
+    useEffect,
     useMemo,
     useState,
 } from 'react';
@@ -18,6 +19,7 @@ export type SearchArguments = {
 type ContextType = {
     applied: SearchArguments,
     current: SearchArguments,
+    shouldShowBar: [boolean, Dispatch<SetStateAction<boolean>>],
     update: (partial: Partial<SearchArguments>, force?: true) => void,
 }
 
@@ -30,6 +32,7 @@ const emptySearchArguments: SearchArguments = {
 const Context = createContext<ContextType>({
     applied: emptySearchArguments,
     current: emptySearchArguments,
+    shouldShowBar: [true, () => { /* no-op */ }],
     update: () => { /* np-op */},
 });
 
@@ -41,6 +44,7 @@ type Props = {
 export function SearchContextProvider({ initial, children }: Props) {
     const [applied, setApplied] = useState(initial ?? emptySearchArguments);
     const [current, setCurrent] = useState(initial ?? emptySearchArguments);
+    const shouldShowBar = useState(true);
 
     const update = useCallback((partial: Partial<SearchArguments>, force?: true) => {
         const value = {
@@ -58,6 +62,7 @@ export function SearchContextProvider({ initial, children }: Props) {
             value={{
                 applied,
                 current,
+                shouldShowBar,
                 update,
             }}
         >
@@ -79,6 +84,22 @@ export function useCurrentSearchArguments() {
 export function useUpdate() {
     const { update } = useContext(Context);
     return update;
+}
+
+export function useShouldShowBar() {
+    const { shouldShowBar } = useContext(Context);
+    return shouldShowBar;
+}
+
+export function useShouldShowBarValue(value: boolean) {
+    const [shouldShowBar, setShouldShowBar] = useShouldShowBar();
+    useEffect(() => {
+        const previous = shouldShowBar;
+        setShouldShowBar(value);
+        return () => {
+            setShouldShowBar(previous);
+        };
+    }, [value, shouldShowBar, setShouldShowBar]);
 }
 
 type MultiSelectFilterHookType<T> = [
