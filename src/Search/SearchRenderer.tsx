@@ -65,10 +65,10 @@ function LoadedSearchRenderer(props: LoadedProps) {
 
 function SearchRenderer() {
     const applied = useAppliedSearchArguments();
+    const previous = useRef<PreloadedQuery<SearchRendererQueryType> | null>(null);
     const [
         data,
         loadQuery,
-        dispose,
     ] = useQueryLoader<SearchRendererQueryType>(SearchRendererQuery);
 
     const error = useRef<ErrorBoundary>(null);
@@ -79,14 +79,18 @@ function SearchRenderer() {
             query: applied.query,
             specialities: applied.specialities?.map(x => x),
         });
-        return () => {
-            dispose();
-        };
-    }, [dispose, loadQuery, applied]);
+    }, [loadQuery, applied]);
+
+    useEffect(() => {
+        if (error.current != null && data != null) {
+            previous.current?.dispose();
+            previous.current = data;
+        }
+    }, [data]);
 
     return (
         <Suspense boundaryRef={error}>
-            {data != null && <LoadedSearchRenderer data={data}/>}
+            {data != null && <LoadedSearchRenderer data={previous?.current ?? data}/>}
         </Suspense>
     );
 }
