@@ -83,8 +83,9 @@ export function useUpdate() {
 
 type MultiSelectFilterHookType<T> = [
     Set<T> | null,
-    (value: T) => void,
-    (value: T) => void,
+    (value: T, force?: true) => void,
+    (value: T, force?: true) => void,
+    (force?: true) => void,
 ]
 type MultiSelectFilterTypeKeys = {
     [P in keyof SearchArguments]: SearchArguments[P] extends ReadonlyArray<infer U> | null ? U : never
@@ -100,7 +101,7 @@ function useMultiSelectFilter<
     const { current, update } = useContext(Context);
     const values = current[key];
     const set = useMemo(() => values && new Set(values), [values]);
-    const add = useCallback((newValue: MultiSelectFilterTypes[K]) => {
+    const add = useCallback((newValue: MultiSelectFilterTypes[K], force?: true) => {
         const currentValues: ReadonlyArray<MultiSelectFilterTypes[K]> = values ?? [];
         if (currentValues.includes(newValue)) {
             return;
@@ -108,18 +109,24 @@ function useMultiSelectFilter<
 
         update({
             [key]: [...currentValues, newValue],
-        });
+        }, force);
     }, [values, update, key]);
 
-    const remove = useCallback((value: MultiSelectFilterTypes[K]) => {
+    const remove = useCallback((value: MultiSelectFilterTypes[K], force?: true) => {
         const currentValues: ReadonlyArray<MultiSelectFilterTypes[K]> = values ?? [];
         const newValues = currentValues.filter(item => item !== value);
         update({
             [key]: newValues.length > 0 ? newValues : null,
-        });
+        }, force);
     }, [values, update, key]);
 
-    return [set, add, remove];
+    const clear = useCallback((force?: true) => {
+        update({
+            [key]: [],
+        }, force);
+    }, [key, update]);
+
+    return [set, add, remove, clear];
 }
 
 type MultiSelectFilterValueHookType = [
