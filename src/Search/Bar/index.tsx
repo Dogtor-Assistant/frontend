@@ -3,6 +3,7 @@ import { Container, VStack } from '@chakra-ui/react';
 
 import { useShouldShowBar } from 'Search/context';
 import CityPicker from './Filters/Common/CityPicker';
+import SpecialityPicker from './Filters/Common/SpecialityPicker';
 
 function Bar() {
     const [shouldShowBar] = useShouldShowBar();
@@ -16,6 +17,7 @@ function Bar() {
         <Container maxW="container.lg">
             <VStack>
                 <CityPicker />
+                <SpecialityPicker />
             </VStack>
         </Container>
     );
