@@ -6,6 +6,7 @@ import { Container } from '@chakra-ui/react';
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
+import CityPicker from './Filters/Common/CityPicker';
 import SearchResultsList from './SearchResultsList';
 
 type Props = {
@@ -24,6 +25,7 @@ function Results(props: Props) {
 
     return (
         <Container maxW="container.lg">
+            <CityPicker />
             <SearchResultsList search={search} />
         </Container>
     );
