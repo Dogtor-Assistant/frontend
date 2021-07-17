@@ -7,6 +7,8 @@ import { useCities } from 'Search/context';
 import { useCities as useAllCities } from 'backendConstants';
 import MultiSelect from 'external/select';
 
+const PICKER_DEBOUNCE_TIME = 1000;
+
 function CityPicker() {
     const allCities = useAllCities();
     const [selected, add, remove, clear] = useCities();
@@ -35,19 +37,19 @@ function CityPicker() {
                         break;
                     case 'select-option':
                         if (meta.option != null) {
-                            add(meta.option.value, true);
+                            add(meta.option.value, PICKER_DEBOUNCE_TIME);
                         }
                         break;
                     case 'deselect-option':
                         if (meta.option != null) {
-                            remove(meta.option.value, true);
+                            remove(meta.option.value, PICKER_DEBOUNCE_TIME);
                         }
                         break;
                     
                     case 'remove-value':
                     case 'pop-value':
                         if (meta.removedValue != null) {
-                            remove(meta.removedValue.value, true);
+                            remove(meta.removedValue.value, PICKER_DEBOUNCE_TIME);
                         }
                         break;
                     case 'create-option':

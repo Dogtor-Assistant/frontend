@@ -7,6 +7,7 @@ import React, {
     useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
 } from 'react';
 
@@ -16,11 +17,13 @@ export type SearchArguments = {
     readonly specialities: readonly string[] | null,
 }
 
+type Force = true | number
+
 type ContextType = {
     applied: SearchArguments,
     current: SearchArguments,
     shouldShowBar: [boolean, Dispatch<SetStateAction<boolean>>],
-    update: (partial: Partial<SearchArguments>, force?: true) => void,
+    update: (partial: Partial<SearchArguments>, force?: Force) => void,
 }
 
 const emptySearchArguments: SearchArguments = {
@@ -44,18 +47,41 @@ type Props = {
 export function SearchContextProvider({ initial, children }: Props) {
     const [applied, setApplied] = useState(initial ?? emptySearchArguments);
     const [current, setCurrent] = useState(initial ?? emptySearchArguments);
+    const timeout = useRef<NodeJS.Timeout | null>(null);
     const shouldShowBar = useState(true);
 
-    const update = useCallback((partial: Partial<SearchArguments>, force?: true) => {
+    const update = useCallback((partial: Partial<SearchArguments>, force?: Force) => {
         const value = {
             ...current,
             ...partial,
         };
         setCurrent(value);
-        if (force) {
-            setApplied(value);
+        if (force == null) {
+            return;
         }
+
+        if (timeout.current != null) {
+            clearTimeout(timeout.current);
+        }
+        
+        switch (typeof force) {
+        case 'boolean':
+            setApplied(value);
+            break;
+        case 'number':
+            timeout.current = setTimeout(() => setApplied(value), force);
+            break;
+        }
+
     }, [current, setCurrent, setApplied]);
+
+    useEffect(() => {
+        return () => {
+            if (timeout.current != null) {
+                clearTimeout(timeout.current);
+            }
+        };
+    }, []);
 
     return (
         <Context.Provider
@@ -104,9 +130,9 @@ export function useShouldShowBarValue(value: boolean) {
 
 type MultiSelectFilterHookType<T> = [
     Set<T> | null,
-    (value: T, force?: true) => void,
-    (value: T, force?: true) => void,
-    (force?: true) => void,
+    (value: T, force?: Force) => void,
+    (value: T, force?: Force) => void,
+    (force?: Force) => void,
 ]
 type MultiSelectFilterTypeKeys = {
     [P in keyof SearchArguments]: SearchArguments[P] extends ReadonlyArray<infer U> | null ? U : never
@@ -122,7 +148,7 @@ function useMultiSelectFilter<
     const { current, update } = useContext(Context);
     const values = current[key];
     const set = useMemo(() => values && new Set(values), [values]);
-    const add = useCallback((newValue: MultiSelectFilterTypes[K], force?: true) => {
+    const add = useCallback((newValue: MultiSelectFilterTypes[K], force?: Force) => {
         const currentValues: ReadonlyArray<MultiSelectFilterTypes[K]> = values ?? [];
         if (currentValues.includes(newValue)) {
             return;
@@ -133,7 +159,7 @@ function useMultiSelectFilter<
         }, force);
     }, [values, update, key]);
 
-    const remove = useCallback((value: MultiSelectFilterTypes[K], force?: true) => {
+    const remove = useCallback((value: MultiSelectFilterTypes[K], force?: Force) => {
         const currentValues: ReadonlyArray<MultiSelectFilterTypes[K]> = values ?? [];
         const newValues = currentValues.filter(item => item !== value);
         update({
@@ -141,7 +167,7 @@ function useMultiSelectFilter<
         }, force);
     }, [values, update, key]);
 
-    const clear = useCallback((force?: true) => {
+    const clear = useCallback((force?: Force) => {
         update({
             [key]: [],
         }, force);
