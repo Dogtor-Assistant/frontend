@@ -138,11 +138,11 @@ type MultiSelectFilterTypeKeys = {
     [P in keyof SearchArguments]: SearchArguments[P] extends ReadonlyArray<infer U> | null ? U : never
 };
 
-type MultiSelectFilterTypes = Pick<MultiSelectFilterTypeKeys, {
+export type MultiSelectFilterTypes = Pick<MultiSelectFilterTypeKeys, {
     [Key in keyof MultiSelectFilterTypeKeys]: MultiSelectFilterTypeKeys[Key] extends never ? never : Key
 }[keyof MultiSelectFilterTypeKeys]>;
 
-function useMultiSelectFilter<
+export function useMultiSelectFilter<
     K extends keyof MultiSelectFilterTypes
 >(key: K): MultiSelectFilterHookType<MultiSelectFilterTypes[K]> {
     const { current, update } = useContext(Context);
