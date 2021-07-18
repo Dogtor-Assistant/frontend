@@ -37,8 +37,6 @@ function LoadedBookAppointment(props: LoadedProps) {
     );
 
     if(data.node == null) {
-        // eslint-disable-next-line no-console
-        console.log('no dog');
         return null;
     }
 
@@ -58,8 +56,7 @@ function BookAppointment() {
     const { id } = useParams<Arguments>();
     useEffect(() => {
         error.current?.reset();
-        //loadQuery({ doctorID: id });
-        loadQuery({ doctorID: '60f1c406c3df7a02d9e497d8' });
+        loadQuery({ doctorID: id });
         return () => {
             dispose();
         };
