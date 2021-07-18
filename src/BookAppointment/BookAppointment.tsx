@@ -5,19 +5,20 @@ import type { PreloadedQuery } from 'react-relay';
 import BookAppointmentQuery from './__generated__/BookAppointmentQuery.graphql';
 
 import React, { useEffect, useRef } from 'react';
+import { useParams } from 'react-router';
 
 import { usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
 import Suspense from 'Suspense';
-import Patient from './Menu';
+import Menu from './Menu';
 
 type LoadedProps = {
     data: PreloadedQuery<BookAppointmentQueryType>,
 }
 
-type Props = {
-    
+type Arguments = {
+    id: string,
 }
 
 function LoadedBookAppointment(props: LoadedProps) {
@@ -35,12 +36,18 @@ function LoadedBookAppointment(props: LoadedProps) {
         props.data,
     );
 
+    if(data.node == null) {
+        // eslint-disable-next-line no-console
+        console.log('no dog');
+        return null;
+    }
+
     return (
-        <Patient/>
+        <Menu Doctor={data.node}/>
     );
 }
 
-function BookAppointment(props: Props) {
+function BookAppointment() {
     const [
         data,
         loadQuery,
@@ -48,13 +55,15 @@ function BookAppointment(props: Props) {
     ] = useQueryLoader<BookAppointmentQueryType>(BookAppointmentQuery);
 
     const error = useRef<ErrorBoundary>(null);
+    const { id } = useParams<Arguments>();
     useEffect(() => {
         error.current?.reset();
-        loadQuery({ });
+        //loadQuery({ doctorID: id });
+        loadQuery({ doctorID: '60f1c406c3df7a02d9e497d8' });
         return () => {
             dispose();
         };
-    }, [dispose, loadQuery]);
+    }, [dispose, loadQuery, id]);
 
     return (
         <Suspense boundaryRef={error}>

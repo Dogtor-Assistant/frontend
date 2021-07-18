@@ -4,10 +4,29 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
+export type Weekday = "Friday" | "Monday" | "Saturday" | "Sunday" | "Thursday" | "Tuesday" | "Wednesday" | "%future added value";
 export type Menu_doctor = {
     readonly firstname: string;
-    readonly topServices: ReadonlyArray<{
+    readonly lastname: string;
+    readonly offeredSlots: ReadonlyArray<{
+        readonly day: Weekday;
+        readonly start: string;
+        readonly end: string;
+    }>;
+    readonly services: ReadonlyArray<{
         readonly id: string;
+        readonly description: string | null;
+        readonly estimatedDuration: number | null;
+        readonly name: string;
+        readonly privateCovered: boolean | null;
+        readonly publicCovered: boolean | null;
+    }>;
+    readonly appointments: ReadonlyArray<{
+        readonly isDone: boolean;
+        readonly expectedTime: {
+            readonly duration: number | null;
+            readonly start: string | null;
+        };
     }>;
     readonly " $refType": "Menu_doctor";
 };
@@ -19,7 +38,15 @@ export type Menu_doctor$key = {
 
 
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "start",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -35,9 +62,42 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
+      "kind": "ScalarField",
+      "name": "lastname",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "OfferedSlot",
+      "kind": "LinkedField",
+      "name": "offeredSlots",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "day",
+          "storageKey": null
+        },
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "end",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "Service",
       "kind": "LinkedField",
-      "name": "topServices",
+      "name": "services",
       "plural": true,
       "selections": [
         {
@@ -45,6 +105,78 @@ const node: ReaderFragment = {
           "args": null,
           "kind": "ScalarField",
           "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "description",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "estimatedDuration",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "privateCovered",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "publicCovered",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Appointment",
+      "kind": "LinkedField",
+      "name": "appointments",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isDone",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "AppointmentTime",
+          "kind": "LinkedField",
+          "name": "expectedTime",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "duration",
+              "storageKey": null
+            },
+            (v0/*: any*/)
+          ],
           "storageKey": null
         }
       ],
@@ -54,5 +186,6 @@ const node: ReaderFragment = {
   "type": "Doctor",
   "abstractKey": null
 };
-(node as any).hash = '02932db7d7482deb52ad953c5ba3ab3a';
+})();
+(node as any).hash = '1bc4aaf712697cef80272832f9855484';
 export default node;

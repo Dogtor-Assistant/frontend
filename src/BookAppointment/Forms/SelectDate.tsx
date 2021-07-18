@@ -1,3 +1,4 @@
+import type { Weekday } from '../__generated__/Menu_doctor.graphql';
 import type { FC, ReactElement } from 'react';
 
 import React, { useEffect, useState } from 'react';
@@ -11,16 +12,27 @@ import {
     GridItem,
     IconButton,
     Stack,
+    useColorMode,
+    useColorModeValue,
 } from '@chakra-ui/react';
 import { ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons';
 
-export type Day = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
-
 type SelectDateProps = {
-    blockedAppointments: Array<{'expectedTime': Date, 'expectedDuration': number} | null>,
-    doctorHours: Array<{'day': Day, 'slotStart': number, 'slotStop': number}>,
+    blockedAppointments: ReadonlyArray<{
+        readonly isDone: boolean,
+        readonly expectedTime: {
+            readonly duration: number | null,
+            readonly start: string | null,
+        },
+    }>,
+    doctorHours: ReadonlyArray<{
+        readonly day: Weekday,
+        readonly start: string,
+        readonly end: string,
+    }>,
+    expectedTime: Date | null,
+    currentDate: Date,
     expectedDuration: number,
-    expectedTime: Date,
     setExpectedTime: React.Dispatch<React.SetStateAction<Date>>,
     setValidForm: React.Dispatch<React.SetStateAction<boolean>>,
 }
@@ -31,61 +43,102 @@ const SelectDate: FC<SelectDateProps> =
     expectedDuration,
     setExpectedTime,
     expectedTime,
+    currentDate,
     setValidForm,
 }): ReactElement => {
-    const [serviceInsuranceError, setServiceInsuranceError] = useState(false);
-    const currentDate = new Date();
-    const getDoctorSlots = () => {
+    const [noDateSelectedError, setNoDateSelectedError] = useState(false);
 
-        const slotTable = Array<Array<number>>([], [], [], [], [], [], [], []);
-        for (let slot_counter = currentDate.getDay() - 1; slot_counter < doctorHours.length; slot_counter++) {
-            const slot_duration = Math.ceil(expectedDuration/30);
-            let dayNumber = 0;
+    const weekdayArr: Weekday[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    // eslint-disable-next-line max-len
+    const startDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
+    // eslint-disable-next-line max-len
+    const endDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDay()+ (7- currentDate.getDay()));
 
-            if(doctorHours[slot_counter]?.day === 'Tuesday') {
-                dayNumber = 1;
-            }if(doctorHours[slot_counter]?.day === 'Wednesday') {
-                dayNumber = 2;
-            }if(doctorHours[slot_counter]?.day === 'Thursday') {
-                dayNumber = 3;
-            }if(doctorHours[slot_counter]?.day === 'Friday') {
-                dayNumber = 4;
-            }if(doctorHours[slot_counter]?.day === 'Saturday') {
-                dayNumber = 5;
-            }if(doctorHours[slot_counter]?.day === 'Sunday') {
-                dayNumber = 6;
+    const WeekSlots = () => {
+        let day_numb = currentDate.getDay();
+        const numb_DaySlots = new Array<Array<{'endSlot':number, 'startSlot':number}>>();
+        const numb_DayApp = new Array<Array<{'endTime':number, 'startTime':number}>>(7);
+
+        while (day_numb < 7) {
+            const current_Day = new Date(
+                // eslint-disable-next-line max-len
+                currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (day_numb-currentDate.getDay()));
+            if(currentDate.getDay() !== day_numb) {
+                current_Day.setHours(0);
             }
 
-            let slotStart = doctorHours[slot_counter].slotStart;
+            const appointments = blockedAppointments;
 
-            while(slotStart < doctorHours[slot_counter].slotStop) {
-                slotTable[dayNumber].push(slotStart);
-                slotStart = slotStart + (slot_duration * 0.5);
-            }
-        }
-        return slotTable;
-    };
-    const calculateSlots = () => {
-        const lastDayOfTheWeek = new Date(
-            currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (7-currentDate.getDay()), 23);
-        const blockedTimes = [[], [], [], [], [], [], []];
+            appointments.filter(app => {
+                const appDate = app.expectedTime.start != null ? new Date(app.expectedTime.start) : null;
+                const duration = app.expectedTime.duration;
 
-        /*if(blockedAppointments != null) {
-            for(let bA_counter = 0; bA_counter < blockedAppointments.length; bA_counter++) {
-                if(blockedAppointments[bA_counter].expectedTime >= currentDate) {
-                    if(blockedAppointments[bA_counter].expectedTime < lastDayOfTheWeek) {
-                        blockedTimes[blockedAppointments[bA_counter].expectedTime.getDay() - 1].push(
-                            blockedAppointments[bA_counter]);
+                const num = appDate?.getDate() !== undefined ? appDate?.getDate() : null;
+                const month = appDate?.getMonth() !== undefined ? appDate?.getMonth() : null;
+                const year = appDate?.getFullYear() !== undefined ? appDate?.getFullYear() : null;
+                const hour = appDate?.getHours() !== undefined ? appDate?.getHours() : null;
+                const minute = appDate?.getHours() !== undefined ? appDate?.getMinutes() : null;
+
+                // eslint-disable-next-line max-len
+                if(current_Day.getFullYear() === year && current_Day.getMonth() === month && current_Day.getDate() === num && duration != null) {
+                    if (hour != null && minute != null) {
+                        const startTime = hour * 60 + minute;
+                        const endTime = startTime + duration;
+                        numb_DayApp[day_numb].push({ 'endTime':endTime, 'startTime' : startTime });
                     }
                 }
-            }
-        }*/
+            });
 
+            const daySlots = [];
+            for(let i = 0; i < doctorHours.length; i++) {
+                if(weekdayArr[day_numb] === doctorHours[i].day) {
+                    const startSlot = stringToTime(doctorHours[i].start);
+                    const endSlot = stringToTime(doctorHours[i].end);
+                    daySlots.push({ 'endSlot':endSlot, 'startSlot':startSlot });
+                }
+            }
+            numb_DaySlots.push(daySlots);
+
+            day_numb = day_numb + 1;
+        }
+        
+        const finalSlots = new Array<Array<number>>(7);
+        for(let i = currentDate.getDay(); i < 7; i++) {
+            let day_slots = Array<number>();
+            for(let j = 0; j < numb_DaySlots[i].length; j++) {
+                const slots = new Array<number>();
+                let slot_counter = numb_DaySlots[i][j].startSlot;
+                while (slot_counter < numb_DaySlots[i][j].endSlot - expectedDuration) {
+                    slots.push(slot_counter);
+                    slot_counter = slot_counter + 30;
+                }
+
+                let filtered_solts = slots;
+                for(let k = 0; k < numb_DayApp[i].length; k++) {
+                    const filtered = new Array<number>();
+                    if (numb_DayApp[i][k].startTime <= numb_DaySlots[i][j].endSlot) {
+                        filtered_solts.filter(slot => {
+                            if (numb_DayApp[i][k].startTime >= slot+30 || numb_DayApp[i][k].endTime <= slot) {
+                                filtered.push(slot);
+                            }
+                        });
+                        filtered_solts = filtered;
+                    }
+                }
+                day_slots = day_slots.concat(filtered_solts);
+            }
+            day_slots.sort(function(a, b) { return a-b; });
+            finalSlots[i] = day_slots;
+        }
+        return finalSlots;
     };
+
+    const { toggleColorMode } = useColorMode();
+    const color = useColorModeValue('green', 'gray');
     
     useEffect(() => {
-        setValidForm(true);
-    }, [setValidForm]);
+        setValidForm(expectedTime != null);
+    }, [expectedTime, setValidForm]);
 
     return (
         <div>
@@ -109,7 +162,7 @@ const SelectDate: FC<SelectDateProps> =
                             <Divider />
                         </Center>
                         <Center height="30px">
-                            05.07.2021 - 10.07.2021
+                            {startDay} - {endDay}
                         </Center>
                         <Center height="50px">
                             <Divider />
@@ -121,15 +174,15 @@ const SelectDate: FC<SelectDateProps> =
                             templateRows="repeat(13, 1fr)"
                         >
                             <GridItem colSpan={1} rowSpan={13}>
-                                <IconButton aria-label="Submit DateTime" icon={<ArrowLeftIcon />} />
+                                <IconButton aria-label="PriorWeek" icon={<ArrowLeftIcon />} />
                             </GridItem>
                             {['Mo', 'Tu', 'We', 'Thu', 'Fr', 'Sa', 'Su'].map(day => (
                                 <GridItem key={day}><Center> {day}</Center></GridItem>
                             ))}
                             <GridItem colSpan={1} rowSpan={13}>
-                                <IconButton aria-label="Submit DateTime" icon={<ArrowRightIcon />} />
+                                <IconButton aria-label="NextWeek" icon={<ArrowRightIcon />} />
                             </GridItem>
-                            {getDoctorSlots().map(slotDay => (
+                            {WeekSlots().map((slotDay, index) => (
                                 // eslint-disable-next-line react/jsx-key
                                 <GridItem colSpan={1} rowSpan={12}><Center>
                                     <Stack spacing={4}>
@@ -137,11 +190,16 @@ const SelectDate: FC<SelectDateProps> =
                                             slotDay.map(slot => (
                                                 <Button
                                                     borderRadius="full"
-                                                    colorScheme="green"
+                                                    colorScheme={color}
                                                     key={slot}
+                                                    onClick={() => {
+                                                        // eslint-disable-next-line max-len
+                                                        setExpectedTime(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + index, Math.ceil(slot/60), slot%60));
+                                                        toggleColorMode;
+                                                    }}
                                                     variant="solid"
                                                 >
-                                                    {slot}
+                                                    {Math.ceil(slot/60)}:{slot%60}
                                                 </Button>
                                             ))
                                         }
@@ -161,5 +219,12 @@ const SelectDate: FC<SelectDateProps> =
         </div>
     );
 };
+
+function stringToTime(number: string) {
+    const numberArray = number.split(':');
+    const h = parseInt(numberArray[0]);
+    const min = parseInt(numberArray[1]);
+    return h*60 + min;
+}
 
 export default SelectDate;

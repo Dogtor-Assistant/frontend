@@ -42,8 +42,10 @@ function App() {
                             <Signup />
                         </Route>
 
-                        <Route path="/bookappointment">
+                        <Route path="/bookappointment/:id">
                             <BookAppointment />
+                        </Route>
+                        
                         <Route path="/patient">
                             <PatientPage />
                         </Route>

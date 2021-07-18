@@ -1,3 +1,4 @@
+import type { Weekday } from 'BookAppointment/__generated__/Menu_doctor.graphql';
 import type { FC, ReactElement } from 'react';
 
 import React, { useEffect } from 'react';
@@ -29,22 +30,40 @@ import AppDate from './AppDate';
 import AppService from './AppService';
 
 export type Day = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
+export type Insurance = 'Private' | 'Public';
+const weekdayArr: Weekday[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const insuranceArr: Insurance[] = ['Public', 'Private'];
 
 type AppointmentOverviewProps = {
     doctorName: string,
     patientNotes: string,
-    setInsurance: React.Dispatch<React.SetStateAction<number>>,
-    insurance: number,
-    possibleServices: Array<string>,
-    serviceDuration: Array<number>,
+    setInsurance: React.Dispatch<React.SetStateAction<Insurance>>,
+    insurance: Insurance,
+    possibleServices: ReadonlyArray<{
+        readonly id: string,
+        readonly description: string | null,
+        readonly estimatedDuration: number | null,
+        readonly name: string,
+        readonly privateCovered: boolean | null,
+        readonly publicCovered: boolean | null,
+    }>,
     expectedDuration: number,
     selectedServices: Array<string>,
-    serviceInsurance: Array<number>,
     setExpectedDuration: React.Dispatch<React.SetStateAction<number>>,
     setSelectedServices: React.Dispatch<React.SetStateAction<Array<string>>>,
     setValidForm: React.Dispatch<React.SetStateAction<boolean>>,
-    blockedAppointments: Array<{'expectedTime': Date, 'expectedDuration': number} | null>,
-    doctorHours: Array<{'day': Day, 'slotStart': number, 'slotStop': number}>,
+    blockedAppointments: ReadonlyArray<{
+        readonly isDone: boolean,
+        readonly expectedTime: {
+            readonly duration: number | null,
+            readonly start: string | null,
+        },
+    }>,
+    doctorHours: ReadonlyArray<{
+        readonly day: Weekday,
+        readonly start: string,
+        readonly end: string,
+    }>,
     expectedTime: Date,
     setExpectedTime: React.Dispatch<React.SetStateAction<Date>>,
     setPatientNotes: React.Dispatch<React.SetStateAction<string>>,
@@ -58,10 +77,8 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
     setInsurance,
     insurance,
     possibleServices,
-    serviceDuration,
     expectedDuration,
     selectedServices,
-    serviceInsurance,
     setExpectedDuration,
     setSelectedServices,
     setValidForm,
@@ -79,11 +96,12 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
     }, [possibleServices, setValidForm]);
 
     const showInsurance = () => {
-        if (insurance === 1) {
-            <RadioGroup defaultValue='1' onChange={event => {
-                setInsurance(parseInt(event));
-            }}
-            value={insurance.toString()}
+        if (insurance === insuranceArr[1]) {
+            <RadioGroup
+                defaultValue='Private' onChange={event => {
+                    setInsurance(insuranceArr[0]);
+                }}
+                value={insurance}
             >
                 <HStack>
                     <Grid
@@ -91,17 +109,18 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                         templateColumns="repeat(2, 1fr)"
                         w="200px"
                     >
-                        <Radio value="0">Public</Radio>
-                        <Radio value="1">Private</Radio>
+                        <Radio value="Public">Public</Radio>
+                        <Radio value="Private">Private</Radio>
                     </Grid>
                 </HStack>
             </RadioGroup>;
         }
         else{
-            <RadioGroup defaultValue='0' onChange={event => {
-                setInsurance(parseInt(event));
-            }}
-            value={insurance.toString()}
+            <RadioGroup
+                defaultValue='Public' onChange={event => {
+                    setInsurance(insuranceArr[1]);
+                }}
+                value={insurance}
             >
                 <HStack>
                     <Grid
@@ -109,8 +128,8 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                         templateColumns="repeat(2, 1fr)"
                         w="200px"
                     >
-                        <Radio value="0">Public</Radio>
-                        <Radio value="1">Private</Radio>
+                        <Radio value="Public">Public</Radio>
+                        <Radio value="Private">Private</Radio>
                     </Grid>
                 </HStack>
             </RadioGroup>;
@@ -125,7 +144,6 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                 isTruncated
                 lineHeight="tight"
                 mt="1"
-                paddingLeft={20}
                 onChange={event => {
                     if (shareData) {
                         setShareData(false);
@@ -133,7 +151,8 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                     else {
                         setShareData(true);
                     }
-                }}>
+                }}
+                paddingLeft={20}>
                 <Checkbox>
                     I hereby agree
                     to share my appointment history and personal profile with the doctor.
@@ -147,7 +166,6 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                 isTruncated
                 lineHeight="tight"
                 mt="1"
-                paddingLeft={20}
                 onChange={event => {
                     if (shareData) {
                         setShareData(false);
@@ -156,6 +174,7 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                         setShareData(true);
                     }
                 }}
+                paddingLeft={20}
             >
                 <Checkbox>
                     I hereby agree

@@ -34,7 +34,26 @@ query BookAppointmentQuery(
 
 fragment Menu_doctor on Doctor {
   firstname
-  topServices {
+  lastname
+  offeredSlots {
+    day
+    start
+    end
+  }
+  services {
+    id
+    description
+    estimatedDuration
+    name
+    privateCovered
+    publicCovered
+  }
+  appointments {
+    isDone
+    expectedTime {
+      duration
+      start
+    }
     id
   }
 }
@@ -60,6 +79,13 @@ v2 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "start",
   "storageKey": null
 };
 return {
@@ -131,11 +157,117 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Service",
+                "kind": "ScalarField",
+                "name": "lastname",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "OfferedSlot",
                 "kind": "LinkedField",
-                "name": "topServices",
+                "name": "offeredSlots",
                 "plural": true,
                 "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "day",
+                    "storageKey": null
+                  },
+                  (v3/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "end",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Service",
+                "kind": "LinkedField",
+                "name": "services",
+                "plural": true,
+                "selections": [
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "description",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "estimatedDuration",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "name",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "privateCovered",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "publicCovered",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Appointment",
+                "kind": "LinkedField",
+                "name": "appointments",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "isDone",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "AppointmentTime",
+                    "kind": "LinkedField",
+                    "name": "expectedTime",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "duration",
+                        "storageKey": null
+                      },
+                      (v3/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -150,12 +282,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7ed64115cf78a00a499f268c23506157",
+    "cacheID": "95398ccea5869d557f9ec10b245f10ff",
     "id": null,
     "metadata": {},
     "name": "BookAppointmentQuery",
     "operationKind": "query",
-    "text": "query BookAppointmentQuery(\n  $doctorID: ID!\n) {\n  node(id: $doctorID) {\n    __typename\n    ... on Doctor {\n      ...Menu_doctor\n    }\n    id\n  }\n}\n\nfragment Menu_doctor on Doctor {\n  firstname\n  topServices {\n    id\n  }\n}\n"
+    "text": "query BookAppointmentQuery(\n  $doctorID: ID!\n) {\n  node(id: $doctorID) {\n    __typename\n    ... on Doctor {\n      ...Menu_doctor\n    }\n    id\n  }\n}\n\nfragment Menu_doctor on Doctor {\n  firstname\n  lastname\n  offeredSlots {\n    day\n    start\n    end\n  }\n  services {\n    id\n    description\n    estimatedDuration\n    name\n    privateCovered\n    publicCovered\n  }\n  appointments {\n    isDone\n    expectedTime {\n      duration\n      start\n    }\n    id\n  }\n}\n"
   }
 };
 })();

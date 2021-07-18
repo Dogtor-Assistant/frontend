@@ -1,5 +1,5 @@
 import type { Menu_doctor$key } from './__generated__/Menu_doctor.graphql';
-import type { FC, ReactElement } from 'react';
+import type { MenuMutation } from'./__generated__/MenuMutation.graphql';
 import type { PayloadError } from 'relay-runtime';
 
 import React, { useState } from 'react';
@@ -23,12 +23,17 @@ import SelectDate from './Forms/SelectDate';
 import SelectServices from './Forms/SelectServices';
 import Nav from './Nav';
 
+import { useIsPatient } from 'user';
+
 export type Insurance = 'Private' | 'Public';
 type Props = { Doctor:Menu_doctor$key };
 
 export type Day = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday'
 
-const Patient: FC = (props:Props): ReactElement => {
+function Menu(props:Props) {
+    const insuranceArr: Insurance[] = ['Public', 'Private'];
+    const dayArr: Day[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
     const history = useHistory();
     
     const [validSelectDate, setValidSelectDate] = useState(false);
@@ -38,40 +43,78 @@ const Patient: FC = (props:Props): ReactElement => {
 
     const [alertServicesInsurance, setAlertServicesInsurance] = useState(false);
 
-    const [doctorId] = useState('');
-    const [doctorName] = useState('');
     const [expectedDuration, setExpectedDuration] = useState(0);
     const [expectedTime, setExpectedTime] = useState(new Date());
-    const [insurance, setInsurance] = useState(0);
+    const [insurance, setInsurance] = useState(insuranceArr[0]);
     const [patientNotes, setPatientNotes] = useState('');
-    const [selectedServices, setSelectedServices] = useState(['']);
+    const [selectedServices, setSelectedServices] = useState(new Array<string>());
     const [shareData, setShareData] = useState(false);
     
     const [step, setStep] = useState(1);
-
-    const [possibleServices] = useState(new Array<string>());
-    const [serviceInsurance] = useState([0]);
-    const [serviceDuration] = useState([0]);
-    const [doctorHours] = useState(new Array<{day: Day, slotStart: number, slotStop: number}>());
-    const [blockedAppointments] = useState([]);
-
-    const insuranceArr: Insurance[] = ['Public', 'Private'];
-    const dayArr: Day[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const userLoggedIn = useIsPatient();
 
     const doctor=useFragment(
         graphql`
             fragment Menu_doctor on Doctor {
                 firstname
-                topServices{
+                lastname
+                offeredSlots{
+                    day
+                    start
+                    end
+                }
+                services{
                     id
+                    description
+                    estimatedDuration
+                    name
+                    privateCovered
+                    publicCovered
+                }
+                appointments{
+                    isDone 
+                    expectedTime{
+                        duration
+                        start
+                    }
                 }
             }
         `,
         props.Doctor,
     );
 
-    /*const [commit, isInFlight] = useMutation<AppointmentQuery>(graphql`
-    mutation MenuAppointmentQuery ($input: UserPatientInput!){
+    const serviceDuration = () => {
+        const arr = [];
+
+        for(let i = 0; i < doctor.services.length; i++) {
+            arr.push(doctor.services[i].estimatedDuration);
+        }
+
+        return arr;
+    };
+    
+    const serviceInsurance = () => {
+        const arr = [];
+        let pub = false;
+        let priv = false;
+
+        for(let i = 0; i < doctor.services.length; i++) {
+            const insurance = [];
+            if(doctor.services[i].privateCovered === true) {
+                pub = true;
+            }
+            if(doctor.services[i].publicCovered === true) {
+                priv = true;
+            }
+
+            arr.push({ 'private': priv, 'public': pub });
+        }
+
+        return arr;
+    };
+
+    const [commit, isInFlight] = useMutation<MenuMutation>(graphql`
+    mutation MenuMutation ($input: AppointmentInput!){
         createAppointment(input: $input) {
             id
         }
@@ -80,7 +123,7 @@ const Patient: FC = (props:Props): ReactElement => {
 
     if (isInFlight) {
         return <LoadingIndicator />;
-    }*/
+    }
 
     const next = (): void => {
         setStep(prevStep => prevStep + 1);
@@ -109,20 +152,12 @@ const Patient: FC = (props:Props): ReactElement => {
             },
             variables: {
                 'input': {
-                    'blockedAppointments': blockedAppointments,
-                    'doctorHours': doctorHours,
-                    'doctorRef': {
-                        'doctorId': doctorId,
-                        'doctorName': doctorName,
-                    },
+                    'doctorId': doctor.lastname,
                     'expectedDuration' : expectedDuration,
-                    'expectedTime' : expectedTime,
+                    'expectedTime' : expectedTime.toDateString(),
                     'insurance' : insurance,
                     'patientNotes': patientNotes,
-                    'possibleServices': possibleServices,
                     'selectedServices' : selectedServices,
-                    'serviceDuration': serviceDuration,
-                    'serviceInsurance': serviceInsurance,
                     'shareData': shareData,
                 },
             },
@@ -138,8 +173,7 @@ const Patient: FC = (props:Props): ReactElement => {
                     <Heading size="md">Select the services</Heading>
                     <SelectServices
                         expectedDuration={expectedDuration} insurance={insurance}
-                        possibleServices={possibleServices} selectedServices={selectedServices}
-                        serviceDuration={serviceDuration} serviceInsurance={serviceInsurance}
+                        possibleServices={doctor.services} selectedServices={selectedServices}
                         setExpectedDuration={setExpectedDuration} setSelectedServices={setSelectedServices}
                         setValidForm={setValidSelectService}
                     />
@@ -163,8 +197,8 @@ const Patient: FC = (props:Props): ReactElement => {
                     <Heading>Book Appointment</Heading>
                     <Heading size="md">Select a Date</Heading>
                     <SelectDate
-                        blockedAppointments={blockedAppointments} doctorHours={doctorHours}
-                        expectedDuration={expectedDuration}
+                        blockedAppointments={doctor.appointments} currentDate={new Date()}
+                        doctorHours={doctor.offeredSlots} expectedDuration={expectedDuration}
                         expectedTime={expectedTime} setExpectedTime={setExpectedTime}
                         setValidForm={setValidSelectDate}
                     />
@@ -217,12 +251,12 @@ const Patient: FC = (props:Props): ReactElement => {
                     <Heading>Book Appointment</Heading>
                     <Heading size="md">Appointment Overview</Heading>
                     <AppointmentOverview
-                        blockedAppointments={blockedAppointments} doctorHours={doctorHours}
-                        doctorName={doctorName} expectedDuration={expectedDuration}
+                        blockedAppointments={doctor.appointments} doctorHours={doctor.offeredSlots}
+                        doctorName={`Dr. ${ doctor.firstname } ${ doctor.lastname}`}
+                        expectedDuration={expectedDuration}
                         expectedTime={expectedTime} insurance={insurance}
-                        patientNotes={patientNotes} possibleServices={possibleServices}
-                        selectedServices={selectedServices} serviceDuration={serviceDuration}
-                        serviceInsurance={serviceInsurance} setExpectedDuration={setExpectedDuration}
+                        patientNotes={patientNotes} possibleServices={doctor.services}
+                        selectedServices={selectedServices} setExpectedDuration={setExpectedDuration}
                         setExpectedTime={setExpectedTime} setInsurance={setInsurance}
                         setPatientNotes={setPatientNotes} setSelectedServices={setSelectedServices}
                         setShareData={setShareData} setValidForm={setValidAO}
@@ -252,6 +286,6 @@ const Patient: FC = (props:Props): ReactElement => {
             </Center>
         );
     }
-};
+}
 
-export default Patient;
+export default Menu;

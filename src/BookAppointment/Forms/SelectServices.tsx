@@ -1,3 +1,4 @@
+import type { Insurance } from 'BookAppointment/__generated__/MenuMutation.graphql';
 import type { FC, ReactElement } from 'react';
 
 import React, { useEffect, useState } from 'react';
@@ -17,12 +18,17 @@ import {
 } from '@chakra-ui/react';
 
 type SelectServicesProps = {
-    insurance: number,
-    possibleServices: Array<string>,
-    serviceDuration: Array<number>,
+    insurance: Insurance,
+    possibleServices: ReadonlyArray<{
+        readonly id: string,
+        readonly description: string | null,
+        readonly estimatedDuration: number | null,
+        readonly name: string,
+        readonly privateCovered: boolean | null,
+        readonly publicCovered: boolean | null,
+    }>,
     expectedDuration: number,
     selectedServices: Array<string>,
-    serviceInsurance: Array<number>,
     setExpectedDuration: React.Dispatch<React.SetStateAction<number>>,
     setSelectedServices: React.Dispatch<React.SetStateAction<Array<string>>>,
     setValidForm: React.Dispatch<React.SetStateAction<boolean>>,
@@ -31,9 +37,7 @@ const SelectServices: FC<SelectServicesProps> =
 ({
     insurance,
     possibleServices,
-    serviceDuration,
     expectedDuration,
-    serviceInsurance,
     selectedServices,
     setExpectedDuration,
     setSelectedServices,
@@ -42,7 +46,7 @@ const SelectServices: FC<SelectServicesProps> =
     const [serviceInsuranceError, setServiceInsuranceError] = useState(false);
     
     useEffect(() => {
-        setValidForm(possibleServices != null);
+        setValidForm(possibleServices.length !== 0);
     }, [possibleServices, setValidForm]);
 
     return (
@@ -68,7 +72,7 @@ const SelectServices: FC<SelectServicesProps> =
                     <SimpleGrid columns={1} spacing={4}>
                         {possibleServices.map(service => (
                             <Container
-                                key={service}
+                                key={service.name}
                             >
                                 <Box
                                     as="h2"
@@ -77,24 +81,37 @@ const SelectServices: FC<SelectServicesProps> =
                                     mt="1"
                                     paddingLeft={4}
                                 >
-                                    <Checkbox key={service} onChange={() => {
-                                        if(selectedServices.includes(service)) {
-                                            const newServices = selectedServices.filter(s => (s !== service));
+                                    <Checkbox key={service.name} onChange={() => {
+                                        if(selectedServices.includes(service.name)) {
+                                            const newServices = selectedServices.filter(s => (s !== service.name));
                                             setSelectedServices(newServices);
-                                            const duration = serviceDuration[possibleServices.indexOf(service)];
-                                            setExpectedDuration(expectedDuration - duration);
+                                            // eslint-disable-next-line max-len
+                                            const duration = possibleServices[possibleServices.indexOf(service)].estimatedDuration;
+                                            if(duration != null) {
+                                                setExpectedDuration(expectedDuration - duration);
+                                            }
                                         }
                                         else{
-                                            if(serviceInsurance[possibleServices.indexOf(service)] !== insurance) {
+                                            // eslint-disable-next-line max-len
+                                            if(possibleServices[possibleServices.indexOf(service)].privateCovered === false &&
+                                            insurance === 'Private') {
                                                 setServiceInsuranceError(true);
                                             }
-                                            selectedServices.push(service);
+                                            // eslint-disable-next-line max-len
+                                            if(possibleServices[possibleServices.indexOf(service)].publicCovered === false &&
+                                            insurance === 'Public') {
+                                                setServiceInsuranceError(true);
+                                            }
+                                            selectedServices.push(service.name);
                                             setSelectedServices(selectedServices);
-                                            const duration = serviceDuration[possibleServices.indexOf(service)];
-                                            setExpectedDuration(expectedDuration + duration);
+                                            // eslint-disable-next-line max-len
+                                            const duration = possibleServices[possibleServices.indexOf(service)].estimatedDuration;
+                                            if (duration != null) {
+                                                setExpectedDuration(expectedDuration + duration);
+                                            }
                                         }
                                     }}>
-                                        {service}
+                                        {service.name}
                                     </Checkbox>
                                 </Box>
                                 { serviceInsuranceError &&
