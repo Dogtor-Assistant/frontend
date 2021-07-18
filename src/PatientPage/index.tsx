@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Box,
     Divider,
@@ -8,9 +8,12 @@ import {
 
 import { Search } from 'Home';
 import PastApp from './PastApp';
+import ProfileSuggestion from './ProfileSuggestion';
 import UpcomingApp from './UpcomingApp';
 
 function PatientPage() {
+    const [showSuggestion, setShowSuggestion] = useState(true);
+
     return (
         <div>
             <Box my={4}>
@@ -20,6 +23,12 @@ function PatientPage() {
                 align="stretch"
                 spacing={4}
             >
+                { showSuggestion &&
+                <ProfileSuggestion
+                    setShowSuggestion={setShowSuggestion}
+                    showSuggestion={showSuggestion}
+                />
+                }
                 <Heading alignSelf="center" my={4} size="md">Upcoming Appointments</Heading>
                 <UpcomingApp />
 
