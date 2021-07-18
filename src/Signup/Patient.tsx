@@ -130,7 +130,7 @@ const Patient: FC = (): ReactElement => {
                                 'zipCode': zipCode,
                             },
                             'allergies': allergies,
-                            'birthDate': birthDate.toISOString(),
+                            'birthDate': birthDate.getDate() !== new Date().getDate() ? birthDate.toISOString() : null,
                             'email': email,
                             'firstName': firstName,
                             'gender': genderArr[gender],
