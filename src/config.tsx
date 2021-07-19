@@ -54,7 +54,7 @@ export function useBackendBaseURL(): string {
         case 'Staging':
             return STAGING_BACKEND_BASE_URL;
         case 'Local':
-            return LOCAL_BACKEND_BASE_URL;
+            return PRODUCTION_BACKEND_BASE_URL;
         }
     }, [backendConfig]);
 

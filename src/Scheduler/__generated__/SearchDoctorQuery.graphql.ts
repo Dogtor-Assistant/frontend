@@ -12,6 +12,8 @@ export type SearchDoctorQueryResponse = {
             readonly edges: ReadonlyArray<{
                 readonly node: {
                     readonly id: string;
+                    readonly firstname: string;
+                    readonly lastname: string;
                     readonly services: ReadonlyArray<{
                         readonly id: string;
                         readonly name: string;
@@ -37,6 +39,8 @@ query SearchDoctorQuery(
       edges {
         node {
           id
+          firstname
+          lastname
           services {
             id
             name
@@ -96,6 +100,20 @@ v3 = {
           "plural": false,
           "selections": [
             (v2/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "firstname",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "lastname",
+              "storageKey": null
+            },
             {
               "alias": null,
               "args": null,
@@ -169,14 +187,14 @@ return {
     ]
   },
   "params": {
-    "cacheID": "01f94c50e6298f33b0266c430d413ce7",
+    "cacheID": "8560190d4197d2abd161af2d24940da6",
     "id": null,
     "metadata": {},
     "name": "SearchDoctorQuery",
     "operationKind": "query",
-    "text": "query SearchDoctorQuery(\n  $query: String!\n) {\n  search(query: $query) {\n    results {\n      edges {\n        node {\n          id\n          services {\n            id\n            name\n          }\n        }\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query SearchDoctorQuery(\n  $query: String!\n) {\n  search(query: $query) {\n    results {\n      edges {\n        node {\n          id\n          firstname\n          lastname\n          services {\n            id\n            name\n          }\n        }\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '7943edd5227b00e311af050710794c70';
+(node as any).hash = '6544302bfc5a57a1701bf24dc5ffdf38';
 export default node;

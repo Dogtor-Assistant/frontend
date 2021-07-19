@@ -29,6 +29,7 @@ import { graphql } from 'babel-plugin-relay/macro';
 
 import DatePickerComponent from '../DatePicker/DatePickerComponent';
 import LoadingIndicator from '../LoadingIndicator';
+import SearchDoctor from './SearchDoctor';
 
 type AppointmentType = {
     event:{
@@ -59,6 +60,10 @@ type AppointmentType = {
     onClose: ()=>void,
     onCloseFollowupModal: ()=>void,
 }
+type doctorType ={
+    id: string, firstname: string, lastname:string,
+        services: { id: string, serviceName: string }[],
+}
 
 const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:AppointmentType) => {
 
@@ -69,13 +74,12 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
     const [serviceIdSelected, setServiceIdSelected] = useState('');
     const [servicesAdded, setServicesAdded] = useState([{ id: '', serviceName: '' }]);
 
-    const [doctor, setDoctor] = useState({
-        doctorId: '',
-        doctorName: '',
-        services: [{ id: '1', serviceName: 'Service1' }, { id: '2', serviceName: 'Service2' }],
+    const [doctor, setDoctor] = useState<doctorType>({
+        firstname: '',
+        id: '',
+        lastname: '',
+        services: [{ id: '', serviceName: '' }],
     });
-    const [services, setServices] = useState(doctor.services);
-    console.log(services);
     
     const [commit, isInFlight] = useMutation<AppointmentFollowupMutation>(graphql`
     mutation AppointmentFollowupMutation($followupInput: FollowupInput!){
@@ -112,14 +116,13 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
                 },
                 variables: {
                     'followupInput': {
-                        doctorNotes: notes, //done
-                        /** here goes the input */
-                        doctorRef: '',
-                        patientRef: event.patient.id, //done
-                        services: [{
-                            serviceId:'',
-                            serviceName: '',
-                        }],
+                        doctorNotes: notes,
+                        doctorRef: doctor.id,
+                        patientRef: event.patient.id,
+                        services: [...servicesAdded.map(service => ({
+                            serviceId: service.id,
+                            serviceName: service.serviceName,
+                        }))],
                         suggestedDate: startDate.toISOString(),
                     },
                 },
@@ -133,13 +136,11 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
         }
 
         const exist = servicesAdded.filter(s => s.id === serviceIdSelected);
-        console.log('exists', exist);
         if (exist.length === 0) {
             const newServicesAdded = [...servicesAdded.filter(s => s.id),
-                services.filter(s => s.id === serviceIdSelected)[0]];
+                doctor.services.filter(s => s.id === serviceIdSelected)[0]];
             
             setServicesAdded(newServicesAdded);
-            // setServiceIdSelected('');
         }
         
     };
@@ -148,8 +149,7 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
         const removedArr = [...servicesAdded].filter(s => s.id !== serviceId);
         setServicesAdded(removedArr);
     };
-    console.log(servicesAdded);
-    console.log(serviceIdSelected);
+
     return (
         isInFlight ? <LoadingIndicator /> :
             <DrawerContent>
@@ -157,16 +157,9 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
                 <DrawerHeader>Create new followup</DrawerHeader>
                 <DrawerBody>
                     <Stack spacing='24px'>
-                        {/* TODO: query the doctors and than handle the select service */}
-                        <Box>
-                            <FormLabel htmlFor='doctor'>Select Doctor</FormLabel>
-                            <Select defaultValue='segun' id='doctor'>
-                                <option value='segun'>Segun Adebayo</option>
-                                <option value='kola'>Kola Tioluwani</option>
-                            </Select>
-                        </Box>
-                        <Spacer/>
-
+                        
+                        <SearchDoctor setDoctor={setDoctor} />
+                            
                         {servicesAdded.map(s => {
                             return (
                                 s.id !== '' && (
@@ -196,7 +189,7 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
                             }}
                             placeholder="Service" >
                             {
-                                services.map(service => <option key={service.id}
+                                doctor?.services?.map(service => <option key={service.id}
                                     value={service.id}>{service.serviceName}</option>)
                             }
                         </Select>

@@ -12,7 +12,7 @@ import PatientPage from 'PatientPage';
 import Calendar from 'Scheduler/Calendar';
 import Signup from 'Signup';
 import NotFound from './Notfound/NotFound';
-import { DoctorRoute, PatientRoute } from './ProtectedRoutes/DoctorRoute';
+import { DoctorRoute, PatientRoute } from './ProtectedRoutes/ProtectedRoutes';
 
 function App() {
 

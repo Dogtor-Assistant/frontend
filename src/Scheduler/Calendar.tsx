@@ -91,9 +91,7 @@ function LoadedCalendar(props: LoadedProps) {
     } = useDisclosure();
 
     const handleEventClick = ({ event }: EventInput) => {
-        console.log(event);
         const selectedEvent = events.find(e => e.id === event.id) || {};
-
         setSelectedEvent({
             end:selectedEvent.end || '',
             firstName:selectedEvent.firstName || '',
@@ -121,8 +119,6 @@ function LoadedCalendar(props: LoadedProps) {
         });
         onOpen();
     };
-
-    console.log(selectedEvent);
 
     const handleOnCloseDone = () => {
         setEvents(events.filter(e => e.id !== selectedEvent.id));
@@ -207,7 +203,7 @@ function LoadedCalendar(props: LoadedProps) {
             title: appointment.patient.firstname.concat(' '.concat(appointment.patient.lastname)),
         })) : []),
         ] : []);
-    console.log(events);
+        
     return (
         <Container maxW="container.xl" >
             <FullCalendar
