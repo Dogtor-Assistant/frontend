@@ -117,6 +117,19 @@ export function useShouldShowBar() {
     return shouldShowBar;
 }
 
+export function useSearchQuery(force?: Force) {
+    const { current, update } = useContext(Context);
+    const setQuery = useCallback((query: string) => {
+        if (query === '') {
+            update({ query: null }, force);
+        } else {
+            update({ query }, force);
+        }
+    }, [update, force]);
+
+    return [current.query ?? '', setQuery];
+}
+
 export function useShouldShowBarValue(value: boolean) {
     const [shouldShowBar, setShouldShowBar] = useShouldShowBar();
     useEffect(() => {
