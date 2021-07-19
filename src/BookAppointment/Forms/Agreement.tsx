@@ -54,13 +54,16 @@ const Agreement: FC<AgreementProps> =
                                     setPatientNotes(event.target.value);
                                 }} placeholder="Appointment Notes"/>
                             </Box>
+                            <Center height="50px">
+                                <Divider />
+                            </Center>
                             <Box
                                 as="h4"
                                 fontWeight="semibold"
                                 isTruncated
                                 lineHeight="tight"
                                 mt="1"
-                                paddingLeft={20}
+                                paddingLeft={4}
                             >
                                 <Checkbox onChange={() => {
                                     if(shareData) {

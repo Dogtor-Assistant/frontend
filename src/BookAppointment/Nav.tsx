@@ -27,7 +27,7 @@ const Nav: FC<{
                 Back
             </Button>
             }
-            { step < lim -1 && step !== 2 &&
+            { step < lim -1 &&
             <Button
                 colorScheme="blue"
                 isDisabled={!valid}

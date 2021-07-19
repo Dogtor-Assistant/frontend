@@ -30,7 +30,6 @@ function LoadedBookAppointment(props: LoadedProps) {
                         ... Menu_doctor
                     }
                 }
-                
             }
         `,
         props.data,

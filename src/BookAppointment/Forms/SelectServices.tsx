@@ -44,10 +44,11 @@ const SelectServices: FC<SelectServicesProps> =
     setValidForm,
 }): ReactElement => {
     const [serviceInsuranceError, setServiceInsuranceError] = useState(false);
+    const [selectedServiceError, setSelectedServiceError] = useState(false);
     
     useEffect(() => {
-        setValidForm(possibleServices.length !== 0);
-    }, [possibleServices, setValidForm]);
+        setValidForm(possibleServices === [] || selectedServiceError);
+    }, [possibleServices, selectedServiceError, setValidForm]);
 
     return (
         <div>
@@ -109,6 +110,9 @@ const SelectServices: FC<SelectServicesProps> =
                                             if (duration != null) {
                                                 setExpectedDuration(expectedDuration + duration);
                                             }
+                                        }
+                                        if (selectedServices !== []) {
+                                            setSelectedServiceError(true);
                                         }
                                     }}>
                                         {service.name}

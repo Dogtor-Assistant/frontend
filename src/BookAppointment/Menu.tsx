@@ -3,6 +3,8 @@ import type { MenuMutation } from'./__generated__/MenuMutation.graphql';
 import type { PayloadError } from 'relay-runtime';
 
 import React, { useState } from 'react';
+import { render } from 'react-dom';
+import { Redirect } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import {
     Alert,
@@ -30,7 +32,7 @@ type Props = { Doctor:Menu_doctor$key };
 
 export type Day = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday'
 
-function Menu(props:Props) {
+function Menu(this: any, props:Props) {
     const insuranceArr: Insurance[] = ['Public', 'Private'];
     const dayArr: Day[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 

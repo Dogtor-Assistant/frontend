@@ -1,9 +1,10 @@
 import React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
+import BookAppointment from './BookAppointment';
 import Confirmation from './Confirmation';
 
-function BookAppointment() {
+function BookAppointmentIndex() {
     const { path } = useRouteMatch();
     
     return (
@@ -20,4 +21,4 @@ function BookAppointment() {
     );
 }
 
-export default BookAppointment;
+export default BookAppointmentIndex;

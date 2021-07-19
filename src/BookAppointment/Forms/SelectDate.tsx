@@ -1,4 +1,5 @@
 import type { Weekday } from '../__generated__/Menu_doctor.graphql';
+import type { UseRadioProps } from '@chakra-ui/react';
 import type { FC, ReactElement } from 'react';
 
 import React, { useEffect, useState } from 'react';
@@ -14,6 +15,8 @@ import {
     Stack,
     useColorMode,
     useColorModeValue,
+    useControllableState,
+    useRadio,
 } from '@chakra-ui/react';
 import { ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons';
 
@@ -48,16 +51,20 @@ const SelectDate: FC<SelectDateProps> =
 }): ReactElement => {
     const [noDateSelectedError, setNoDateSelectedError] = useState(false);
 
+    useEffect(() => {
+        setValidForm(expectedTime == null || noDateSelectedError);
+    }, [expectedTime, noDateSelectedError, setValidForm]);
+
+    // eslint-disable-next-line max-len
     const weekdayArr: Weekday[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     // eslint-disable-next-line max-len
-    const startDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
-    // eslint-disable-next-line max-len
-    const endDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDay()+ (7- currentDate.getDay()));
+    const [startDay, setStartDay] = useControllableState({ defaultValue: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay() + 1) });
 
     const WeekSlots = () => {
+        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()- 5);
         let day_numb = currentDate.getDay();
         const numb_DaySlots = new Array<Array<{'endSlot':number, 'startSlot':number}>>();
-        const numb_DayApp = new Array<Array<{'endTime':number, 'startTime':number}>>(7);
+        const numb_DayApp = new Array<Array<{'endTime':number, 'startTime':number}>>();
 
         while (day_numb < 7) {
             const current_Day = new Date(
@@ -98,34 +105,41 @@ const SelectDate: FC<SelectDateProps> =
                 }
             }
             numb_DaySlots.push(daySlots);
-
             day_numb = day_numb + 1;
         }
+
+        console.log(numb_DayApp);
+        console.log(numb_DaySlots);
         
         const finalSlots = new Array<Array<number>>(7);
-        for(let i = currentDate.getDay(); i < 7; i++) {
-            let day_slots = Array<number>();
-            for(let j = 0; j < numb_DaySlots[i].length; j++) {
-                const slots = new Array<number>();
-                let slot_counter = numb_DaySlots[i][j].startSlot;
-                while (slot_counter < numb_DaySlots[i][j].endSlot - expectedDuration) {
-                    slots.push(slot_counter);
-                    slot_counter = slot_counter + 30;
-                }
-
-                let filtered_solts = slots;
-                for(let k = 0; k < numb_DayApp[i].length; k++) {
-                    const filtered = new Array<number>();
-                    if (numb_DayApp[i][k].startTime <= numb_DaySlots[i][j].endSlot) {
-                        filtered_solts.filter(slot => {
-                            if (numb_DayApp[i][k].startTime >= slot+30 || numb_DayApp[i][k].endTime <= slot) {
-                                filtered.push(slot);
-                            }
-                        });
-                        filtered_solts = filtered;
+        for(let i = 0; i < numb_DaySlots.length; i++) {let day_slots = Array<number>();
+            if(numb_DaySlots[i] !== undefined) {
+                for(let j = 0; j < numb_DaySlots[i].length; j++) {
+                    const slots = new Array<number>();
+                    let slot_counter = numb_DaySlots[i][j].startSlot;
+                    while (slot_counter < numb_DaySlots[i][j].endSlot - expectedDuration) {
+                        slots.push(slot_counter);
+                        slot_counter = slot_counter + 30;
                     }
+
+                    /*
+                    if(numb_DayApp[i] !== undefined) {
+                        let filtered_solts = slots;
+                        for(let k = 0; k < numb_DayApp[i].length; k++) {
+                            const filtered = new Array<number>();
+                            if (numb_DayApp[i][k].startTime <= numb_DaySlots[i][j].endSlot) {
+                                filtered_solts.filter(slot => {
+                                    if (numb_DayApp[i][k].startTime >= slot+30 || numb_DayApp[i][k].endTime <= slot) {
+                                        filtered.push(slot);
+                                    }
+                                });
+                                filtered_solts = filtered;
+                            }
+                        }
+                        day_slots = day_slots.concat(filtered_solts);
+                    }*/
+                    day_slots = slots;
                 }
-                day_slots = day_slots.concat(filtered_solts);
             }
             day_slots.sort(function(a, b) { return a-b; });
             finalSlots[i] = day_slots;
@@ -143,45 +157,60 @@ const SelectDate: FC<SelectDateProps> =
     return (
         <div>
             <Container maxW="container.l">
-                <Center height="50px">
-                    <Divider />
-                </Center>
                 <Box borderRadius="lg" borderWidth="1px" maxW="l" overflow="hidden">
                     <Box p={6}>
-                        <Box
-                            as="h4"
-                            fontWeight="semibold"
-                            isTruncated
-                            lineHeight="tight"
-                            mt="1"
-                            paddingLeft={4}
-                        >
-                            Please select an appointment Date:
-                        </Box>
-                        <Center height="30px">
+                        <Center height="20px">
                             <Divider />
                         </Center>
-                        <Center height="30px">
-                            {startDay} - {endDay}
-                        </Center>
+                        <Grid
+                            gap={4}
+                            h="30px"
+                            templateColumns="repeat(7, 1fr)"
+                            templateRows="repeat(1, 1fr)"
+                        >
+                            <GridItem colSpan={1} rowSpan={1}>
+                                <IconButton aria-label="PriorWeek" icon={<ArrowLeftIcon />}
+                                    onClick={() => {
+                                        // eslint-disable-next-line max-len
+                                        setStartDay(new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate() - 7));
+                                    }}
+                                />
+                            </GridItem>
+                            <GridItem colSpan={5} rowSpan={1}>
+                                <Center height="30px">
+                                    {startDay.toDateString()} - {
+                                        new Date(
+                                            startDay.getFullYear(),
+                                            startDay.getMonth(),
+                                            startDay.getDate() + 6).toDateString()}
+                                </Center>
+                            </GridItem>
+                            <GridItem colSpan={1} rowSpan={1}>
+                                <IconButton aria-label="NextWeek" icon={<ArrowRightIcon />}
+                                    onClick={() => {
+                                        // eslint-disable-next-line max-len
+                                        setStartDay(new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate() + 7));
+                                    }}/>
+                            </GridItem>
+                        </Grid>
                         <Center height="50px">
                             <Divider />
                         </Center>
                         <Grid
                             gap={4}
-                            h="200px"
-                            templateColumns="repeat(9, 1fr)"
+                            h="30px"
+                            templateColumns="repeat(7, 1fr)"
                             templateRows="repeat(13, 1fr)"
                         >
-                            <GridItem colSpan={1} rowSpan={13}>
-                                <IconButton aria-label="PriorWeek" icon={<ArrowLeftIcon />} />
-                            </GridItem>
                             {['Mo', 'Tu', 'We', 'Thu', 'Fr', 'Sa', 'Su'].map(day => (
                                 <GridItem key={day}><Center> {day}</Center></GridItem>
                             ))}
-                            <GridItem colSpan={1} rowSpan={13}>
-                                <IconButton aria-label="NextWeek" icon={<ArrowRightIcon />} />
-                            </GridItem>
+                        </Grid>
+                        <Grid
+                            gap={4}
+                            templateColumns="repeat(7, 1fr)"
+                            templateRows="repeat(13, 1fr)"
+                        >
                             {WeekSlots().map((slotDay, index) => (
                                 // eslint-disable-next-line react/jsx-key
                                 <GridItem colSpan={1} rowSpan={12}><Center>
@@ -193,9 +222,13 @@ const SelectDate: FC<SelectDateProps> =
                                                     colorScheme={color}
                                                     key={slot}
                                                     onClick={() => {
-                                                        // eslint-disable-next-line max-len
-                                                        setExpectedTime(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + index, Math.ceil(slot/60), slot%60));
+                                                        setExpectedTime(new Date(
+                                                            currentDate.getFullYear(),
+                                                            currentDate.getMonth(),
+                                                            currentDate.getDate() + index,
+                                                            Math.ceil(slot/60), slot%60));
                                                         toggleColorMode;
+                                                        setNoDateSelectedError(true);
                                                     }}
                                                     variant="solid"
                                                 >
@@ -208,7 +241,8 @@ const SelectDate: FC<SelectDateProps> =
                                         }
                                     </Stack>
                                 </Center></GridItem>
-                            ))}
+                            ))
+                            }
                         </Grid>
                     </Box>
                 </Box>

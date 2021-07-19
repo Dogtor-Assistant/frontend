@@ -264,7 +264,7 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                                     mt="1"
                                     paddingLeft={4}
                                 >
-                                    {expectedTime}
+                                    {expectedTime.toDateString()}
                                 </Box>
                             </GridItem>
                             <GridItem colSpan={1} rowSpan={1}>
