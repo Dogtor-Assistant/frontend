@@ -195,7 +195,7 @@ export function useMultiSelectFilter<
 
     const clear = useCallback((force?: Force) => {
         update({
-            [key]: [],
+            [key]: null,
         }, force);
     }, [key, update]);
 
