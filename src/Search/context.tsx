@@ -20,6 +20,7 @@ export type SearchArguments = {
 type Force = true | number
 
 type ContextType = {
+    lastFetchTime: number,
     applied: SearchArguments,
     current: SearchArguments,
     shouldShowBar: [boolean, Dispatch<SetStateAction<boolean>>],
@@ -35,6 +36,7 @@ const emptySearchArguments: SearchArguments = {
 const Context = createContext<ContextType>({
     applied: emptySearchArguments,
     current: emptySearchArguments,
+    lastFetchTime: 0,
     shouldShowBar: [true, () => { /* no-op */ }],
     update: () => { /* np-op */},
 });
@@ -45,6 +47,7 @@ type Props = {
 }
 
 export function SearchContextProvider({ initial, children }: Props) {
+    const [lastFetchTime, setLastFetchTime] = useState(0);
     const [applied, setApplied] = useState(initial ?? emptySearchArguments);
     const [current, setCurrent] = useState(initial ?? emptySearchArguments);
     const timeout = useRef<NodeJS.Timeout | null>(null);
@@ -66,10 +69,14 @@ export function SearchContextProvider({ initial, children }: Props) {
         
         switch (typeof force) {
         case 'boolean':
+            setLastFetchTime(Date.now());
             setApplied(value);
             break;
         case 'number':
-            timeout.current = setTimeout(() => setApplied(value), force);
+            timeout.current = setTimeout(() => {
+                setLastFetchTime(Date.now());
+                setApplied(value);
+            }, force);
             break;
         }
 
@@ -88,6 +95,7 @@ export function SearchContextProvider({ initial, children }: Props) {
             value={{
                 applied,
                 current,
+                lastFetchTime,
                 shouldShowBar,
                 update,
             }}
@@ -117,7 +125,12 @@ export function useShouldShowBar() {
     return shouldShowBar;
 }
 
-export function useSearchQuery(force?: Force) {
+export function useLastFetchTime() {
+    const { lastFetchTime } = useContext(Context);
+    return lastFetchTime;
+}
+
+export function useSearchQuery(force?: Force): [string, (value: string) => void] {
     const { current, update } = useContext(Context);
     const setQuery = useCallback((query: string) => {
         if (query === '') {

@@ -15,7 +15,7 @@ import SearchResultsContainer from './SearchResultsContainer';
 
 import useSearchArguments from './useSearchArguments';
 
-import { useAppliedSearchArguments, useUpdate } from './context';
+import { useAppliedSearchArguments, useLastFetchTime, useUpdate } from './context';
 
 type LoadedProps = {
     data: PreloadedQuery<SearchRendererQueryType>,
@@ -50,13 +50,24 @@ function LoadedSearchRenderer(props: LoadedProps) {
     }, [id, history]);
 
     const update = useUpdate();
-    const appliedArguments = useAppliedSearchArguments();
+    const previousLastFetchTime = useRef<number | null>(null);
+    const currentLastFetchTime = useLastFetchTime();
     const searchArguments = useSearchArguments(data.search);
+
     useEffect(() => {
-        if (appliedArguments.query !== searchArguments.query) {
+        previousLastFetchTime.current = Date.now();
+    }, [data]);
+
+    useEffect(() => {
+        if (
+            previousLastFetchTime.current == null || (
+                currentLastFetchTime < previousLastFetchTime.current
+            )
+        ) {
+            previousLastFetchTime.current = currentLastFetchTime;
             update(searchArguments);
         }
-    }, [searchArguments, update, appliedArguments]);
+    }, [searchArguments, update, currentLastFetchTime]);
 
     return (
         <SearchResultsContainer search={data.search}/>
