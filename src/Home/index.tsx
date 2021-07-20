@@ -35,7 +35,7 @@ export function Search() {
 
         const timeout = setTimeout(() => {
             route({ query: value });
-        }, 300);
+        }, 700);
 
         return () => {
             clearTimeout(timeout);

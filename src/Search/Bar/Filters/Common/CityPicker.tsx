@@ -9,7 +9,7 @@ function CityPicker() {
 
     return (
         <SearchMultiSelectPicker
-            name="cities"
+            name="Cities"
             parameter="cities"
             placeholder="Search in Cities"
             values={allCities}

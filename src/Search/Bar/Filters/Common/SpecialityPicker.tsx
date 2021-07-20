@@ -9,7 +9,7 @@ function SpecialityPicker() {
 
     return (
         <SearchMultiSelectPicker
-            name="specialities"
+            name="Specialities"
             parameter="specialities"
             placeholder="Search for Specialities"
             values={specialities}

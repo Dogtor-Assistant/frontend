@@ -1,9 +1,9 @@
 import React from 'react';
 import { Container, VStack } from '@chakra-ui/react';
 
+import HorizonalScrollview from 'HorizonalScrollview';
 import { useShouldShowBar } from 'Search/context';
-import CityPicker from './Filters/Common/CityPicker';
-import SpecialityPicker from './Filters/Common/SpecialityPicker';
+import Applied from './Filters/Applied';
 import SearchQueryBar from './SearchQueryBar';
 
 function Bar() {
@@ -13,13 +13,13 @@ function Bar() {
         return null;
     }
 
-    // TODO: Add everything
     return (
         <Container maxW="container.lg">
             <VStack>
                 <SearchQueryBar />
-                <CityPicker />
-                <SpecialityPicker />
+                <HorizonalScrollview w="100%">
+                    <Applied />
+                </HorizonalScrollview>
             </VStack>
         </Container>
     );
