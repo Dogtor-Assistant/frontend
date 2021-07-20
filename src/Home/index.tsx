@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Box,
     Center,
@@ -21,7 +21,27 @@ import {
 
 import ReviewList from 'LatestReviewList';
 
+import useRouteToSearch from 'useRouteToSearch';
+
 export function Search() {
+    const [query, setQuery] = useState('');
+    const route = useRouteToSearch();
+
+    useEffect(() => {
+        const value = query;
+        if (value.length < 1) {
+            return;
+        }
+
+        const timeout = setTimeout(() => {
+            route({ query: value });
+        }, 300);
+
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [query, route]);
+
     return (
         <Container paddingTop={8}>
             <InputGroup size="lg">
@@ -30,6 +50,7 @@ export function Search() {
                 </InputLeftElement>
                 <Input
                     autoFocus
+                    onChange={event => setQuery(event.target.value)}
                     placeholder="Search for Doctor"
                     pr="4.5rem"
                     spellCheck="false"
@@ -41,6 +62,7 @@ export function Search() {
                         pl: '68px',
                     }}
                     type="text"
+                    value={query}
                     variant="filled"
                 />
                 
