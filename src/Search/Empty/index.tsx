@@ -1,9 +1,16 @@
 import React from 'react';
 
-import { useShouldShowBarValue } from 'Search/context';
+import useAreSearchArgumentsEmpty from '../useAreSearchArgumentsEmpty';
+
+import { useShouldShowBarValue } from '../context';
 
 function Empty() {
+    const areArgumentsEmpty = useAreSearchArgumentsEmpty();
     useShouldShowBarValue(true);
+
+    if (areArgumentsEmpty) {
+        return null;
+    }
 
     return (
         <p>No Results</p>
