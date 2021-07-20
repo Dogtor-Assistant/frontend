@@ -13,6 +13,7 @@ import { graphql } from 'babel-plugin-relay/macro';
 import Suspense from 'Suspense';
 import SearchResultsContainer from './SearchResultsContainer';
 
+import useAreSearchArgumentsEmpty from './useAreSearchArgumentsEmpty';
 import useSearchArguments from './useSearchArguments';
 
 import { useAppliedSearchArguments, useLastFetchTime, useUpdate } from './context';
@@ -46,12 +47,18 @@ function LoadedSearchRenderer(props: LoadedProps) {
         `,
         props.data,
     );
+
+    const areArgumentsEmpty = useAreSearchArgumentsEmpty();
     const history = useHistory();
 
     const id = data.search.id;
     useEffect(() => {
-        history.replace(`search?id=${id}`);
-    }, [id, history]);
+        if (areArgumentsEmpty) {
+            history.replace('search');
+        } else {
+            history.replace(`search?id=${id}`);
+        }
+    }, [id, areArgumentsEmpty, history]);
 
     const update = useUpdate();
     const previousLastFetchTime = useRef<number | null>(null);
