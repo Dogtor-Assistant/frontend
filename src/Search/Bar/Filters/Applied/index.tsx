@@ -1,5 +1,5 @@
 import React from 'react';
-import { HStack } from '@chakra-ui/react';
+import { HStack, Text } from '@chakra-ui/react';
 
 import { useCurrentFilterTypes } from 'Search/context';
 import FilterPicker from '../Common/FilterPicker';
@@ -9,7 +9,13 @@ function Applied() {
     const filters = useCurrentFilterTypes();
 
     return (
-        <HStack overflow="visible">
+        <HStack>
+            <Text
+                fontSize="md"
+                fontWeight="semibold"
+            >
+                Filters:
+            </Text>
             {
                 filters.map(type => {
                     return (
