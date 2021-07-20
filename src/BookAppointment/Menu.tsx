@@ -25,7 +25,7 @@ import SelectDate from './Forms/SelectDate';
 import SelectServices from './Forms/SelectServices';
 import Nav from './Nav';
 
-import { useIsPatient } from 'user';
+import { useIsPatient, usePatientInsurance } from 'user';
 
 export type Insurance = 'Private' | 'Public';
 type Props = { Doctor:Menu_doctor$key };
@@ -49,11 +49,20 @@ function Menu(this: any, props:Props) {
     const [expectedTime, setExpectedTime] = useState(new Date());
     const [insurance, setInsurance] = useState(insuranceArr[0]);
     const [patientNotes, setPatientNotes] = useState('');
-    const [selectedServices, setSelectedServices] = useState(new Array<string>());
+    const [selectedServices, setSelectedServices] = useState(new Array<{
+        readonly id: string,
+        readonly description: string | null,
+        readonly estimatedDuration: number | null,
+        readonly name: string,
+        readonly privateCovered: boolean | null,
+        readonly publicCovered: boolean | null,
+    }>());
+    const [selectedServicesID, setSelectedServicesID] = useState(new Array<string>());
     const [shareData, setShareData] = useState(false);
     
     const [step, setStep] = useState(1);
     const userLoggedIn = useIsPatient();
+    const userInsurance = usePatientInsurance();
 
     const doctor=useFragment(
         graphql`
@@ -85,36 +94,6 @@ function Menu(this: any, props:Props) {
         props.Doctor,
     );
 
-    const serviceDuration = () => {
-        const arr = [];
-
-        for(let i = 0; i < doctor.services.length; i++) {
-            arr.push(doctor.services[i].estimatedDuration);
-        }
-
-        return arr;
-    };
-    
-    const serviceInsurance = () => {
-        const arr = [];
-        let pub = false;
-        let priv = false;
-
-        for(let i = 0; i < doctor.services.length; i++) {
-            const insurance = [];
-            if(doctor.services[i].privateCovered === true) {
-                pub = true;
-            }
-            if(doctor.services[i].publicCovered === true) {
-                priv = true;
-            }
-
-            arr.push({ 'private': priv, 'public': pub });
-        }
-
-        return arr;
-    };
-
     const [commit, isInFlight] = useMutation<MenuMutation>(graphql`
     mutation MenuMutation ($input: AppointmentInput!){
         createAppointment(input: $input) {
@@ -122,6 +101,16 @@ function Menu(this: any, props:Props) {
         }
     }
     `);
+
+    /*if (userInsurance !== undefined) {
+        if(userInsurance === 'Private' || userInsurance === 'Public') {
+            setInsurance(userInsurance);
+        }
+    }
+
+    /*if (userLoggedIn === false) {
+        throw Error ('not logged In');
+    }*/
 
     if (isInFlight) {
         return <LoadingIndicator />;
@@ -159,7 +148,7 @@ function Menu(this: any, props:Props) {
                     'expectedTime' : expectedTime.toDateString(),
                     'insurance' : insurance,
                     'patientNotes': patientNotes,
-                    'selectedServices' : selectedServices,
+                    'selectedServices' : selectedServicesID,
                     'shareData': shareData,
                 },
             },
@@ -177,7 +166,7 @@ function Menu(this: any, props:Props) {
                         expectedDuration={expectedDuration} insurance={insurance}
                         possibleServices={doctor.services} selectedServices={selectedServices}
                         setExpectedDuration={setExpectedDuration} setSelectedServices={setSelectedServices}
-                        setValidForm={setValidSelectService}
+                        setSelectedServicesID={setSelectedServicesID} setValidForm={setValidSelectService}
                     />
                     <Nav
                         back={back}
@@ -253,14 +242,14 @@ function Menu(this: any, props:Props) {
                     <Heading>Book Appointment</Heading>
                     <Heading size="md">Appointment Overview</Heading>
                     <AppointmentOverview
-                        blockedAppointments={doctor.appointments} doctorHours={doctor.offeredSlots}
-                        doctorName={`Dr. ${ doctor.firstname } ${ doctor.lastname}`}
-                        expectedDuration={expectedDuration}
-                        expectedTime={expectedTime} insurance={insurance}
-                        patientNotes={patientNotes} possibleServices={doctor.services}
-                        selectedServices={selectedServices} setExpectedDuration={setExpectedDuration}
-                        setExpectedTime={setExpectedTime} setInsurance={setInsurance}
-                        setPatientNotes={setPatientNotes} setSelectedServices={setSelectedServices}
+                        blockedAppointments={doctor.appointments} currentTime={expectedTime}
+                        doctorHours={doctor.offeredSlots}
+                        doctorName={`Dr. ${ doctor.firstname } ${ doctor.lastname}`} expectedDuration={expectedDuration}
+                        expectedTime={expectedTime} insurance={insurance} patientNotes={patientNotes}
+                        possibleServices={doctor.services} selectedServices={selectedServices}
+                        setExpectedDuration={setExpectedDuration} setExpectedTime={setExpectedTime}
+                        setInsurance={setInsurance} setPatientNotes={setPatientNotes}
+                        setSelectedServices={setSelectedServices} setSelectedServicesID={setSelectedServicesID}
                         setShareData={setShareData} setValidForm={setValidAO}
                         shareData={shareData}
                     />

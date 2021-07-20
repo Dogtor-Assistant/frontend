@@ -1,3 +1,6 @@
+import type { Insurance } from 'BookAppointment/__generated__/MenuMutation.graphql';
+import type { FC, ReactElement } from 'react';
+
 import React from 'react';
 import {
     Button,
@@ -14,7 +17,50 @@ import {
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 
-function AppService() {
+import SelectServices from '../SelectServices';
+
+type SelectServicesProps = {
+    insurance: Insurance,
+    possibleServices: ReadonlyArray<{
+        readonly id: string,
+        readonly description: string | null,
+        readonly estimatedDuration: number | null,
+        readonly name: string,
+        readonly privateCovered: boolean | null,
+        readonly publicCovered: boolean | null,
+    }>,
+    expectedDuration: number,
+    selectedServices: Array<{
+        readonly id: string,
+        readonly description: string | null,
+        readonly estimatedDuration: number | null,
+        readonly name: string,
+        readonly privateCovered: boolean | null,
+        readonly publicCovered: boolean | null,
+    }>,
+    setExpectedDuration: React.Dispatch<React.SetStateAction<number>>,
+    setSelectedServices: React.Dispatch<React.SetStateAction<Array<{
+        readonly id: string,
+        readonly description: string | null,
+        readonly estimatedDuration: number | null,
+        readonly name: string,
+        readonly privateCovered: boolean | null,
+        readonly publicCovered: boolean | null,
+    }>>>,
+    setSelectedServicesID:React.Dispatch<React.SetStateAction<Array<string>>>,
+    setValidForm: React.Dispatch<React.SetStateAction<boolean>>,
+}
+const AppService: FC<SelectServicesProps> =
+({
+    insurance,
+    possibleServices,
+    expectedDuration,
+    selectedServices,
+    setExpectedDuration,
+    setSelectedServices,
+    setValidForm,
+    setSelectedServicesID,
+}): ReactElement => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
@@ -24,6 +70,7 @@ function AppService() {
                 isOpen={isOpen}
                 onClose={onClose}
                 placement="right"
+                size= "lg"
             >
                 <DrawerOverlay />
                 <DrawerContent>
@@ -31,19 +78,23 @@ function AppService() {
                     <DrawerHeader>Select Services</DrawerHeader>
 
                     <DrawerBody>
-                        
+                        <SelectServices
+                            expectedDuration={expectedDuration} insurance={insurance}
+                            possibleServices={possibleServices} selectedServices={selectedServices}
+                            setExpectedDuration={setExpectedDuration} setSelectedServices={setSelectedServices}
+                            setSelectedServicesID={setSelectedServicesID} setValidForm={setValidForm}
+                        />
                     </DrawerBody>
 
                     <DrawerFooter>
                         <Button mr={3} onClick={onClose} variant="outline">
-                        Cancel
+                        Close
                         </Button>
-                        <Button colorScheme="green">Save</Button>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
         </Center>
     );
-}
+};
 
 export default AppService;

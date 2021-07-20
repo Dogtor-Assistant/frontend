@@ -3,6 +3,8 @@ import type { UseRadioProps } from '@chakra-ui/react';
 import type { FC, ReactElement } from 'react';
 
 import React, { useEffect, useState } from 'react';
+import { render } from 'react-dom';
+import { HStack, useRadioGroup } from '@chakra-ui/react';
 import {
     Box,
     Button,
@@ -33,7 +35,7 @@ type SelectDateProps = {
         readonly start: string,
         readonly end: string,
     }>,
-    expectedTime: Date | null,
+    expectedTime: Date,
     currentDate: Date,
     expectedDuration: number,
     setExpectedTime: React.Dispatch<React.SetStateAction<Date>>,
@@ -52,30 +54,24 @@ const SelectDate: FC<SelectDateProps> =
     const [noDateSelectedError, setNoDateSelectedError] = useState(false);
 
     useEffect(() => {
-        setValidForm(expectedTime == null || noDateSelectedError);
-    }, [expectedTime, noDateSelectedError, setValidForm]);
+        setValidForm(expectedTime !== currentDate || noDateSelectedError);
+    }, [currentDate, expectedTime, noDateSelectedError, setValidForm]);
 
     // eslint-disable-next-line max-len
     const weekdayArr: Weekday[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     // eslint-disable-next-line max-len
     const [startDay, setStartDay] = useControllableState({ defaultValue: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay() + 1) });
 
-    const WeekSlots = () => {
-        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()- 5);
-        let day_numb = currentDate.getDay();
-        const numb_DaySlots = new Array<Array<{'endSlot':number, 'startSlot':number}>>();
-        const numb_DayApp = new Array<Array<{'endTime':number, 'startTime':number}>>();
+    function findSlots(sDate:Date) {
+        let day_numb = sDate.getDay() -1;
+
+        const week_slots = new Array<Array<{'slotDate':Date, 'startSlot':number}>>(7);
+        const week_appointments = new Array<Array<{'slotDate':Date, 'startSlot':number}>>(7);
 
         while (day_numb < 7) {
-            const current_Day = new Date(
-                // eslint-disable-next-line max-len
-                currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (day_numb-currentDate.getDay()));
-            if(currentDate.getDay() !== day_numb) {
-                current_Day.setHours(0);
-            }
+            week_slots[day_numb] = getDaySlots(day_numb, sDate);
 
             const appointments = blockedAppointments;
-
             appointments.filter(app => {
                 const appDate = app.expectedTime.start != null ? new Date(app.expectedTime.start) : null;
                 const duration = app.expectedTime.duration;
@@ -87,65 +83,127 @@ const SelectDate: FC<SelectDateProps> =
                 const minute = appDate?.getHours() !== undefined ? appDate?.getMinutes() : null;
 
                 // eslint-disable-next-line max-len
-                if(current_Day.getFullYear() === year && current_Day.getMonth() === month && current_Day.getDate() === num && duration != null) {
+                if(sDate.getFullYear() === year && sDate.getMonth() === month && sDate.getDate() + day_numb === num && duration != null) {
                     if (hour != null && minute != null) {
-                        const startTime = hour * 60 + minute;
-                        const endTime = startTime + duration;
-                        numb_DayApp[day_numb].push({ 'endTime':endTime, 'startTime' : startTime });
+                        const app_time = hour * 60 + minute;
+                        const startApp = app_time - (app_time % 30);
+                        let app_counter = startApp;
+                        const endApp = startApp + duration;
+
+                        while (app_counter < endApp) {
+                            const appDate = new Date(year, month, num, Math.ceil(app_counter/60), app_counter%60);
+                            if(appDate >= sDate) {
+                                week_appointments[day_numb].push({ 'slotDate':appDate, 'startSlot' : app_counter });
+                                app_counter = app_counter + 30;
+                            }
+                        }
                     }
                 }
             });
-
-            const daySlots = [];
-            for(let i = 0; i < doctorHours.length; i++) {
-                if(weekdayArr[day_numb] === doctorHours[i].day) {
-                    const startSlot = stringToTime(doctorHours[i].start);
-                    const endSlot = stringToTime(doctorHours[i].end);
-                    daySlots.push({ 'endSlot':endSlot, 'startSlot':startSlot });
-                }
-            }
-            numb_DaySlots.push(daySlots);
-            day_numb = day_numb + 1;
+            day_numb = day_numb+1;
         }
 
-        console.log(numb_DayApp);
-        console.log(numb_DaySlots);
-        
-        const finalSlots = new Array<Array<number>>(7);
-        for(let i = 0; i < numb_DaySlots.length; i++) {let day_slots = Array<number>();
-            if(numb_DaySlots[i] !== undefined) {
-                for(let j = 0; j < numb_DaySlots[i].length; j++) {
-                    const slots = new Array<number>();
-                    let slot_counter = numb_DaySlots[i][j].startSlot;
-                    while (slot_counter < numb_DaySlots[i][j].endSlot - expectedDuration) {
-                        slots.push(slot_counter);
+        const filtered_week_slots = new Array<Array<{'slotDate':Date, 'startSlot':number}>>(7);
+        week_slots.map((wSlot, wIndex) => {
+            if(wSlot !== undefined && wSlot !== []) {
+                const filtered_day_slots = new Array<{'slotDate':Date, 'startSlot':number}>();
+                wSlot.map(dSlot => {
+                    if(dSlot !== undefined) {
+                        let noAppBool = true;
+                        week_appointments.map(w_app => {
+                            if(w_app.includes(dSlot)) {
+                                noAppBool = false;
+                            }
+                        });
+                        if (noAppBool) {
+                            filtered_day_slots.push(dSlot);
+                        }
+                    }
+                });
+                filtered_week_slots[wIndex] = filtered_day_slots;
+            }
+        });
+
+        return filtered_week_slots;
+    }
+
+    function getDaySlots(day_numb:number, sDate:Date) {
+        const daySlots = new Array<{'slotDate':Date, 'startSlot':number}>();
+        for(let i = 0; i < doctorHours.length; i++) {
+            if(weekdayArr[day_numb] === doctorHours[i].day) {
+                const startSlot = stringToTime(doctorHours[i].start);
+                const endSlot = stringToTime(doctorHours[i].end);
+
+                let slot_counter = startSlot;
+                while (slot_counter < endSlot - expectedDuration) {
+                    // eslint-disable-next-line max-len
+                    const day = new Date(sDate.getFullYear(), sDate.getMonth(), sDate.getDate() + day_numb, Math.ceil(slot_counter/60), slot_counter%60);
+                    if(day >= sDate) {
+                        daySlots.push({ 'slotDate':day, 'startSlot': slot_counter });
                         slot_counter = slot_counter + 30;
                     }
-
-                    /*
-                    if(numb_DayApp[i] !== undefined) {
-                        let filtered_solts = slots;
-                        for(let k = 0; k < numb_DayApp[i].length; k++) {
-                            const filtered = new Array<number>();
-                            if (numb_DayApp[i][k].startTime <= numb_DaySlots[i][j].endSlot) {
-                                filtered_solts.filter(slot => {
-                                    if (numb_DayApp[i][k].startTime >= slot+30 || numb_DayApp[i][k].endTime <= slot) {
-                                        filtered.push(slot);
-                                    }
-                                });
-                                filtered_solts = filtered;
-                            }
-                        }
-                        day_slots = day_slots.concat(filtered_solts);
-                    }*/
-                    day_slots = slots;
                 }
             }
-            day_slots.sort(function(a, b) { return a-b; });
-            finalSlots[i] = day_slots;
         }
-        return finalSlots;
-    };
+        return daySlots;
+    }
+
+    function TimeSlots() {
+        const weekSlots = findSlots(startDay);
+        const dates = Array<Array<Date>>(weekSlots.length);
+        const options= Array<Array<string>>(weekSlots.length);
+        for(let i = 0; i < weekSlots.length; i++) {
+            const day_dates = Array<Date>();
+            const day_options= Array<string>();
+            for(let j = 0; j < weekSlots[i].length; j++) {
+                day_dates.push(weekSlots[i][j].slotDate);
+                day_options.push(
+                    // eslint-disable-next-line max-len
+                    `${i } ` +`${weekSlots[i][j].slotDate.toLocaleTimeString().split(':')[0]}:${weekSlots[i][j].slotDate.toLocaleTimeString().split(':')[1]}`);
+            }
+            dates.push(day_dates);
+            options.push(day_options);
+        }
+
+        const { getRootProps, getRadioProps } = useRadioGroup({
+            defaultValue: '',
+            name: 'framework',
+            onChange: onClickDate,
+        });
+
+        const group = getRootProps();
+
+        return (
+            <Grid
+                gap={4}
+                templateColumns="repeat(7, 1fr)"
+                templateRows="repeat(13, 1fr)"
+                {...group}
+            >
+                {options.map(slotDay => (
+                    // eslint-disable-next-line react/jsx-key
+                    <GridItem colSpan={1} rowSpan={12}><Center>
+                        <Stack {...group}>
+                            {slotDay.map(value => {
+                                console.log(`${value }!`);
+                                const radio = getRadioProps({ value });
+                                return (
+                                    <RadioCard key={value} {...radio}>
+                                        {value.split(' ')[1]}
+                                    </RadioCard>
+                                );
+                            })}
+                        </Stack></Center>
+                    </GridItem>
+                ))}
+            </Grid>
+        );
+    }
+
+    function onClickDate(newDate:string) {
+        //setExpectedTime(newDate);
+        setNoDateSelectedError(true);
+    }
 
     const { toggleColorMode } = useColorMode();
     const color = useColorModeValue('green', 'gray');
@@ -206,44 +264,7 @@ const SelectDate: FC<SelectDateProps> =
                                 <GridItem key={day}><Center> {day}</Center></GridItem>
                             ))}
                         </Grid>
-                        <Grid
-                            gap={4}
-                            templateColumns="repeat(7, 1fr)"
-                            templateRows="repeat(13, 1fr)"
-                        >
-                            {WeekSlots().map((slotDay, index) => (
-                                // eslint-disable-next-line react/jsx-key
-                                <GridItem colSpan={1} rowSpan={12}><Center>
-                                    <Stack spacing={4}>
-                                        if(slotDay != []){
-                                            slotDay.map(slot => (
-                                                <Button
-                                                    borderRadius="full"
-                                                    colorScheme={color}
-                                                    key={slot}
-                                                    onClick={() => {
-                                                        setExpectedTime(new Date(
-                                                            currentDate.getFullYear(),
-                                                            currentDate.getMonth(),
-                                                            currentDate.getDate() + index,
-                                                            Math.ceil(slot/60), slot%60));
-                                                        toggleColorMode;
-                                                        setNoDateSelectedError(true);
-                                                    }}
-                                                    variant="solid"
-                                                >
-                                                    {Math.ceil(slot/60)}:{slot%60}
-                                                </Button>
-                                            ))
-                                        }
-                                        else{
-                                            <GridItem colSpan={1} rowSpan={12}/>
-                                        }
-                                    </Stack>
-                                </Center></GridItem>
-                            ))
-                            }
-                        </Grid>
+                        <TimeSlots/>
                     </Box>
                 </Box>
                 <Center height="50px">
@@ -259,6 +280,38 @@ function stringToTime(number: string) {
     const h = parseInt(numberArray[0]);
     const min = parseInt(numberArray[1]);
     return h*60 + min;
+}
+
+function RadioCard(props:any) {
+    const { getInputProps, getCheckboxProps } = useRadio(props);
+
+    const input = getInputProps();
+    const checkbox = getCheckboxProps();
+
+    return (
+        <Box as="label">
+            <input {...input} />
+            <Box
+                {...checkbox}
+                _checked={{
+                    bg: 'green.600',
+                    borderColor: 'green.600',
+                    color: 'white',
+                }}
+                _focus={{
+                    boxShadow: 'outline',
+                }}
+                borderRadius="full"
+                borderWidth="1px"
+                boxShadow="md"
+                cursor="pointer"
+                px={5}
+                py={3}
+            >
+                {props.children}
+            </Box>
+        </Box>
+    );
 }
 
 export default SelectDate;

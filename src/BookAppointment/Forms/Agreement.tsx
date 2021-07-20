@@ -30,6 +30,54 @@ const Agreement: FC<AgreementProps> =
         setValidForm(true);
     }, [setValidForm]);
 
+    function ShowShareData() {
+        if (shareData) {
+            return(
+                <Box
+                    as="h4"
+                    fontWeight="semibold"
+                    lineHeight="tight"
+                    mt="1"
+                    onChange={event => {
+                        if (shareData) {
+                            setShareData(false);
+                        }
+                        else {
+                            setShareData(true);
+                        }
+                    }}
+                    paddingLeft={4}>
+                    <Checkbox defaultIsChecked size="md">
+                        I hereby agree
+                        to share my appointment history and personal profile with the doctor.
+                    </Checkbox>
+                </Box>
+            );
+        }
+        return(
+            <Box
+                as="h4"
+                fontWeight="semibold"
+                lineHeight="tight"
+                mt="1"
+                onChange={event => {
+                    if (shareData) {
+                        setShareData(false);
+                    }
+                    else {
+                        setShareData(true);
+                    }
+                }}
+                paddingLeft={4}
+            >
+                <Checkbox size="md">
+                    I hereby agree
+                    to share my appointment history and personal profile with the doctor.
+                </Checkbox>
+            </Box>
+        );
+    }
+
     return (
         <div>
             <Container maxW="container.l">
@@ -57,25 +105,7 @@ const Agreement: FC<AgreementProps> =
                             <Center height="50px">
                                 <Divider />
                             </Center>
-                            <Box
-                                as="h4"
-                                fontWeight="semibold"
-                                isTruncated
-                                lineHeight="tight"
-                                mt="1"
-                                paddingLeft={4}
-                            >
-                                <Checkbox onChange={() => {
-                                    if(shareData) {
-                                        setShareData(false);
-                                    }
-                                    else{
-                                        setShareData(true);
-                                    }
-                                }}>
-                                    I hereby agree to share my appointment history and personal profile with the doctor.
-                                </Checkbox>
-                            </Box>
+                            <ShowShareData/>
                         </Stack>
                     </Box>
                 </Box>

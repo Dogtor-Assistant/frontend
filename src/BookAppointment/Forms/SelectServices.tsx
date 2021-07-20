@@ -28,9 +28,24 @@ type SelectServicesProps = {
         readonly publicCovered: boolean | null,
     }>,
     expectedDuration: number,
-    selectedServices: Array<string>,
+    selectedServices: Array<{
+        readonly id: string,
+        readonly description: string | null,
+        readonly estimatedDuration: number | null,
+        readonly name: string,
+        readonly privateCovered: boolean | null,
+        readonly publicCovered: boolean | null,
+    }>,
+    setSelectedServicesID: React.Dispatch<React.SetStateAction<Array<string>>>,
     setExpectedDuration: React.Dispatch<React.SetStateAction<number>>,
-    setSelectedServices: React.Dispatch<React.SetStateAction<Array<string>>>,
+    setSelectedServices: React.Dispatch<React.SetStateAction<Array<{
+        readonly id: string,
+        readonly description: string | null,
+        readonly estimatedDuration: number | null,
+        readonly name: string,
+        readonly privateCovered: boolean | null,
+        readonly publicCovered: boolean | null,
+    }>>>,
     setValidForm: React.Dispatch<React.SetStateAction<boolean>>,
 }
 const SelectServices: FC<SelectServicesProps> =
@@ -42,14 +57,27 @@ const SelectServices: FC<SelectServicesProps> =
     setExpectedDuration,
     setSelectedServices,
     setValidForm,
+    setSelectedServicesID,
 }): ReactElement => {
     const [serviceInsuranceError, setServiceInsuranceError] = useState(false);
     const [selectedServiceError, setSelectedServiceError] = useState(false);
     
     useEffect(() => {
-        setValidForm(possibleServices === [] || selectedServiceError);
-    }, [possibleServices, selectedServiceError, setValidForm]);
+        setValidForm(selectedServices.length !== 0 || selectedServiceError);
+    }, [selectedServices, selectedServiceError, setValidForm]);
 
+    const checkedBool = () => {
+        const checkB= new Array<boolean>(possibleServices.length);
+        for(let i = 0; i < possibleServices.length; i++) {
+            if(selectedServices.includes(possibleServices[i])) {
+                checkB[i] = true;
+            }
+            else{
+                checkB[i] = false;
+            }
+        }
+        return checkB;
+    };
     return (
         <div>
             <Center height="50px">
@@ -71,7 +99,7 @@ const SelectServices: FC<SelectServicesProps> =
                         <Divider />
                     </Center>
                     <SimpleGrid columns={1} spacing={4}>
-                        {possibleServices.map(service => (
+                        {possibleServices.map((service, index) => (
                             <Container
                                 key={service.name}
                             >
@@ -82,37 +110,46 @@ const SelectServices: FC<SelectServicesProps> =
                                     mt="1"
                                     paddingLeft={4}
                                 >
-                                    <Checkbox key={service.name} onChange={() => {
-                                        if(selectedServices.includes(service.name)) {
-                                            const newServices = selectedServices.filter(s => (s !== service.name));
+                                    <Checkbox isChecked={checkedBool()[index]} key={service.name} onChange={() => {
+                                        if(checkedBool()[index]) {
+                                            const newServices = selectedServices.filter(s => (s !== service));
                                             setSelectedServices(newServices);
                                             // eslint-disable-next-line max-len
-                                            const duration = possibleServices[possibleServices.indexOf(service)].estimatedDuration;
+                                            const duration = possibleServices[index].estimatedDuration;
                                             if(duration != null) {
                                                 setExpectedDuration(expectedDuration - duration);
                                             }
                                         }
                                         else{
                                             // eslint-disable-next-line max-len
-                                            if(possibleServices[possibleServices.indexOf(service)].privateCovered === false &&
+                                            if(possibleServices[index].privateCovered === false &&
                                             insurance === 'Private') {
                                                 setServiceInsuranceError(true);
                                             }
                                             // eslint-disable-next-line max-len
-                                            if(possibleServices[possibleServices.indexOf(service)].publicCovered === false &&
+                                            if(possibleServices[index].publicCovered === false &&
                                             insurance === 'Public') {
                                                 setServiceInsuranceError(true);
                                             }
-                                            selectedServices.push(service.name);
+                                            selectedServices.push(service);
                                             setSelectedServices(selectedServices);
                                             // eslint-disable-next-line max-len
-                                            const duration = possibleServices[possibleServices.indexOf(service)].estimatedDuration;
+                                            const duration = possibleServices[index].estimatedDuration;
                                             if (duration != null) {
                                                 setExpectedDuration(expectedDuration + duration);
                                             }
                                         }
                                         if (selectedServices !== []) {
                                             setSelectedServiceError(true);
+                                            const selectedServicesID = new Array<string>();
+                                            for(let i = 0; i < selectedServices.length; i++) {
+                                                selectedServicesID.push(selectedServices[i].id);
+                                            }
+                                            setSelectedServicesID(selectedServicesID);
+                                        }
+                                        else{
+                                            setSelectedServiceError(false);
+                                            setSelectedServicesID([]);
                                         }
                                     }}>
                                         {service.name}

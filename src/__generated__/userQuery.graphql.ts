@@ -3,6 +3,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from "relay-runtime";
+export type Insurance = "Private" | "Public" | "%future added value";
 export type userQueryVariables = {};
 export type userQueryResponse = {
     readonly me: {
@@ -12,6 +13,7 @@ export type userQueryResponse = {
         readonly patientProfile: {
             readonly __typename: string;
             readonly id: string;
+            readonly insurance: Insurance;
         } | null;
         readonly doctorProfile: {
             readonly __typename: string;
@@ -35,6 +37,7 @@ query userQuery {
     patientProfile {
       __typename
       id
+      insurance
     }
     doctorProfile {
       __typename
@@ -52,16 +55,13 @@ var v0 = {
   "name": "id",
   "storageKey": null
 },
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "__typename",
-    "storageKey": null
-  },
-  (v0/*: any*/)
-],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
 v2 = [
   {
     "alias": null,
@@ -93,7 +93,17 @@ v2 = [
         "kind": "LinkedField",
         "name": "patientProfile",
         "plural": false,
-        "selections": (v1/*: any*/),
+        "selections": [
+          (v1/*: any*/),
+          (v0/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "insurance",
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       },
       {
@@ -103,7 +113,10 @@ v2 = [
         "kind": "LinkedField",
         "name": "doctorProfile",
         "plural": false,
-        "selections": (v1/*: any*/),
+        "selections": [
+          (v1/*: any*/),
+          (v0/*: any*/)
+        ],
         "storageKey": null
       }
     ],
@@ -128,14 +141,14 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "1f1159e3a0275d0c147f80156945fd0b",
+    "cacheID": "5eaaa5cd7f7dce124ece0700e55a1d05",
     "id": null,
     "metadata": {},
     "name": "userQuery",
     "operationKind": "query",
-    "text": "query userQuery {\n  me {\n    id\n    firstname\n    lastname\n    patientProfile {\n      __typename\n      id\n    }\n    doctorProfile {\n      __typename\n      id\n    }\n  }\n}\n"
+    "text": "query userQuery {\n  me {\n    id\n    firstname\n    lastname\n    patientProfile {\n      __typename\n      id\n      insurance\n    }\n    doctorProfile {\n      __typename\n      id\n    }\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '253d330493e8349f8dbbe331a79e1df1';
+(node as any).hash = 'f56c38901edb38b3007d26ef37eef440';
 export default node;

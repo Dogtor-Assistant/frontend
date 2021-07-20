@@ -48,9 +48,24 @@ type AppointmentOverviewProps = {
         readonly publicCovered: boolean | null,
     }>,
     expectedDuration: number,
-    selectedServices: Array<string>,
+    selectedServices: Array<{
+        readonly id: string,
+        readonly description: string | null,
+        readonly estimatedDuration: number | null,
+        readonly name: string,
+        readonly privateCovered: boolean | null,
+        readonly publicCovered: boolean | null,
+    }>,
     setExpectedDuration: React.Dispatch<React.SetStateAction<number>>,
-    setSelectedServices: React.Dispatch<React.SetStateAction<Array<string>>>,
+    setSelectedServices: React.Dispatch<React.SetStateAction<Array<{
+        readonly id: string,
+        readonly description: string | null,
+        readonly estimatedDuration: number | null,
+        readonly name: string,
+        readonly privateCovered: boolean | null,
+        readonly publicCovered: boolean | null,
+    }>>>,
+    setSelectedServicesID: React.Dispatch<React.SetStateAction<Array<string>>>,
     setValidForm: React.Dispatch<React.SetStateAction<boolean>>,
     blockedAppointments: ReadonlyArray<{
         readonly isDone: boolean,
@@ -65,6 +80,7 @@ type AppointmentOverviewProps = {
         readonly end: string,
     }>,
     expectedTime: Date,
+    currentTime: Date,
     setExpectedTime: React.Dispatch<React.SetStateAction<Date>>,
     setPatientNotes: React.Dispatch<React.SetStateAction<string>>,
     shareData: boolean,
@@ -86,6 +102,7 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
     doctorHours,
     expectedTime,
     setExpectedTime,
+    setSelectedServicesID,
     setPatientNotes,
     shareData,
     setShareData,
@@ -95,27 +112,30 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
         setValidForm(possibleServices != null);
     }, [possibleServices, setValidForm]);
 
-    const showInsurance = () => {
+    function ShowInsurance() {
         if (insurance === insuranceArr[1]) {
-            <RadioGroup
-                defaultValue='Private' onChange={event => {
-                    setInsurance(insuranceArr[0]);
-                }}
-                value={insurance}
-            >
-                <HStack>
-                    <Grid
-                        gap={20}
-                        templateColumns="repeat(2, 1fr)"
-                        w="200px"
-                    >
-                        <Radio value="Public">Public</Radio>
-                        <Radio value="Private">Private</Radio>
-                    </Grid>
-                </HStack>
-            </RadioGroup>;
+            return(
+                <RadioGroup
+                    defaultValue='Private' onChange={event => {
+                        setInsurance(insuranceArr[0]);
+                    }}
+                    value={insurance}
+                >
+                    <HStack>
+                        <Grid
+                            gap={30}
+                            templateColumns="repeat(2, 1fr)"
+                            w="200px"
+                        >
+                            <Radio value="Public">Public</Radio>
+                            <Radio value="Private">Private</Radio>
+                        </Grid>
+                    </HStack>
+                </RadioGroup>
+            );
         }
-        else{
+        
+        return(
             <RadioGroup
                 defaultValue='Public' onChange={event => {
                     setInsurance(insuranceArr[1]);
@@ -124,7 +144,7 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
             >
                 <HStack>
                     <Grid
-                        gap={20}
+                        gap={30}
                         templateColumns="repeat(2, 1fr)"
                         w="200px"
                     >
@@ -132,38 +152,38 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                         <Radio value="Private">Private</Radio>
                     </Grid>
                 </HStack>
-            </RadioGroup>;
-        }
-    };
+            </RadioGroup>
+        );
+    }
 
-    const showShareData = () => {
+    function ShowShareData() {
         if (shareData) {
-            <Box
-                as="h4"
-                fontWeight="semibold"
-                isTruncated
-                lineHeight="tight"
-                mt="1"
-                onChange={event => {
-                    if (shareData) {
-                        setShareData(false);
-                    }
-                    else {
-                        setShareData(true);
-                    }
-                }}
-                paddingLeft={20}>
-                <Checkbox>
-                    I hereby agree
-                    to share my appointment history and personal profile with the doctor.
-                </Checkbox>
-            </Box>;
+            return(
+                <Box
+                    as="h4"
+                    fontWeight="semibold"
+                    lineHeight="tight"
+                    mt="1"
+                    onChange={event => {
+                        if (shareData) {
+                            setShareData(false);
+                        }
+                        else {
+                            setShareData(true);
+                        }
+                    }}
+                    paddingLeft={20}>
+                    <Checkbox defaultIsChecked size="md">
+                        I hereby agree
+                        to share my appointment history and personal profile with the doctor.
+                    </Checkbox>
+                </Box>
+            );
         }
-        else{
+        return(
             <Box
                 as="h4"
                 fontWeight="semibold"
-                isTruncated
                 lineHeight="tight"
                 mt="1"
                 onChange={event => {
@@ -176,13 +196,13 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                 }}
                 paddingLeft={20}
             >
-                <Checkbox>
+                <Checkbox size="md">
                     I hereby agree
                     to share my appointment history and personal profile with the doctor.
                 </Checkbox>
-            </Box>;
-        }
-    };
+            </Box>
+        );
+    }
 
     function EditableControls() {
         const {
@@ -210,7 +230,7 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
 
     return (
         <div>
-            <Container maxW="container.l">
+            <Container maxW="container.lg">
                 <Center height="50px">
                     <Divider />
                 </Center>
@@ -269,7 +289,11 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                             </GridItem>
                             <GridItem colSpan={1} rowSpan={1}>
                                 <Center>
-                                    <AppDate />
+                                    <AppDate
+                                        blockedAppointments={blockedAppointments}
+                                        doctorHours={doctorHours} expectedDuration={expectedDuration}
+                                        expectedTime={expectedTime} setExpectedTime={setExpectedTime}
+                                        setValidForm={setValidForm}/>
                                 </Center>
                             </GridItem>
                             <GridItem colSpan={1} rowSpan={1} >
@@ -291,10 +315,10 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                                     mt="1"
                                     paddingLeft={4}
                                 >
-                                    {showInsurance}
+                                    <ShowInsurance/>
                                 </Box>
                             </GridItem>
-                            <GridItem colSpan={1} rowSpan={2} >
+                            <GridItem colSpan={1} rowSpan={1} >
                                 <Box
                                     as="h4"
                                     fontWeight="semibold"
@@ -306,7 +330,7 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                                     Appointment Services
                                 </Box>
                             </GridItem>
-                            <GridItem colSpan={3} rowSpan={2}>
+                            <GridItem colSpan={3} rowSpan={1}>
                                 <Box
                                     as="h2"
                                     lineHeight="tight"
@@ -318,18 +342,23 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                                             <Tag
                                                 borderRadius="full"
                                                 colorScheme="green"
-                                                key={value}
+                                                key={value.id}
                                                 variant="solid"
                                             >
-                                                <TagLabel>{value}</TagLabel>
+                                                <TagLabel>{value.name}</TagLabel>
                                                 <TagCloseButton />
                                             </Tag>
                                         ))}
                                     </HStack>
                                 </Box>
                             </GridItem>
-                            <GridItem colSpan={1} rowSpan={2}>
-                                <AppService/>
+                            <GridItem colSpan={1} rowSpan={1}>
+                                <AppService
+                                    expectedDuration={expectedDuration} insurance={insurance}
+                                    possibleServices={possibleServices} selectedServices={selectedServices}
+                                    setExpectedDuration={setExpectedDuration} setSelectedServices={setSelectedServices}
+                                    setSelectedServicesID={setSelectedServicesID} setValidForm={setValidForm}
+                                />
                             </GridItem>
                             <GridItem colSpan={1} rowSpan={1} >
                                 <Box
@@ -375,7 +404,7 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                                 </Box>
                             </GridItem>
                             <GridItem colSpan={5} rowSpan={1} >
-                                {showShareData}
+                                <ShowShareData/>
                             </GridItem>
 
                         </Grid>
