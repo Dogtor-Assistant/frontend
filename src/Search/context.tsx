@@ -276,7 +276,7 @@ export function useMultiSelectFilter<
 
 type MultiSelectFilterValueHookType = [
     boolean,
-    (newValue: boolean) => void,
+    (newValue: boolean, force?: Force) => void,
 ]
 
 function useMultiSelectFilterValue<
@@ -284,11 +284,11 @@ function useMultiSelectFilterValue<
 >(key: K, value: MultiSelectFilterTypes[K]): MultiSelectFilterValueHookType {
     const [set, add, remove] = useMultiSelectFilter(key);
     const included = useMemo(() => set?.has(value) ?? false, [set, value]);
-    const setIncluded = useCallback((included: boolean) => {
+    const setIncluded = useCallback((included: boolean, force?: Force) => {
         if (included) {
-            add(value);
+            add(value, force);
         } else {
-            remove(value);
+            remove(value, force);
         }
     }, [value, add, remove]);
 

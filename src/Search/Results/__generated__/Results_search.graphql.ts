@@ -5,6 +5,9 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type Results_search = {
+    readonly suggestions: {
+        readonly " $fragmentRefs": FragmentRefs<"Suggestions_suggestions">;
+    };
     readonly " $fragmentRefs": FragmentRefs<"SearchResultsList_search">;
     readonly " $refType": "Results_search";
 };
@@ -23,6 +26,22 @@ const node: ReaderFragment = {
   "name": "Results_search",
   "selections": [
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "SearchSuggestions",
+      "kind": "LinkedField",
+      "name": "suggestions",
+      "plural": false,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "Suggestions_suggestions"
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "SearchResultsList_search"
@@ -31,5 +50,5 @@ const node: ReaderFragment = {
   "type": "Search",
   "abstractKey": null
 };
-(node as any).hash = 'b3f5d3c108a44a162a75809137c19464';
+(node as any).hash = '9f4246db0d189e798622a6c264363d79';
 export default node;

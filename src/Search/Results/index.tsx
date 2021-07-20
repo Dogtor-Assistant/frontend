@@ -8,6 +8,7 @@ import { graphql } from 'babel-plugin-relay/macro';
 
 import { useShouldShowBarValue } from 'Search/context';
 import SearchResultsList from './SearchResultsList';
+import Suggestions from './Suggestions';
 
 type Props = {
     search: Results_search$key,
@@ -20,6 +21,9 @@ function Results(props: Props) {
         graphql`
             fragment Results_search on Search {
                 ...SearchResultsList_search
+                suggestions {
+                    ...Suggestions_suggestions
+                }
             }
         `,
         props.search,
@@ -27,6 +31,7 @@ function Results(props: Props) {
 
     return (
         <Container maxW="container.lg">
+            <Suggestions suggestions={search.suggestions}/>
             <SearchResultsList search={search} />
         </Container>
     );
