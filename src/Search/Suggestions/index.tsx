@@ -3,6 +3,7 @@ import type { Suggestions_search$key } from './__generated__/Suggestions_search.
 import React from 'react';
 import {
     Button,
+    Center,
     Container,
     Text,
     VStack,
@@ -56,6 +57,20 @@ function Suggestions(props: Props) {
                 >
                     Search
                 </Button>
+                <Center>
+                    <Button
+                        onClick={() => {
+                            update({
+                                cities: null,
+                                query: null,
+                                specialities: null,
+                            }, true);
+                        }}
+                        variant="ghost"
+                    >
+                        Reset
+                    </Button>
+                </Center>
             </VStack>
         </Container>
     );
