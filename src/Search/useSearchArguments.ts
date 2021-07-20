@@ -12,6 +12,7 @@ function useSearchArguments(search: useSearchArguments_search$key): SearchArgume
                     cities
                     query
                     specialities
+                    minRating
                 }
             }
         `,
@@ -20,6 +21,7 @@ function useSearchArguments(search: useSearchArguments_search$key): SearchArgume
 
     return {
         cities: decoded.scope.cities,
+        minRating: decoded.scope.minRating,
         query: decoded.scope.query,
         specialities: decoded.scope.specialities,
     };

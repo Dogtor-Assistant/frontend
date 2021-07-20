@@ -18,6 +18,7 @@ export type SearchArguments = {
     readonly query: string | null,
     readonly cities: readonly string[] | null,
     readonly specialities: readonly string[] | null,
+    readonly minRating: number | null,
 }
 
 type Force = true | number
@@ -34,6 +35,7 @@ type ContextType = {
 
 export const EMPTY_SEARCH_ARGUMENTS: SearchArguments = {
     cities: null,
+    minRating: null,
     query: null,
     specialities: null,
 };
@@ -59,6 +61,8 @@ function argumentsKeyForFilter(type: FilterType): (keyof SearchArguments) {
         return 'cities';
     case 'Specialities':
         return 'specialities';
+    case 'Rating':
+        return 'minRating';
     }
 }
 

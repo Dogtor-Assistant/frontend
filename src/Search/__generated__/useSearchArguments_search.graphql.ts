@@ -9,6 +9,7 @@ export type useSearchArguments_search = {
         readonly cities: ReadonlyArray<string> | null;
         readonly query: string | null;
         readonly specialities: ReadonlyArray<string> | null;
+        readonly minRating: number | null;
     };
     readonly " $refType": "useSearchArguments_search";
 };
@@ -54,6 +55,13 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "specialities",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "minRating",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -62,5 +70,5 @@ const node: ReaderFragment = {
   "type": "Search",
   "abstractKey": null
 };
-(node as any).hash = '96e64ca29c6fd5961b9656cc6726f473';
+(node as any).hash = 'd00610eaadd7dc1ef0b0664cb308a246';
 export default node;

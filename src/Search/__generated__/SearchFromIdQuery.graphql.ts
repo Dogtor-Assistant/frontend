@@ -46,6 +46,7 @@ fragment useSearchArguments_search on Search {
     cities
     query
     specialities
+    minRating
   }
 }
 */
@@ -160,6 +161,13 @@ return {
                     "kind": "ScalarField",
                     "name": "specialities",
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "minRating",
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -174,12 +182,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e5081a23653b676325ea254a802c2490",
+    "cacheID": "2e67f047aedc0c54ed9f91f847f2c68b",
     "id": null,
     "metadata": {},
     "name": "SearchFromIdQuery",
     "operationKind": "query",
-    "text": "query SearchFromIdQuery(\n  $searchId: ID!\n) {\n  node(id: $searchId) {\n    __typename\n    ... on Search {\n      ...SearchFromId_SearchRootFromFragment_search\n    }\n    id\n  }\n}\n\nfragment SearchFromId_SearchRootFromFragment_search on Search {\n  ...useSearchArguments_search\n}\n\nfragment useSearchArguments_search on Search {\n  scope {\n    cities\n    query\n    specialities\n  }\n}\n"
+    "text": "query SearchFromIdQuery(\n  $searchId: ID!\n) {\n  node(id: $searchId) {\n    __typename\n    ... on Search {\n      ...SearchFromId_SearchRootFromFragment_search\n    }\n    id\n  }\n}\n\nfragment SearchFromId_SearchRootFromFragment_search on Search {\n  ...useSearchArguments_search\n}\n\nfragment useSearchArguments_search on Search {\n  scope {\n    cities\n    query\n    specialities\n    minRating\n  }\n}\n"
   }
 };
 })();
