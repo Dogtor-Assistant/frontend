@@ -47,6 +47,14 @@ fragment useSearchArguments_search on Search {
     query
     specialities
     minRating
+    nearby {
+      label
+      coordinates {
+        latitude
+        longitude
+      }
+      maximumDistanceInMeters
+    }
   }
 }
 */
@@ -168,6 +176,56 @@ return {
                     "kind": "ScalarField",
                     "name": "minRating",
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "NearbyLocation",
+                    "kind": "LinkedField",
+                    "name": "nearby",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "label",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Coordinates",
+                        "kind": "LinkedField",
+                        "name": "coordinates",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "latitude",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "longitude",
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "maximumDistanceInMeters",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -182,12 +240,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2e67f047aedc0c54ed9f91f847f2c68b",
+    "cacheID": "47ae05b1df288db9ed27496f14b36ec5",
     "id": null,
     "metadata": {},
     "name": "SearchFromIdQuery",
     "operationKind": "query",
-    "text": "query SearchFromIdQuery(\n  $searchId: ID!\n) {\n  node(id: $searchId) {\n    __typename\n    ... on Search {\n      ...SearchFromId_SearchRootFromFragment_search\n    }\n    id\n  }\n}\n\nfragment SearchFromId_SearchRootFromFragment_search on Search {\n  ...useSearchArguments_search\n}\n\nfragment useSearchArguments_search on Search {\n  scope {\n    cities\n    query\n    specialities\n    minRating\n  }\n}\n"
+    "text": "query SearchFromIdQuery(\n  $searchId: ID!\n) {\n  node(id: $searchId) {\n    __typename\n    ... on Search {\n      ...SearchFromId_SearchRootFromFragment_search\n    }\n    id\n  }\n}\n\nfragment SearchFromId_SearchRootFromFragment_search on Search {\n  ...useSearchArguments_search\n}\n\nfragment useSearchArguments_search on Search {\n  scope {\n    cities\n    query\n    specialities\n    minRating\n    nearby {\n      label\n      coordinates {\n        latitude\n        longitude\n      }\n      maximumDistanceInMeters\n    }\n  }\n}\n"
   }
 };
 })();

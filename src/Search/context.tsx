@@ -14,11 +14,21 @@ import React, {
 
 import { FILTER_TYPES } from './types';
 
+type Nearby = {
+    readonly label: string,
+    readonly coordinates: {
+        readonly latitude: number,
+        readonly longitude: number,
+    },
+    readonly maximumDistanceInMeters: number,
+}
+
 export type SearchArguments = {
     readonly query: string | null,
     readonly cities: readonly string[] | null,
     readonly specialities: readonly string[] | null,
     readonly minRating: number | null,
+    readonly nearby: Nearby | null,
 }
 
 type Force = true | number
@@ -36,6 +46,7 @@ type ContextType = {
 export const EMPTY_SEARCH_ARGUMENTS: SearchArguments = {
     cities: null,
     minRating: null,
+    nearby: null,
     query: null,
     specialities: null,
 };

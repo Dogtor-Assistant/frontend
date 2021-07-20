@@ -29,12 +29,14 @@ function LoadedSearchRenderer(props: LoadedProps) {
                 $cities: [String!]
                 $specialities: [String!]
                 $minRating: Float
+                $nearby: NearbyLocationInput
             ) {
                 search(
                     query: $query,
                     cities: $cities,
                     specialities: $specialities
                     minRating: $minRating
+                    nearby: $nearby
                 ) {
                     id
                     ...useSearchArguments_search
@@ -89,6 +91,7 @@ function SearchRenderer() {
         loadQuery({
             cities: applied.cities?.map(x => x),
             minRating: applied.minRating,
+            nearby: applied.nearby,
             query: applied.query,
             specialities: applied.specialities?.map(x => x),
         });

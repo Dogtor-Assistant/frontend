@@ -1,3 +1,4 @@
+/* eslint-disable relay/unused-fields */
 import type { useSearchArguments_search$key } from './__generated__/useSearchArguments_search.graphql';
 import type { SearchArguments } from './context';
 
@@ -13,18 +14,21 @@ function useSearchArguments(search: useSearchArguments_search$key): SearchArgume
                     query
                     specialities
                     minRating
+                    nearby {
+                        label
+                        coordinates {
+                            latitude
+                            longitude
+                        }
+                        maximumDistanceInMeters
+                    }
                 }
             }
         `,
         search,
     );
 
-    return {
-        cities: decoded.scope.cities,
-        minRating: decoded.scope.minRating,
-        query: decoded.scope.query,
-        specialities: decoded.scope.specialities,
-    };
+    return decoded.scope;
 }
 
 export default useSearchArguments;
