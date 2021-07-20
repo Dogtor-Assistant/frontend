@@ -1,9 +1,10 @@
 import React from 'react';
-import { Container, VStack } from '@chakra-ui/react';
+import { Container, Text, VStack } from '@chakra-ui/react';
 
 import HorizonalScrollview from 'HorizonalScrollview';
 import { useShouldShowBar } from 'Search/context';
 import Applied from './Filters/Applied';
+import FilterPicker from './Filters/Common/FilterPicker';
 import SearchQueryBar from './SearchQueryBar';
 
 function Bar() {
@@ -15,10 +16,17 @@ function Bar() {
 
     return (
         <Container maxW="container.lg">
-            <VStack>
+            <VStack align="start">
                 <SearchQueryBar />
+                <Text
+                    fontSize="md"
+                    fontWeight="semibold"
+                >
+                    Filters
+                </Text>
                 <HorizonalScrollview w="100%">
                     <Applied />
+                    <FilterPicker />
                 </HorizonalScrollview>
             </VStack>
         </Container>

@@ -1,8 +1,7 @@
 import React from 'react';
-import { HStack, Text } from '@chakra-ui/react';
+import { HStack } from '@chakra-ui/react';
 
 import { useCurrentFilterTypes } from 'Search/context';
-import FilterPicker from '../Common/FilterPicker';
 import Filter from './Filter';
 
 function Applied() {
@@ -10,12 +9,6 @@ function Applied() {
 
     return (
         <HStack>
-            <Text
-                fontSize="md"
-                fontWeight="semibold"
-            >
-                Filters:
-            </Text>
             {
                 filters.map(type => {
                     return (
@@ -26,7 +19,6 @@ function Applied() {
                     );
                 })
             }
-            <FilterPicker />
         </HStack>
     );
 }
