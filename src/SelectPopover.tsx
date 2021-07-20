@@ -5,6 +5,7 @@ import type { Props as SelectProps } from 'react-select';
 
 import React from 'react';
 import ReactSelect, { components as selectComponents } from 'react-select';
+import { useDisclosure } from '@chakra-ui/react';
 import {
     Box,
     Button,
@@ -37,6 +38,9 @@ type SecondyAction = {
 
 type Props = PopoverProps & {
     children: ReactNode[] | ReactNode | null,
+    isOpen?: boolean,
+    onOpen?: () => void,
+    onClose?: () => void,
     actions?: SecondyAction[],
 }
 
@@ -220,15 +224,29 @@ function SelectPopover(props: Props) {
     const {
         children,
         actions = [],
+        isOpen: defaultIsOpen,
+        onClose: defaultOnClose,
+        onOpen: defaultOnOpen,
         ...rest
     } = props;
+
+    const { onOpen, onClose, isOpen } = useDisclosure({
+        isOpen: defaultIsOpen,
+        onClose: defaultOnClose,
+        onOpen: defaultOnOpen,
+    });
+
     return (
         <Popover
             closeOnBlur
             closeOnEsc
             isLazy
+            isOpen={isOpen}
             lazyBehavior="unmount"
             matchWidth
+            onClose={onClose}
+            onOpen={onOpen}
+            returnFocusOnClose={false}
         >
             <ButtonGroup isAttached size="sm" variant="outline">
                 <PopoverTrigger>
