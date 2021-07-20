@@ -159,10 +159,6 @@ function LoadedCalendar(props: LoadedProps) {
                                 start
                                 duration
                             }
-                            actualTime{
-                                start
-                                duration
-                            }
                             isDone
                         }
 
@@ -177,8 +173,9 @@ function LoadedCalendar(props: LoadedProps) {
         [...(data.node?.appointments ? data.node?.appointments.map(appointment => !appointment.isDone ? {} : ({
             end: typeof appointment.expectedTime?.start === 'string' ? new Date(new Date(
                 appointment.expectedTime?.start).setMinutes(new Date(appointment.expectedTime?.start).getMinutes()
-                 + appointment.expectedTime.duration!)).toISOString() : '',
-
+                 + ((appointment.expectedTime.duration != null && appointment.expectedTime.duration === undefined) ?
+                     appointment.expectedTime.duration : 0
+                 ))).toISOString() : '',
             firstName: appointment.patient.firstname,
             id: appointment.id,
             lastName: appointment.patient.lastname,

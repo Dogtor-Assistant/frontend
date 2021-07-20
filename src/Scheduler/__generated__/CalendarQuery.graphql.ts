@@ -33,10 +33,6 @@ export type CalendarQueryResponse = {
                 readonly start: string | null;
                 readonly duration: number | null;
             };
-            readonly actualTime: {
-                readonly start: string | null;
-                readonly duration: number | null;
-            } | null;
             readonly isDone: boolean;
         }>;
     } | null;
@@ -78,10 +74,6 @@ query CalendarQuery(
           start
           duration
         }
-        actualTime {
-          start
-          duration
-        }
         isDone
       }
     }
@@ -112,23 +104,7 @@ v2 = {
   "name": "id",
   "storageKey": null
 },
-v3 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "start",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "duration",
-    "storageKey": null
-  }
-],
-v4 = {
+v3 = {
   "kind": "InlineFragment",
   "selections": [
     {
@@ -254,17 +230,22 @@ v4 = {
           "kind": "LinkedField",
           "name": "expectedTime",
           "plural": false,
-          "selections": (v3/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "AppointmentTime",
-          "kind": "LinkedField",
-          "name": "actualTime",
-          "plural": false,
-          "selections": (v3/*: any*/),
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "start",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "duration",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         },
         {
@@ -296,7 +277,7 @@ return {
         "name": "node",
         "plural": false,
         "selections": [
-          (v4/*: any*/)
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
@@ -326,21 +307,21 @@ return {
             "storageKey": null
           },
           (v2/*: any*/),
-          (v4/*: any*/)
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "c1ba82955633a44760d762bc6791aac1",
+    "cacheID": "b007943f03bed686131d5d196b5e6d6f",
     "id": null,
     "metadata": {},
     "name": "CalendarQuery",
     "operationKind": "query",
-    "text": "query CalendarQuery(\n  $docId: ID!\n) {\n  node(id: $docId) {\n    __typename\n    ... on Doctor {\n      appointments {\n        id\n        patient {\n          id\n          firstname\n          lastname\n          surgeries\n          isSmoker\n          address {\n            city\n            zipCode\n            streetName\n            streetNumber\n          }\n          gender\n          height\n          weight\n          activityLevel\n        }\n        expectedTime {\n          start\n          duration\n        }\n        actualTime {\n          start\n          duration\n        }\n        isDone\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query CalendarQuery(\n  $docId: ID!\n) {\n  node(id: $docId) {\n    __typename\n    ... on Doctor {\n      appointments {\n        id\n        patient {\n          id\n          firstname\n          lastname\n          surgeries\n          isSmoker\n          address {\n            city\n            zipCode\n            streetName\n            streetNumber\n          }\n          gender\n          height\n          weight\n          activityLevel\n        }\n        expectedTime {\n          start\n          duration\n        }\n        isDone\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = 'b7cb26eb12bc9b9e0ce71829d02f3bf0';
+(node as any).hash = 'fb2c7157b13cbaa15f18a9c28b9751c2';
 export default node;
