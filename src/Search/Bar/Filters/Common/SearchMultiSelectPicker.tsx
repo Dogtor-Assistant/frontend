@@ -2,7 +2,7 @@ import type { MultiSelectFilterTypes } from 'Search/context';
 
 import React from 'react';
 import { useMemo } from 'react';
-import { Text } from '@chakra-ui/react';
+import { Button, Text } from '@chakra-ui/react';
 import { CloseIcon } from '@chakra-ui/icons';
 
 import { useMultiSelectFilter } from 'Search/context';
@@ -85,9 +85,12 @@ function SearchMultiSelectPicker<
             size="xs"
             value={selectedOptions}
         >
-            <Text>
-                {name}: {selectedLabel}
-            </Text>
+            
+            <Button mr="-px">
+                <Text>
+                    {name}: {selectedLabel}
+                </Text>
+            </Button>
         </SelectPopover>
     );
 }

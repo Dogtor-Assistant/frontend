@@ -8,7 +8,6 @@ import ReactSelect, { components as selectComponents } from 'react-select';
 import { useDisclosure } from '@chakra-ui/react';
 import {
     Box,
-    Button,
     ButtonGroup,
     Center,
     CloseButton,
@@ -250,9 +249,7 @@ function SelectPopover(props: Props) {
         >
             <ButtonGroup isAttached size="sm" variant="outline">
                 <PopoverTrigger>
-                    <Button mr="-px">
-                        {children}
-                    </Button>
+                    {children}
                 </PopoverTrigger>
                 {
                     actions.map(({ icon, label, action }, index) => {
