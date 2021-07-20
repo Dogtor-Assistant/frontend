@@ -161,7 +161,6 @@ const CustomModal = ({
                         <CustomDrawer
                             eventType={eventType}
                             isOpenFollowupModal={isOpenFollowupModal}
-                            onClose={onClose}
                             onCloseFollowupModal={onCloseFollowupModal}/>
                         <AppointmentDone eventId={eventType.id} onClose={handleOnCloseDone}/>
                         <AppointmentDelete eventId={eventType.id} onClose={handleOnCloseDelete}/>

@@ -57,7 +57,6 @@ type AppointmentType = {
             weight: number,
         },
     },
-    onClose: ()=>void,
     onCloseFollowupModal: ()=>void,
 }
 type doctorType ={
@@ -65,7 +64,7 @@ type doctorType ={
         services: { id: string, serviceName: string }[],
 }
 
-const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:AppointmentType) => {
+const AppointmentFollowup = ({ event, onCloseFollowupModal }:AppointmentType) => {
 
     const toast = useToast();
 
@@ -92,7 +91,7 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
         if (result) {
             commit({
                 onCompleted({ assignFollowup }) {
-                    if(assignFollowup && onClose && onCloseFollowupModal) {
+                    if(assignFollowup && onCloseFollowupModal) {
                         
                         toast({
                             description: 'A followup has been saved.',
@@ -101,7 +100,7 @@ const AppointmentFollowup = ({ event, onClose, onCloseFollowupModal }:Appointmen
                             status: 'success',
                             title: 'Successfully.',
                         });
-                        onClose();
+                       
                         onCloseFollowupModal();
                         
                     }else{

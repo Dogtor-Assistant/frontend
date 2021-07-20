@@ -32,14 +32,12 @@ type Props = {
          },
 
     },
-    onClose: () => void,
     isOpenFollowupModal: boolean,
     onCloseFollowupModal: ()=>void,
 }
 
 const CustomDrawer = ({
     eventType,
-    onClose,
     onCloseFollowupModal,
     isOpenFollowupModal,
 }: Props) => {
@@ -48,13 +46,12 @@ const CustomDrawer = ({
             isOpen={isOpenFollowupModal}
             onClose={onCloseFollowupModal}
             placement='right'
-            size='xl'
+            size='lg'
         >
             <DrawerOverlay />
             <DrawerContent>
                 <AppointmentFollowup
                     event={eventType}
-                    onClose={onClose}
                     onCloseFollowupModal={onCloseFollowupModal}/>
             </DrawerContent>
         </Drawer>
