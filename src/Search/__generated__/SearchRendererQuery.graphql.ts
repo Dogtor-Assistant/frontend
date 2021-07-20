@@ -8,6 +8,7 @@ export type SearchRendererQueryVariables = {
     query?: string | null;
     cities?: Array<string> | null;
     specialities?: Array<string> | null;
+    minRating?: number | null;
 };
 export type SearchRendererQueryResponse = {
     readonly search: {
@@ -27,8 +28,9 @@ query SearchRendererQuery(
   $query: String
   $cities: [String!]
   $specialities: [String!]
+  $minRating: Float
 ) {
-  search(query: $query, cities: $cities, specialities: $specialities) {
+  search(query: $query, cities: $cities, specialities: $specialities, minRating: $minRating) {
     id
     ...useSearchArguments_search
     ...SearchResultsContainer_search
@@ -115,18 +117,28 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "query"
+  "name": "minRating"
 },
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
+  "name": "query"
+},
+v3 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
   "name": "specialities"
 },
-v3 = [
+v4 = [
   {
     "kind": "Variable",
     "name": "cities",
     "variableName": "cities"
+  },
+  {
+    "kind": "Variable",
+    "name": "minRating",
+    "variableName": "minRating"
   },
   {
     "kind": "Variable",
@@ -139,35 +151,35 @@ v3 = [
     "variableName": "specialities"
   }
 ],
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cities",
   "storageKey": null
 },
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "specialities",
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v8 = [
+v9 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -179,7 +191,8 @@ return {
     "argumentDefinitions": [
       (v0/*: any*/),
       (v1/*: any*/),
-      (v2/*: any*/)
+      (v2/*: any*/),
+      (v3/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -187,13 +200,13 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v4/*: any*/),
         "concreteType": "Search",
         "kind": "LinkedField",
         "name": "search",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v5/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -214,22 +227,23 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v1/*: any*/),
+      (v2/*: any*/),
       (v0/*: any*/),
-      (v2/*: any*/)
+      (v3/*: any*/),
+      (v1/*: any*/)
     ],
     "kind": "Operation",
     "name": "SearchRendererQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v3/*: any*/),
+        "args": (v4/*: any*/),
         "concreteType": "Search",
         "kind": "LinkedField",
         "name": "search",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -238,7 +252,7 @@ return {
             "name": "scope",
             "plural": false,
             "selections": [
-              (v5/*: any*/),
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -246,7 +260,7 @@ return {
                 "name": "query",
                 "storageKey": null
               },
-              (v6/*: any*/),
+              (v7/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -265,8 +279,8 @@ return {
             "name": "suggestions",
             "plural": false,
             "selections": [
-              (v6/*: any*/),
-              (v5/*: any*/)
+              (v7/*: any*/),
+              (v6/*: any*/)
             ],
             "storageKey": null
           },
@@ -292,7 +306,7 @@ return {
                 "name": "edges",
                 "plural": true,
                 "selections": [
-                  (v7/*: any*/)
+                  (v8/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -301,7 +315,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v8/*: any*/),
+            "args": (v9/*: any*/),
             "concreteType": "DoctorsConnection",
             "kind": "LinkedField",
             "name": "results",
@@ -344,8 +358,8 @@ return {
                         "name": "rating",
                         "storageKey": null
                       },
-                      (v4/*: any*/),
-                      (v7/*: any*/)
+                      (v5/*: any*/),
+                      (v8/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -389,7 +403,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v8/*: any*/),
+            "args": (v9/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "SearchResultsList_search_results",
@@ -402,14 +416,14 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f1cb67d96d9b5bf61a21879728e570eb",
+    "cacheID": "b2d8c6bac7b31be9731f2acc423b1fa1",
     "id": null,
     "metadata": {},
     "name": "SearchRendererQuery",
     "operationKind": "query",
-    "text": "query SearchRendererQuery(\n  $query: String\n  $cities: [String!]\n  $specialities: [String!]\n) {\n  search(query: $query, cities: $cities, specialities: $specialities) {\n    id\n    ...useSearchArguments_search\n    ...SearchResultsContainer_search\n  }\n}\n\nfragment CitiesSuggestions_suggestions on SearchSuggestions {\n  cities\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  rating\n}\n\nfragment Results_search on Search {\n  ...SearchResultsList_search\n}\n\nfragment SearchResultsContainer_search on Search {\n  ...useResultMode_search\n  ...Results_search\n  ...Suggestions_search\n}\n\nfragment SearchResultsList_search on Search {\n  results(first: 20) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment SpecialitiesSuggestions_suggestions on SearchSuggestions {\n  specialities\n}\n\nfragment Suggestions_search on Search {\n  suggestions {\n    ...SpecialitiesSuggestions_suggestions\n    ...CitiesSuggestions_suggestions\n  }\n}\n\nfragment useResultMode_search on Search {\n  suggestions {\n    specialities\n    cities\n  }\n  firstResult: results(first: 1) {\n    edges {\n      __typename\n    }\n  }\n}\n\nfragment useSearchArguments_search on Search {\n  scope {\n    cities\n    query\n    specialities\n    minRating\n  }\n}\n"
+    "text": "query SearchRendererQuery(\n  $query: String\n  $cities: [String!]\n  $specialities: [String!]\n  $minRating: Float\n) {\n  search(query: $query, cities: $cities, specialities: $specialities, minRating: $minRating) {\n    id\n    ...useSearchArguments_search\n    ...SearchResultsContainer_search\n  }\n}\n\nfragment CitiesSuggestions_suggestions on SearchSuggestions {\n  cities\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  rating\n}\n\nfragment Results_search on Search {\n  ...SearchResultsList_search\n}\n\nfragment SearchResultsContainer_search on Search {\n  ...useResultMode_search\n  ...Results_search\n  ...Suggestions_search\n}\n\nfragment SearchResultsList_search on Search {\n  results(first: 20) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment SpecialitiesSuggestions_suggestions on SearchSuggestions {\n  specialities\n}\n\nfragment Suggestions_search on Search {\n  suggestions {\n    ...SpecialitiesSuggestions_suggestions\n    ...CitiesSuggestions_suggestions\n  }\n}\n\nfragment useResultMode_search on Search {\n  suggestions {\n    specialities\n    cities\n  }\n  firstResult: results(first: 1) {\n    edges {\n      __typename\n    }\n  }\n}\n\nfragment useSearchArguments_search on Search {\n  scope {\n    cities\n    query\n    specialities\n    minRating\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '42aa89f03018582d55891cfba78586e1';
+(node as any).hash = '6d792c612373caed43cd07853e1a41a3';
 export default node;

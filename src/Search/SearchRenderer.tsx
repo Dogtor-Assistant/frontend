@@ -28,11 +28,13 @@ function LoadedSearchRenderer(props: LoadedProps) {
                 $query: String
                 $cities: [String!]
                 $specialities: [String!]
+                $minRating: Float
             ) {
                 search(
                     query: $query,
                     cities: $cities,
                     specialities: $specialities
+                    minRating: $minRating
                 ) {
                     id
                     ...useSearchArguments_search
@@ -86,6 +88,7 @@ function SearchRenderer() {
         error.current?.reset();
         loadQuery({
             cities: applied.cities?.map(x => x),
+            minRating: applied.minRating,
             query: applied.query,
             specialities: applied.specialities?.map(x => x),
         });
