@@ -2,6 +2,7 @@ import React from 'react';
 import { HStack } from '@chakra-ui/react';
 
 import { useCurrentFilterTypes } from 'Search/context';
+import FilterPicker from '../Common/FilterPicker';
 import Filter from './Filter';
 
 function Applied() {
@@ -19,6 +20,7 @@ function Applied() {
                     );
                 })
             }
+            <FilterPicker />
         </HStack>
     );
 }
