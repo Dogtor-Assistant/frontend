@@ -1,4 +1,5 @@
 
+import type { FilterType } from './types';
 import type { Dispatch, ReactNode, SetStateAction } from 'react';
 
 import React, {
@@ -11,6 +12,8 @@ import React, {
     useState,
 } from 'react';
 
+import { FILTER_TYPES } from './types';
+
 export type SearchArguments = {
     readonly query: string | null,
     readonly cities: readonly string[] | null,
@@ -20,9 +23,11 @@ export type SearchArguments = {
 type Force = true | number
 
 type ContextType = {
+    filterTypes: FilterType[],
     lastFetchTime: number,
     applied: SearchArguments,
     current: SearchArguments,
+    addFilter: (type: FilterType) => void,
     shouldShowBar: [boolean, Dispatch<SetStateAction<boolean>>],
     update: (partial: Partial<SearchArguments>, force?: Force) => void,
 }
@@ -34,8 +39,10 @@ const emptySearchArguments: SearchArguments = {
 };
 
 const Context = createContext<ContextType>({
+    addFilter: () => { /* no-op */ },
     applied: emptySearchArguments,
     current: emptySearchArguments,
+    filterTypes: [],
     lastFetchTime: 0,
     shouldShowBar: [true, () => { /* no-op */ }],
     update: () => { /* np-op */},
@@ -46,12 +53,27 @@ type Props = {
     children: ReactNode[] | ReactNode | null,
 }
 
+function argumentsKeyForFilter(type: FilterType): (keyof SearchArguments) {
+    switch (type) {
+    case 'Cities':
+        return 'cities';
+    case 'Specialities':
+        return 'specialities';
+    }
+}
+
+function searchArgumentsIncludeFilter(searchArguments: SearchArguments, type: FilterType): boolean {
+    return searchArguments[argumentsKeyForFilter(type)] != null;
+}
+
 export function SearchContextProvider({ initial, children }: Props) {
     const [lastFetchTime, setLastFetchTime] = useState(0);
     const [applied, setApplied] = useState(initial ?? emptySearchArguments);
     const [current, setCurrent] = useState(initial ?? emptySearchArguments);
     const timeout = useRef<NodeJS.Timeout | null>(null);
     const shouldShowBar = useState(true);
+    
+    const [filterTypes, setFilterTypes] = useState<FilterType[]>([]);
 
     const update = useCallback((partial: Partial<SearchArguments>, force?: Force) => {
         const value = {
@@ -59,9 +81,22 @@ export function SearchContextProvider({ initial, children }: Props) {
             ...partial,
         };
         setCurrent(value);
+
+        const newAdditionalFilters = FILTER_TYPES.filter(type => {
+            return !filterTypes.includes(type) && searchArgumentsIncludeFilter(value, type);
+        });
+
+        const newFilters = [...filterTypes, ...newAdditionalFilters];
+
         if (force == null) {
+            if (newFilters.length > 0) {
+                setFilterTypes(newFilters);
+            }
             return;
         }
+
+        const filtersWithoutUnnecessaryOnes = newFilters.filter(filter => searchArgumentsIncludeFilter(value, filter));
+        setFilterTypes(filtersWithoutUnnecessaryOnes);
 
         if (timeout.current != null) {
             clearTimeout(timeout.current);
@@ -80,7 +115,17 @@ export function SearchContextProvider({ initial, children }: Props) {
             break;
         }
 
-    }, [current, setCurrent, setApplied]);
+    }, [current, setCurrent, setApplied, filterTypes, setFilterTypes]);
+
+    const addFilter = useCallback((type: FilterType) => {
+        setFilterTypes(filterTypes => {
+            if (filterTypes.includes(type)) {
+                return filterTypes;
+            }
+
+            return [...filterTypes, type];
+        });
+    }, [setFilterTypes]);
 
     useEffect(() => {
         return () => {
@@ -93,8 +138,10 @@ export function SearchContextProvider({ initial, children }: Props) {
     return (
         <Context.Provider
             value={{
+                addFilter,
                 applied,
                 current,
+                filterTypes,
                 lastFetchTime,
                 shouldShowBar,
                 update,
@@ -128,6 +175,16 @@ export function useShouldShowBar() {
 export function useLastFetchTime() {
     const { lastFetchTime } = useContext(Context);
     return lastFetchTime;
+}
+
+export function useAddFilter() {
+    const { addFilter } = useContext(Context);
+    return addFilter;
+}
+
+export function useCurrentFilterTypes() {
+    const { filterTypes } = useContext(Context);
+    return filterTypes;
 }
 
 export function useSearchQuery(force?: Force): [string, (value: string) => void] {
