@@ -14,6 +14,7 @@ import {
     Flex,
     IconButton,
     Popover,
+    PopoverArrow,
     PopoverContent,
     PopoverTrigger,
     Portal,
@@ -266,6 +267,7 @@ function SelectPopover(props: Props) {
                 
             </ButtonGroup>
             <PopoverContent>
+                <PopoverArrow />
                 <SelectionPopoverContent {...rest}/>
             </PopoverContent>
         </Popover>
