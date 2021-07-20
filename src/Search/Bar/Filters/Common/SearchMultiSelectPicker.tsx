@@ -8,6 +8,8 @@ import { CloseIcon } from '@chakra-ui/icons';
 import { useMultiSelectFilter } from 'Search/context';
 import SelectPopover from 'SelectPopover';
 
+import useDisclosureOnByDefault from './useDisclosureOnByDefault';
+
 const PICKER_DEBOUNCE_TIME = 1000;
 
 type Props<
@@ -33,6 +35,8 @@ function SearchMultiSelectPicker<
     }, [selected]);
 
     const selectedLabel = useMemo(() => selected != null ? Array.from(selected).join(', ') : 'None', [selected]);
+    const openByDefault = useMemo(() => selected == null, [selected]);
+    const { isOpen, onClose, onOpen } = useDisclosureOnByDefault(openByDefault);
 
     return (
         <SelectPopover
@@ -45,6 +49,7 @@ function SearchMultiSelectPicker<
                     },
                 ]
             }
+            isOpen={isOpen}
             isOptionSelected={({ value }) => selected?.has(value) ?? false}
             name={name}
             onChange={(_, meta) => {
@@ -73,6 +78,8 @@ function SearchMultiSelectPicker<
                     break;
                 }
             }}
+            onClose={onClose}
+            onOpen={onOpen}
             options={options}
             placeholder={placeholder}
             size="xs"
