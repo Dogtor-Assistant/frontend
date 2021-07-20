@@ -3,6 +3,7 @@ import type { FilterType } from 'Search/types';
 import React from 'react';
 
 import CityPicker from '../Common/CityPicker';
+import MinRatingPicker from '../Common/MinRatingPicker';
 import SpecialityPicker from '../Common/SpecialityPicker';
 
 type Props = {
@@ -15,6 +16,8 @@ function Filter({ type }: Props) {
         return <CityPicker />;
     case 'Specialities':
         return <SpecialityPicker />;
+    case 'Rating':
+        return <MinRatingPicker />;
     }
 }
 
