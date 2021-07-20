@@ -32,7 +32,7 @@ type ContextType = {
     update: (partial: Partial<SearchArguments>, force?: Force) => void,
 }
 
-const emptySearchArguments: SearchArguments = {
+export const EMPTY_SEARCH_ARGUMENTS: SearchArguments = {
     cities: null,
     query: null,
     specialities: null,
@@ -40,8 +40,8 @@ const emptySearchArguments: SearchArguments = {
 
 const Context = createContext<ContextType>({
     addFilter: () => { /* no-op */ },
-    applied: emptySearchArguments,
-    current: emptySearchArguments,
+    applied: EMPTY_SEARCH_ARGUMENTS,
+    current: EMPTY_SEARCH_ARGUMENTS,
     filterTypes: [],
     lastFetchTime: 0,
     shouldShowBar: [true, () => { /* no-op */ }],
@@ -68,8 +68,8 @@ function searchArgumentsIncludeFilter(searchArguments: SearchArguments, type: Fi
 
 export function SearchContextProvider({ initial, children }: Props) {
     const [lastFetchTime, setLastFetchTime] = useState(0);
-    const [applied, setApplied] = useState(initial ?? emptySearchArguments);
-    const [current, setCurrent] = useState(initial ?? emptySearchArguments);
+    const [applied, setApplied] = useState(initial ?? EMPTY_SEARCH_ARGUMENTS);
+    const [current, setCurrent] = useState(initial ?? EMPTY_SEARCH_ARGUMENTS);
     const timeout = useRef<NodeJS.Timeout | null>(null);
     const shouldShowBar = useState(true);
     

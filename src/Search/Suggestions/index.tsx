@@ -12,7 +12,12 @@ import {
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
-import { useAppliedSearchArguments, useShouldShowBarValue, useUpdate } from 'Search/context';
+import {
+    EMPTY_SEARCH_ARGUMENTS,
+    useAppliedSearchArguments,
+    useShouldShowBarValue,
+    useUpdate,
+} from 'Search/context';
 import CitiesSuggestions from './CitiesSuggestions';
 import SpecialitiesSuggestions from './SpecialitiesSuggestions';
 
@@ -60,11 +65,7 @@ function Suggestions(props: Props) {
                 <Center>
                     <Button
                         onClick={() => {
-                            update({
-                                cities: null,
-                                query: null,
-                                specialities: null,
-                            }, true);
+                            update(EMPTY_SEARCH_ARGUMENTS, true);
                         }}
                         variant="ghost"
                     >

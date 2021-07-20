@@ -5,6 +5,8 @@ import { useHistory, useLocation } from 'react-router-dom';
 import SearchFromId from './SearchFromId';
 import SearchRoot from './SearchRoot';
 
+import { EMPTY_SEARCH_ARGUMENTS } from './context';
+
 function Search() {
     const history = useHistory();
     const { search } = useLocation();
@@ -34,9 +36,8 @@ function Search() {
     return (
         <SearchRoot
             initial={{
-                cities: null,
+                ...EMPTY_SEARCH_ARGUMENTS,
                 query,
-                specialities: null,
             }}
         />
     );
