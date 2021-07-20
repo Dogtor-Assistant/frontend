@@ -13,6 +13,7 @@ function SearchQueryBar() {
                 <SearchIcon color="gray.300" />
             </InputLeftElement>
             <Input
+                autoFocus
                 onChange={event => setQuery(event.target.value)}
                 placeholder="Search for Doctor"
                 pr="4.5rem"
