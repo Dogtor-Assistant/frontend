@@ -5,7 +5,6 @@ import {
     Badge,
     Box,
     Button,
-    Center,
     Collapse,
     Flex,
     HStack,
@@ -121,11 +120,9 @@ function DoctorResultRow(props: Props) {
                     <IconButton
                         aria-label={isOpen ? 'Close more info' : 'Show more info'}
                         fontSize="xl"
-                        h={16}
                         icon={isOpen ? <ChevronUpIcon/> : <ChevronDownIcon/>}
                         onClick={onToggle}
                         variant="unstyled"
-                        w={16}
                     />
                     <Spacer />
                     <Button flex={1}>
