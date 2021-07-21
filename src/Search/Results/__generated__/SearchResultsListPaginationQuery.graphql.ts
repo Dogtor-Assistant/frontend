@@ -37,7 +37,18 @@ query SearchResultsListPaginationQuery(
 fragment DoctorDetails_doctor on Doctor {
   ...TopServicesCard_doctor
   ...WorkingHoursCard_doctor
+  ...DoctorLocationCard_doctor
   ...TopReviews_doctor
+}
+
+fragment DoctorLocationCard_doctor on Doctor {
+  lastname
+  address {
+    coordinates {
+      latitude
+      longitude
+    }
+  }
 }
 
 fragment DoctorResultRow_doctor on Doctor {
@@ -300,6 +311,31 @@ return {
                                 "kind": "ScalarField",
                                 "name": "city",
                                 "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Coordinates",
+                                "kind": "LinkedField",
+                                "name": "coordinates",
+                                "plural": false,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "latitude",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "longitude",
+                                    "storageKey": null
+                                  }
+                                ],
+                                "storageKey": null
                               }
                             ],
                             "storageKey": null
@@ -451,12 +487,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "21fc11fc1c024bbe8dfcedac9fe925bb",
+    "cacheID": "47b552e2aca9cd3d77c2dd258d0d44c3",
     "id": null,
     "metadata": {},
     "name": "SearchResultsListPaginationQuery",
     "operationKind": "query",
-    "text": "query SearchResultsListPaginationQuery(\n  $count: Int! = 20\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SearchResultsList_search_1G22uz\n    id\n  }\n}\n\nfragment DoctorDetails_doctor on Doctor {\n  ...TopServicesCard_doctor\n  ...WorkingHoursCard_doctor\n  ...TopReviews_doctor\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  specialities\n  rating\n  address {\n    streetName\n    streetNumber\n    city\n  }\n  ...DoctorDetails_doctor\n  ...useRouteToBookAppointment_doctor\n}\n\nfragment DoctorReviewCard_review on Review {\n  rating\n  content\n  patient {\n    firstname\n    lastname\n    id\n  }\n}\n\nfragment SearchResultsList_search_1G22uz on Search {\n  results(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment TopReviews_doctor on Doctor {\n  topReviews {\n    id\n    ...DoctorReviewCard_review\n  }\n}\n\nfragment TopServicesCard_doctor on Doctor {\n  services {\n    id\n    name\n  }\n}\n\nfragment WorkingHoursCard_doctor on Doctor {\n  offeredSlots {\n    day\n    start\n    end\n  }\n}\n\nfragment useRouteToBookAppointment_doctor on Doctor {\n  id\n}\n"
+    "text": "query SearchResultsListPaginationQuery(\n  $count: Int! = 20\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SearchResultsList_search_1G22uz\n    id\n  }\n}\n\nfragment DoctorDetails_doctor on Doctor {\n  ...TopServicesCard_doctor\n  ...WorkingHoursCard_doctor\n  ...DoctorLocationCard_doctor\n  ...TopReviews_doctor\n}\n\nfragment DoctorLocationCard_doctor on Doctor {\n  lastname\n  address {\n    coordinates {\n      latitude\n      longitude\n    }\n  }\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  specialities\n  rating\n  address {\n    streetName\n    streetNumber\n    city\n  }\n  ...DoctorDetails_doctor\n  ...useRouteToBookAppointment_doctor\n}\n\nfragment DoctorReviewCard_review on Review {\n  rating\n  content\n  patient {\n    firstname\n    lastname\n    id\n  }\n}\n\nfragment SearchResultsList_search_1G22uz on Search {\n  results(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment TopReviews_doctor on Doctor {\n  topReviews {\n    id\n    ...DoctorReviewCard_review\n  }\n}\n\nfragment TopServicesCard_doctor on Doctor {\n  services {\n    id\n    name\n  }\n}\n\nfragment WorkingHoursCard_doctor on Doctor {\n  offeredSlots {\n    day\n    start\n    end\n  }\n}\n\nfragment useRouteToBookAppointment_doctor on Doctor {\n  id\n}\n"
   }
 };
 })();
