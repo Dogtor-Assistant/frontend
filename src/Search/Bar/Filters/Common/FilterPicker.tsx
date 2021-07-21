@@ -59,9 +59,8 @@ function FilterPicker() {
         >
             <IconButton
                 aria-label="Add Filter"
-            >
-                <AddIcon />
-            </IconButton>
+                icon={<AddIcon />}
+            />
         </SelectPopover>
     );
 }

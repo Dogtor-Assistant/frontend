@@ -1,7 +1,24 @@
 import type { DoctorResultRow_doctor$key } from './__generated__/DoctorResultRow_doctor.graphql';
 
 import React from 'react';
-import { Badge, Box, useColorModeValue } from '@chakra-ui/react';
+import {
+    Badge,
+    Box,
+    Button,
+    Center,
+    Collapse,
+    Flex,
+    HStack,
+    IconButton,
+    Spacer,
+    Text,
+    useColorModeValue,
+    useDisclosure,
+    VStack,
+    Wrap,
+    WrapItem,
+} from '@chakra-ui/react';
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
@@ -19,39 +36,103 @@ function DoctorResultRow(props: Props) {
                 firstname
                 lastname
 
+                specialities                
+
                 rating
+
+                address {
+                    streetName
+                    streetNumber
+                    city
+                }
             }
         `,
         props.doctor,
     );
 
+    const { isOpen, onToggle } = useDisclosure();
     const ratingColor = useColorModeValue('dark', 'gray.800');
 
     return (
-        <Box p="2" w="100%">
-            <Box borderRadius="lg" borderWidth="1px" overflow="hidden" w="100%">
-                <Box p="6" w="100%">
-                    <Box alignItems="baseline" d="flex" w="100%">
-                        <Badge borderRadius="full" colorScheme="teal" px="2">
-                            New
-                        </Badge>
-                        <Box
-                            color="gray.500"
-                            fontSize="xs"
-                            fontWeight="semibold"
-                            letterSpacing="wide"
-                            ml="2"
-                            textTransform="uppercase"
-                        >
-                            Dr. {doctor.firstname} &bull; {doctor.lastname}
-                        </Box>
-                    </Box>
+        <Box
+            borderRadius="lg"
+            borderWidth="1px"
+            overflow="hidden"
+            w="100%"
+        >
+            <VStack
+                align="start"
+                p={4}
+                w="100%"
+            >
+                <HStack>
+                    <Text
+                        fontSize="lg"
+                        fontWeight="semibold"
+                        letterSpacing="wide"
+                    >
 
-                    <Box alignItems="center" d="flex" mt="2">
-                        <Rating color={ratingColor} value={doctor.rating}/>
-                    </Box>
+                        Dr. {doctor.firstname} {doctor.lastname}
+                    </Text>
+
+                    <Wrap>
+                        {
+                            doctor.specialities.map(
+                                speciality => {
+                                    return (
+                                        <WrapItem key={speciality}>
+                                            <Badge
+                                                borderRadius="xl"
+                                                px="2"
+                                            >
+                                                {speciality}
+                                            </Badge>
+                                        </WrapItem>
+                                    );
+                                },
+                            )
+                        }
+                    </Wrap>
+                </HStack>
+
+                <Box alignItems="center" d="flex" mt="2">
+                    <Rating color={ratingColor} value={doctor.rating}/>
                 </Box>
-            </Box>
+
+                <Text
+                    fontSize="md"
+                    fontWeight="medium"
+                    letterSpacing="wide"
+                >
+                    {doctor.address.streetName} {doctor.address.streetNumber}, {doctor.address.city}
+                </Text>
+                <Collapse
+                    animateOpacity
+                    in={isOpen}
+                    unmountOnExit
+                >
+                    <Text>
+                        Details
+                    </Text>
+                </Collapse>
+                <Flex align="center" w="100%">
+                    <Box flex={1}/>
+                    <Spacer />
+                    <IconButton
+                        aria-label={isOpen ? 'Close more info' : 'Show more info'}
+                        fontSize="xl"
+                        h={16}
+                        icon={isOpen ? <ChevronUpIcon/> : <ChevronDownIcon/>}
+                        onClick={onToggle}
+                        variant="unstyled"
+                        w={16}
+                    />
+                    <Spacer />
+                    <Button flex={1}>
+                        Book Appointment
+                    </Button>
+                </Flex>
+            </VStack>
         </Box>
     );
 }
