@@ -1,4 +1,5 @@
 import React from 'react';
+import { Center, Text } from '@chakra-ui/react';
 
 import useAreSearchArgumentsEmpty from '../useAreSearchArgumentsEmpty';
 
@@ -13,7 +14,14 @@ function Empty() {
     }
 
     return (
-        <p>No Results</p>
+        <Center>
+            <Text
+                fontSize="xl"
+                fontWeight="semibold"
+            >
+                No Results!
+            </Text>
+        </Center>
     );
 }
 
