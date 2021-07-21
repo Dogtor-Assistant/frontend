@@ -36,6 +36,7 @@ query SearchResultsListPaginationQuery(
 
 fragment DoctorDetails_doctor on Doctor {
   ...WorkingHoursCard_doctor
+  ...TopReviews_doctor
 }
 
 fragment DoctorResultRow_doctor on Doctor {
@@ -50,6 +51,16 @@ fragment DoctorResultRow_doctor on Doctor {
   }
   ...DoctorDetails_doctor
   ...useRouteToBookAppointment_doctor
+}
+
+fragment DoctorReviewCard_review on Review {
+  rating
+  content
+  patient {
+    firstname
+    lastname
+    id
+  }
 }
 
 fragment SearchResultsList_search_1G22uz on Search {
@@ -68,6 +79,13 @@ fragment SearchResultsList_search_1G22uz on Search {
     }
   }
   id
+}
+
+fragment TopReviews_doctor on Doctor {
+  topReviews {
+    id
+    ...DoctorReviewCard_review
+  }
 }
 
 fragment WorkingHoursCard_doctor on Doctor {
@@ -133,7 +151,28 @@ v4 = [
     "name": "first",
     "variableName": "count"
   }
-];
+],
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "firstname",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "lastname",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "rating",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -215,20 +254,8 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "firstname",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "lastname",
-                            "storageKey": null
-                          },
+                          (v5/*: any*/),
+                          (v6/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -236,13 +263,7 @@ return {
                             "name": "specialities",
                             "storageKey": null
                           },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "rating",
-                            "storageKey": null
-                          },
+                          (v7/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -302,6 +323,40 @@ return {
                                 "args": null,
                                 "kind": "ScalarField",
                                 "name": "end",
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Review",
+                            "kind": "LinkedField",
+                            "name": "topReviews",
+                            "plural": true,
+                            "selections": [
+                              (v3/*: any*/),
+                              (v7/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "content",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Patient",
+                                "kind": "LinkedField",
+                                "name": "patient",
+                                "plural": false,
+                                "selections": [
+                                  (v5/*: any*/),
+                                  (v6/*: any*/),
+                                  (v3/*: any*/)
+                                ],
                                 "storageKey": null
                               }
                             ],
@@ -369,12 +424,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "387ea481e01786099426190fc57b2f09",
+    "cacheID": "f92c068393504ab711552f1e1d4081d5",
     "id": null,
     "metadata": {},
     "name": "SearchResultsListPaginationQuery",
     "operationKind": "query",
-    "text": "query SearchResultsListPaginationQuery(\n  $count: Int! = 20\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SearchResultsList_search_1G22uz\n    id\n  }\n}\n\nfragment DoctorDetails_doctor on Doctor {\n  ...WorkingHoursCard_doctor\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  specialities\n  rating\n  address {\n    streetName\n    streetNumber\n    city\n  }\n  ...DoctorDetails_doctor\n  ...useRouteToBookAppointment_doctor\n}\n\nfragment SearchResultsList_search_1G22uz on Search {\n  results(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment WorkingHoursCard_doctor on Doctor {\n  offeredSlots {\n    day\n    start\n    end\n  }\n}\n\nfragment useRouteToBookAppointment_doctor on Doctor {\n  id\n}\n"
+    "text": "query SearchResultsListPaginationQuery(\n  $count: Int! = 20\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SearchResultsList_search_1G22uz\n    id\n  }\n}\n\nfragment DoctorDetails_doctor on Doctor {\n  ...WorkingHoursCard_doctor\n  ...TopReviews_doctor\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  specialities\n  rating\n  address {\n    streetName\n    streetNumber\n    city\n  }\n  ...DoctorDetails_doctor\n  ...useRouteToBookAppointment_doctor\n}\n\nfragment DoctorReviewCard_review on Review {\n  rating\n  content\n  patient {\n    firstname\n    lastname\n    id\n  }\n}\n\nfragment SearchResultsList_search_1G22uz on Search {\n  results(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment TopReviews_doctor on Doctor {\n  topReviews {\n    id\n    ...DoctorReviewCard_review\n  }\n}\n\nfragment WorkingHoursCard_doctor on Doctor {\n  offeredSlots {\n    day\n    start\n    end\n  }\n}\n\nfragment useRouteToBookAppointment_doctor on Doctor {\n  id\n}\n"
   }
 };
 })();

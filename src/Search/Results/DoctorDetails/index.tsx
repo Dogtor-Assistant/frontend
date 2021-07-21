@@ -7,6 +7,7 @@ import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
 import HorizonalScrollview from 'HorizonalScrollview';
+import TopReviews from './TopReviews';
 import WorkingHoursCard from './WorkingHoursCard';
 
 type Props = {
@@ -18,6 +19,7 @@ function DoctorDetails(props: Props) {
         graphql`
             fragment DoctorDetails_doctor on Doctor {
                 ...WorkingHoursCard_doctor
+                ...TopReviews_doctor
             }
         `,
         props.doctor,
@@ -30,6 +32,7 @@ function DoctorDetails(props: Props) {
             <Divider/>
             <HorizonalScrollview align="start" w="100%">
                 <WorkingHoursCard doctor={doctor} />
+                <TopReviews doctor={doctor} />
             </HorizonalScrollview>
         </VStack>
     );
