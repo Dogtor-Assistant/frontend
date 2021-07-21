@@ -66,6 +66,17 @@ fragment MinRatingSuggestion_suggestions on SearchSuggestions {
   minRating
 }
 
+fragment NearbySuggestion_suggestions on SearchSuggestions {
+  nearby {
+    label
+    maximumDistanceInMeters
+    coordinates {
+      latitude
+      longitude
+    }
+  }
+}
+
 fragment Results_search on Search {
   ...SearchResultsList_search
   suggestions {
@@ -117,6 +128,7 @@ fragment Suggestions_suggestions on SearchSuggestions {
   ...CitySuggestions_suggestions
   ...SpecialitySuggestions_suggestions
   ...MinRatingSuggestion_suggestions
+  ...NearbySuggestion_suggestions
 }
 
 fragment useHasAnySuggestions_suggestions on SearchSuggestions {
@@ -243,13 +255,49 @@ v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "label",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Coordinates",
+  "kind": "LinkedField",
+  "name": "coordinates",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "latitude",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "longitude",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "maximumDistanceInMeters",
+  "storageKey": null
+},
+v13 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v11 = [
-  (v10/*: any*/)
-],
-v12 = [
+v14 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -342,45 +390,9 @@ return {
                 "name": "nearby",
                 "plural": false,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "label",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Coordinates",
-                    "kind": "LinkedField",
-                    "name": "coordinates",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "latitude",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "longitude",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "maximumDistanceInMeters",
-                    "storageKey": null
-                  }
+                  (v10/*: any*/),
+                  (v11/*: any*/),
+                  (v12/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -405,7 +417,12 @@ return {
                 "kind": "LinkedField",
                 "name": "nearby",
                 "plural": false,
-                "selections": (v11/*: any*/),
+                "selections": [
+                  (v13/*: any*/),
+                  (v10/*: any*/),
+                  (v12/*: any*/),
+                  (v11/*: any*/)
+                ],
                 "storageKey": null
               }
             ],
@@ -432,7 +449,9 @@ return {
                 "kind": "LinkedField",
                 "name": "edges",
                 "plural": true,
-                "selections": (v11/*: any*/),
+                "selections": [
+                  (v13/*: any*/)
+                ],
                 "storageKey": null
               }
             ],
@@ -440,7 +459,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v12/*: any*/),
+            "args": (v14/*: any*/),
             "concreteType": "DoctorsConnection",
             "kind": "LinkedField",
             "name": "results",
@@ -484,7 +503,7 @@ return {
                         "storageKey": null
                       },
                       (v6/*: any*/),
-                      (v10/*: any*/)
+                      (v13/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -528,7 +547,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v12/*: any*/),
+            "args": (v14/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "SearchResultsList_search_results",
@@ -541,12 +560,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a2eb517531b41c3b3c150e46b88b6056",
+    "cacheID": "89252bce341ae8c9edbfc4e091422568",
     "id": null,
     "metadata": {},
     "name": "SearchRendererQuery",
     "operationKind": "query",
-    "text": "query SearchRendererQuery(\n  $query: String\n  $cities: [String!]\n  $specialities: [String!]\n  $minRating: Float\n  $nearby: NearbyLocationInput\n) {\n  search(query: $query, cities: $cities, specialities: $specialities, minRating: $minRating, nearby: $nearby) {\n    id\n    ...useSearchArguments_search\n    ...SearchResultsContainer_search\n  }\n}\n\nfragment CitiesSuggestions_suggestions on SearchSuggestions {\n  cities\n}\n\nfragment CitySuggestions_suggestions on SearchSuggestions {\n  cities\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  rating\n}\n\nfragment MinRatingSuggestion_suggestions on SearchSuggestions {\n  minRating\n}\n\nfragment Results_search on Search {\n  ...SearchResultsList_search\n  suggestions {\n    ...Suggestions_suggestions\n  }\n}\n\nfragment SearchResultsContainer_search on Search {\n  ...useResultMode_search\n  ...Results_search\n  ...Suggestions_search\n}\n\nfragment SearchResultsList_search on Search {\n  results(first: 20) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment SpecialitiesSuggestions_suggestions on SearchSuggestions {\n  specialities\n}\n\nfragment SpecialitySuggestions_suggestions on SearchSuggestions {\n  specialities\n}\n\nfragment Suggestions_search on Search {\n  suggestions {\n    ...SpecialitiesSuggestions_suggestions\n    ...CitiesSuggestions_suggestions\n  }\n}\n\nfragment Suggestions_suggestions on SearchSuggestions {\n  ...useHasAnySuggestions_suggestions\n  ...CitySuggestions_suggestions\n  ...SpecialitySuggestions_suggestions\n  ...MinRatingSuggestion_suggestions\n}\n\nfragment useHasAnySuggestions_suggestions on SearchSuggestions {\n  cities\n  specialities\n  minRating\n  nearby {\n    __typename\n  }\n}\n\nfragment useResultMode_search on Search {\n  suggestions {\n    specialities\n    cities\n  }\n  firstResult: results(first: 1) {\n    edges {\n      __typename\n    }\n  }\n}\n\nfragment useSearchArguments_search on Search {\n  scope {\n    cities\n    query\n    specialities\n    minRating\n    nearby {\n      label\n      coordinates {\n        latitude\n        longitude\n      }\n      maximumDistanceInMeters\n    }\n  }\n}\n"
+    "text": "query SearchRendererQuery(\n  $query: String\n  $cities: [String!]\n  $specialities: [String!]\n  $minRating: Float\n  $nearby: NearbyLocationInput\n) {\n  search(query: $query, cities: $cities, specialities: $specialities, minRating: $minRating, nearby: $nearby) {\n    id\n    ...useSearchArguments_search\n    ...SearchResultsContainer_search\n  }\n}\n\nfragment CitiesSuggestions_suggestions on SearchSuggestions {\n  cities\n}\n\nfragment CitySuggestions_suggestions on SearchSuggestions {\n  cities\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  rating\n}\n\nfragment MinRatingSuggestion_suggestions on SearchSuggestions {\n  minRating\n}\n\nfragment NearbySuggestion_suggestions on SearchSuggestions {\n  nearby {\n    label\n    maximumDistanceInMeters\n    coordinates {\n      latitude\n      longitude\n    }\n  }\n}\n\nfragment Results_search on Search {\n  ...SearchResultsList_search\n  suggestions {\n    ...Suggestions_suggestions\n  }\n}\n\nfragment SearchResultsContainer_search on Search {\n  ...useResultMode_search\n  ...Results_search\n  ...Suggestions_search\n}\n\nfragment SearchResultsList_search on Search {\n  results(first: 20) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment SpecialitiesSuggestions_suggestions on SearchSuggestions {\n  specialities\n}\n\nfragment SpecialitySuggestions_suggestions on SearchSuggestions {\n  specialities\n}\n\nfragment Suggestions_search on Search {\n  suggestions {\n    ...SpecialitiesSuggestions_suggestions\n    ...CitiesSuggestions_suggestions\n  }\n}\n\nfragment Suggestions_suggestions on SearchSuggestions {\n  ...useHasAnySuggestions_suggestions\n  ...CitySuggestions_suggestions\n  ...SpecialitySuggestions_suggestions\n  ...MinRatingSuggestion_suggestions\n  ...NearbySuggestion_suggestions\n}\n\nfragment useHasAnySuggestions_suggestions on SearchSuggestions {\n  cities\n  specialities\n  minRating\n  nearby {\n    __typename\n  }\n}\n\nfragment useResultMode_search on Search {\n  suggestions {\n    specialities\n    cities\n  }\n  firstResult: results(first: 1) {\n    edges {\n      __typename\n    }\n  }\n}\n\nfragment useSearchArguments_search on Search {\n  scope {\n    cities\n    query\n    specialities\n    minRating\n    nearby {\n      label\n      coordinates {\n        latitude\n        longitude\n      }\n      maximumDistanceInMeters\n    }\n  }\n}\n"
   }
 };
 })();

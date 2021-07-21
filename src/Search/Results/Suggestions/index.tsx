@@ -8,6 +8,7 @@ import { graphql } from 'babel-plugin-relay/macro';
 
 import CitySuggestions from './CitySuggestions';
 import MinRatingSuggestion from './MinRatingSuggestion';
+import NearbySuggestion from './NearbySuggestion';
 import SpecialitySuggestions from './SpecialitySuggestions';
 
 import useHasAnySuggestions from './useHasAnySuggestions';
@@ -24,6 +25,7 @@ function Suggestions(props: Props) {
                 ...CitySuggestions_suggestions
                 ...SpecialitySuggestions_suggestions
                 ...MinRatingSuggestion_suggestions
+                ...NearbySuggestion_suggestions
             }
         `,
         props.suggestions,
@@ -46,6 +48,7 @@ function Suggestions(props: Props) {
                 <CitySuggestions suggestions={suggestions} />
                 <SpecialitySuggestions suggestions={suggestions} />
                 <MinRatingSuggestion suggestions={suggestions} />
+                <NearbySuggestion suggestions={suggestions} />
             </HStack>
         </VStack>
     );
