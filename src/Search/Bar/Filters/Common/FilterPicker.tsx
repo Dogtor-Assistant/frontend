@@ -9,7 +9,8 @@ import { useAddFilter, useCurrentFilterTypes } from 'Search/context';
 import { FILTER_TYPES } from 'Search/types';
 import SelectPopover from 'SelectPopover';
 
-const SELECTABLE_FILTER_TYPES = FILTER_TYPES;
+const NON_SELECTABLE_TYPES: FilterType[] = ['Nearby'];
+const SELECTABLE_FILTER_TYPES = FILTER_TYPES.filter(type => !NON_SELECTABLE_TYPES.includes(type));
 
 function FilterPicker() {
     const currentFilters = useCurrentFilterTypes();

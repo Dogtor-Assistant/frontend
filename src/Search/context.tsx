@@ -74,6 +74,8 @@ function argumentsKeyForFilter(type: FilterType): (keyof SearchArguments) {
         return 'specialities';
     case 'Rating':
         return 'minRating';
+    case 'Nearby':
+        return 'nearby';
     }
 }
 
@@ -312,4 +314,39 @@ export function useSpecialities() {
 
 export function useSpeciality(speciality: string) {
     return useMultiSelectFilterValue('specialities', speciality);
+}
+
+export function useNearbyLabel() {
+    const { current } = useContext(Context);
+    return current.nearby?.label;
+}
+
+type DistanceStateHookType = [
+    number | null,
+    (distance: number | null, force?: Force) => void,
+]
+
+export function useNearbyDistanceInMeters(): DistanceStateHookType {
+    const {
+        current: {
+            nearby,
+        },
+        update,
+    } = useContext(Context);
+
+    const setDistance = useCallback(
+        (distance: number | null, force?: Force) => {
+            if (distance == null) {
+                update({ nearby: null }, force);
+            } else if (nearby != null) {
+                update({
+                    nearby: {
+                        ...nearby,
+                        maximumDistanceInMeters: distance,
+                    },
+                }, force);
+            }
+        }, [update, nearby]);
+
+    return [nearby?.maximumDistanceInMeters ?? null, setDistance];
 }

@@ -4,6 +4,7 @@ import React from 'react';
 
 import CityPicker from '../Common/CityPicker';
 import MinRatingPicker from '../Common/MinRatingPicker';
+import NearbyPicker from '../Common/NearbyPicker';
 import SpecialityPicker from '../Common/SpecialityPicker';
 
 type Props = {
@@ -18,6 +19,8 @@ function Filter({ type }: Props) {
         return <SpecialityPicker />;
     case 'Rating':
         return <MinRatingPicker />;
+    case 'Nearby':
+        return <NearbyPicker />;
     }
 }
 
