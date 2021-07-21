@@ -12,6 +12,8 @@ import Map from 'google-map-react';
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
+import { GOOGLE_MAPS_API_KEY } from 'utils/constants';
+
 type Props = {
     doctor: DoctorLocationCard_doctor$key,
 }
@@ -32,6 +34,15 @@ function DoctorLocationCard(props: Props) {
         props.doctor,
     );
 
+    let apiKeyParams: Partial<Map.Props> = {};
+    if (GOOGLE_MAPS_API_KEY != null) {
+        apiKeyParams = {
+            bootstrapURLKeys: {
+                key: GOOGLE_MAPS_API_KEY,
+            },
+        };
+    }
+
     return (
         <VStack align="start">
             <Text
@@ -48,6 +59,7 @@ function DoctorLocationCard(props: Props) {
                 w="xs"
             >
                 <Map
+                    {...apiKeyParams}
                     center={{
                         lat: doctor.address.coordinates.latitude,
                         lng: doctor.address.coordinates.longitude,
