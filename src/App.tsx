@@ -4,13 +4,18 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { useColorModeValue } from '@chakra-ui/color-mode';
 
 import DebugMenu from 'DebugMenu';
+import Footer from 'Footer';
 import Home from 'Home';
 import Login from 'Login';
 import Navbar from 'Navbar';
 import PatientPage from 'PatientPage';
+import Calendar from 'Scheduler/Calendar';
 import Signup from 'Signup';
+import NotFound from './Notfound/NotFound';
+import { DoctorRoute, PatientRoute } from './ProtectedRoutes/ProtectedRoutes';
 
 function App() {
+
     const themeColorName = useColorModeValue('white', 'gray.800');
     const themeColor = `var(--chakra-colors-${themeColorName})`;
     useMetaTags({
@@ -29,6 +34,7 @@ function App() {
                     <Navbar />
 
                     <Switch>
+                        
                         <Route exact path="/">
                             <Home />
                         </Route>
@@ -41,10 +47,15 @@ function App() {
                             <Signup />
                         </Route>
 
-                        <Route path="/patient">
-                            <PatientPage />
-                        </Route>
+                        <DoctorRoute component={Calendar} exact path="/doctor" />
+
+                        <PatientRoute component={PatientPage} exact path="/patient" />
+
+                        <Route component={NotFound} />
+
                     </Switch>
+                    
+                    <Footer/>
                 </div>
             </Router>
             <DebugMenu />

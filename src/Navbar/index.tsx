@@ -98,7 +98,7 @@ function Navbar() {
                                                 <Link to="/doctor">Doctor Schedule</Link>
                                                 }
                                                 { isPatient &&
-                                                <Link to="/patient">Patient Timeline</Link>
+                                                <Link to="/patient" >Patient Timeline</Link>
                                                 }
                                                 <Button onClick={() => { logout(); history.push('/'); }}>
                                                     Logout

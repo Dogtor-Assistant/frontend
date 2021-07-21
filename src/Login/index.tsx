@@ -41,7 +41,8 @@ function Login() {
 
     useEffect(() => {
         if (isLoggedIn) {
-            if (isDoctor) { /* redirect to doctor homepage */ history.push('/doctor');}
+
+            if (isDoctor) { history.push('/doctor');}
             else if (isPatient) { history.push('/patient'); }
         }
     }, [isLoggedIn, history, isDoctor, isPatient]);
