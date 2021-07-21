@@ -23,6 +23,7 @@ import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
 import Rating from 'Rating';
+import DoctorDetails from './DoctorDetails';
 
 import useRouteToBookAppointment from './useRouteToBookAppointment';
 
@@ -47,6 +48,7 @@ function DoctorResultRow(props: Props) {
                     city
                 }
 
+                ...DoctorDetails_doctor
                 ...useRouteToBookAppointment_doctor
             }
         `,
@@ -75,7 +77,6 @@ function DoctorResultRow(props: Props) {
                         fontWeight="semibold"
                         letterSpacing="wide"
                     >
-
                         Dr. {doctor.firstname} {doctor.lastname}
                     </Text>
 
@@ -113,11 +114,12 @@ function DoctorResultRow(props: Props) {
                 <Collapse
                     animateOpacity
                     in={isOpen}
+                    style={{
+                        width: '100%',
+                    }}
                     unmountOnExit
                 >
-                    <Text>
-                        Details
-                    </Text>
+                    <DoctorDetails doctor={doctor} />
                 </Collapse>
                 <Flex align="center" w="100%">
                     <Box flex={1}/>

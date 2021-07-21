@@ -34,6 +34,10 @@ query SearchResultsListPaginationQuery(
   }
 }
 
+fragment DoctorDetails_doctor on Doctor {
+  ...WorkingHoursCard_doctor
+}
+
 fragment DoctorResultRow_doctor on Doctor {
   firstname
   lastname
@@ -44,6 +48,7 @@ fragment DoctorResultRow_doctor on Doctor {
     streetNumber
     city
   }
+  ...DoctorDetails_doctor
   ...useRouteToBookAppointment_doctor
 }
 
@@ -63,6 +68,14 @@ fragment SearchResultsList_search_1G22uz on Search {
     }
   }
   id
+}
+
+fragment WorkingHoursCard_doctor on Doctor {
+  offeredSlots {
+    day
+    start
+    end
+  }
 }
 
 fragment useRouteToBookAppointment_doctor on Doctor {
@@ -262,6 +275,38 @@ return {
                             ],
                             "storageKey": null
                           },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "OfferedSlot",
+                            "kind": "LinkedField",
+                            "name": "offeredSlots",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "day",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "start",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "end",
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
                           (v3/*: any*/),
                           (v2/*: any*/)
                         ],
@@ -324,12 +369,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "363ad559fe51b05f04330f8294019e00",
+    "cacheID": "387ea481e01786099426190fc57b2f09",
     "id": null,
     "metadata": {},
     "name": "SearchResultsListPaginationQuery",
     "operationKind": "query",
-    "text": "query SearchResultsListPaginationQuery(\n  $count: Int! = 20\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SearchResultsList_search_1G22uz\n    id\n  }\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  specialities\n  rating\n  address {\n    streetName\n    streetNumber\n    city\n  }\n  ...useRouteToBookAppointment_doctor\n}\n\nfragment SearchResultsList_search_1G22uz on Search {\n  results(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment useRouteToBookAppointment_doctor on Doctor {\n  id\n}\n"
+    "text": "query SearchResultsListPaginationQuery(\n  $count: Int! = 20\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SearchResultsList_search_1G22uz\n    id\n  }\n}\n\nfragment DoctorDetails_doctor on Doctor {\n  ...WorkingHoursCard_doctor\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  specialities\n  rating\n  address {\n    streetName\n    streetNumber\n    city\n  }\n  ...DoctorDetails_doctor\n  ...useRouteToBookAppointment_doctor\n}\n\nfragment SearchResultsList_search_1G22uz on Search {\n  results(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment WorkingHoursCard_doctor on Doctor {\n  offeredSlots {\n    day\n    start\n    end\n  }\n}\n\nfragment useRouteToBookAppointment_doctor on Doctor {\n  id\n}\n"
   }
 };
 })();
