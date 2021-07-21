@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import {
+    Box,
     Button,
     ButtonGroup,
     IconButton,
@@ -8,7 +9,12 @@ import {
     PopoverBody,
     PopoverContent,
     PopoverTrigger,
+    Slider,
+    SliderFilledTrack,
+    SliderThumb,
+    SliderTrack,
     Text,
+    VStack,
 } from '@chakra-ui/react';
 import { CloseIcon } from '@chakra-ui/icons';
 
@@ -17,17 +23,28 @@ import { useNearbyDistanceInMeters, useNearbyLabel } from 'Search/context';
 function NearbyPicker() {
     const nearbyLabel = useNearbyLabel();
     const [distance, setDistance] = useNearbyDistanceInMeters();
+
     const distanceLabel = useMemo(() => {
-        if (nearbyLabel == null || distance == null) {
-            return 'Near: None';
+        if (distance == null) {
+            return 'None';
         }
 
-        if (distance > 750) {
-            const kilometers = (distance / 1000).toFixed(1);
-            return `Near ${nearbyLabel} (${kilometers}km)`;
+        if (distance < 1000) {
+            return `${distance.toFixed(0)} m`;
         }
-         
-    }, [nearbyLabel, distance]);
+
+        const kilometers = distance / 1000;
+
+        if (distance < 5_000) {
+            return `${kilometers.toFixed(2)} km`;
+        }
+
+        if (distance < 10_000) {
+            return `${kilometers.toFixed(1)} km`;
+        }
+
+        return `${kilometers.toFixed(0)} km`;
+    }, [distance]);
 
     return (
         <Popover
@@ -41,7 +58,7 @@ function NearbyPicker() {
             <ButtonGroup isAttached size="sm" variant="outline">
                 <PopoverTrigger>
                     <Button>
-                        {distanceLabel}
+                        Near: {nearbyLabel ?? 'None'}
                     </Button>
                 </PopoverTrigger>
                 
@@ -54,9 +71,30 @@ function NearbyPicker() {
             <PopoverContent>
                 <PopoverArrow />
                 <PopoverBody>
-                    <Text>
-                        Hello World
-                    </Text>
+                    <VStack align="start" p={4}>
+                        <Text
+                            fontSize="md"
+                            fontWeight="semibold"
+                        >
+                            Distance: {distanceLabel}
+                        </Text>
+                        <Box paddingLeft={4} paddingRight={4} w="100%">
+                            <Slider
+                                isDisabled={distance == null}
+                                max={100_000}
+                                min={500}
+                                onChange={value => setDistance(value, 500)}
+                                step={250}
+                                value={distance ?? 3_000}
+                            >
+                                <SliderTrack bg="red.100">
+                                    <Box position="relative" right={10} />
+                                    <SliderFilledTrack bg="tomato" />
+                                </SliderTrack>
+                                <SliderThumb boxSize={6} />
+                            </Slider>
+                        </Box>
+                    </VStack>
                 </PopoverBody>
             </PopoverContent>
         </Popover>
