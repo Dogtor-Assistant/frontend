@@ -19,12 +19,12 @@ function NearbyPicker() {
     const [distance, setDistance] = useNearbyDistanceInMeters();
     const distanceLabel = useMemo(() => {
         if (nearbyLabel == null || distance == null) {
-            return 'Nearby: None';
+            return 'Near: None';
         }
 
         if (distance > 750) {
             const kilometers = (distance / 1000).toFixed(1);
-            return `Nearby ${nearbyLabel} (${kilometers}km)`;
+            return `Near ${nearbyLabel} (${kilometers}km)`;
         }
          
     }, [nearbyLabel, distance]);

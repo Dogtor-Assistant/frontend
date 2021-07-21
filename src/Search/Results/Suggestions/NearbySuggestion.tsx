@@ -49,7 +49,7 @@ function NearbySuggestion(props: Props) {
             size="sm"
             variant={current?.label === suggestions.nearby.label ? 'solid' : 'outline'}
         >
-            Nearby: {suggestions.nearby.label}
+            Near: {suggestions.nearby.label}
         </Button>
     );
 }
