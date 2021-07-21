@@ -15,10 +15,14 @@ import {
     PopoverContent,
     PopoverHeader,
     SimpleGrid,
+    useDisclosure,
 } from '@chakra-ui/react';
+
+import { usePatientInsurance } from 'user';
 
 type SelectServicesProps = {
     insurance: Insurance,
+    setInsurance: React.Dispatch<React.SetStateAction<'Private' | 'Public'>>,
     possibleServices: ReadonlyArray<{
         readonly id: string,
         readonly description: string | null,
@@ -52,6 +56,7 @@ const SelectServices: FC<SelectServicesProps> =
 ({
     insurance,
     possibleServices,
+    setInsurance,
     expectedDuration,
     selectedServices,
     setExpectedDuration,
@@ -61,6 +66,11 @@ const SelectServices: FC<SelectServicesProps> =
 }): ReactElement => {
     const [serviceInsuranceError, setServiceInsuranceError] = useState(false);
     const [selectedServiceError, setSelectedServiceError] = useState(false);
+
+    const userInsurance = usePatientInsurance();
+    if (userInsurance !== undefined && userInsurance === 'Private') {
+        setInsurance('Private');
+    }
     
     useEffect(() => {
         setValidForm(selectedServices.length !== 0 || selectedServiceError);
@@ -78,6 +88,11 @@ const SelectServices: FC<SelectServicesProps> =
         }
         return checkB;
     };
+    console.log(possibleServices);
+
+    const { onOpen, onClose, isOpen } = useDisclosure();
+    const firstFieldRef = React.useRef(null);
+
     return (
         <div>
             <Center height="50px">
@@ -124,11 +139,13 @@ const SelectServices: FC<SelectServicesProps> =
                                             // eslint-disable-next-line max-len
                                             if(possibleServices[index].privateCovered === false &&
                                             insurance === 'Private') {
+                                                console.log('Hit');
                                                 setServiceInsuranceError(true);
                                             }
                                             // eslint-disable-next-line max-len
                                             if(possibleServices[index].publicCovered === false &&
                                             insurance === 'Public') {
+                                                console.log('Hit');
                                                 setServiceInsuranceError(true);
                                             }
                                             selectedServices.push(service);
@@ -155,11 +172,14 @@ const SelectServices: FC<SelectServicesProps> =
                                         {service.name}
                                     </Checkbox>
                                 </Box>
-                                { serviceInsuranceError &&
-                                <Popover>
+                                
+                            </Container>
+                        ))}
+                        {serviceInsuranceError &&
+                                <Popover isOpen={true} onClose={onClose} onOpen={onOpen}>
                                     <PopoverContent>
                                         <PopoverArrow />
-                                        <PopoverCloseButton />
+                                        <PopoverCloseButton onClick={onClose}/>
                                         <PopoverHeader>Attention!</PopoverHeader>
                                         <PopoverBody>
                                             Your Insurance does not cover this Service!
@@ -167,9 +187,7 @@ const SelectServices: FC<SelectServicesProps> =
                                         </PopoverBody>
                                     </PopoverContent>
                                 </Popover>
-                                }
-                            </Container>
-                        ))}
+                        }
                     </SimpleGrid>
                 </Box>
             </Box>

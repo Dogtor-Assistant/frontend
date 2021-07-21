@@ -55,7 +55,7 @@ const AppDate: FC<SelectDateProps> =
                 isOpen={isOpen}
                 onClose={onClose}
                 placement="right"
-                size= "lg"
+                size= "3xl"
             >
                 <DrawerOverlay />
                 <DrawerContent>

@@ -42,7 +42,7 @@ function Login() {
     useEffect(() => {
         if (isLoggedIn) {
             if (isDoctor) { /* redirect to doctor homepage */ history.push('/doctor');}
-            else if (isPatient) { history.push('/patient'); }
+            else if (isPatient) { history.goBack(); }
         }
     }, [isLoggedIn, history, isDoctor, isPatient]);
 

@@ -1,13 +1,10 @@
 import type { Weekday } from '../__generated__/Menu_doctor.graphql';
-import type { UseRadioProps } from '@chakra-ui/react';
 import type { FC, ReactElement } from 'react';
 
 import React, { useEffect, useState } from 'react';
-import { render } from 'react-dom';
-import { HStack, useRadioGroup } from '@chakra-ui/react';
+import { useRadioGroup } from '@chakra-ui/react';
 import {
     Box,
-    Button,
     Center,
     Container,
     Divider,
@@ -15,8 +12,6 @@ import {
     GridItem,
     IconButton,
     Stack,
-    useColorMode,
-    useColorModeValue,
     useControllableState,
     useRadio,
 } from '@chakra-ui/react';
@@ -51,28 +46,46 @@ const SelectDate: FC<SelectDateProps> =
     currentDate,
     setValidForm,
 }): ReactElement => {
-    const [noDateSelectedError, setNoDateSelectedError] = useState(false);
 
     useEffect(() => {
-        setValidForm(expectedTime !== currentDate || noDateSelectedError);
-    }, [currentDate, expectedTime, noDateSelectedError, setValidForm]);
+        setValidForm(expectedTime !== currentDate);
+    }, [currentDate, expectedTime, setValidForm]);
 
     // eslint-disable-next-line max-len
     const weekdayArr: Weekday[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     // eslint-disable-next-line max-len
     const [startDay, setStartDay] = useControllableState({ defaultValue: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay() + 1) });
+    const [prevIsActive, setPrevIsActive] = useState(startDay <= currentDate);
 
     function findSlots(sDate:Date) {
         let day_numb = sDate.getDay() -1;
+        const end_date = new Date(sDate.getFullYear(), sDate.getMonth(), sDate.getDate()+ (6-sDate.getDay()));
 
         const week_slots = new Array<Array<{'slotDate':Date, 'startSlot':number}>>(7);
         const week_appointments = new Array<Array<{'slotDate':Date, 'startSlot':number}>>(7);
 
+        const copiedAppointments = blockedAppointments;
+        const filteredAppointments = new Array<{
+            'isDone': boolean,
+            'expectedTime': {
+                'duration': number | null,
+                'start': string | null,
+            },
+        }>();
+
+        copiedAppointments.map(app => {
+            const appDate = app.expectedTime.start != null ? new Date(app.expectedTime.start) : null;
+            const done = app.isDone;
+            
+            if(done === false && appDate != null && appDate <= end_date && appDate >= sDate) {
+                filteredAppointments.push(app);
+            }
+        });
+
         while (day_numb < 7) {
             week_slots[day_numb] = getDaySlots(day_numb, sDate);
 
-            const appointments = blockedAppointments;
-            appointments.filter(app => {
+            filteredAppointments.map(app => {
                 const appDate = app.expectedTime.start != null ? new Date(app.expectedTime.start) : null;
                 const duration = app.expectedTime.duration;
 
@@ -90,12 +103,19 @@ const SelectDate: FC<SelectDateProps> =
                         let app_counter = startApp;
                         const endApp = startApp + duration;
 
+                        const day_appointments = Array<{'slotDate':Date, 'startSlot':number}>();
                         while (app_counter < endApp) {
-                            const appDate = new Date(year, month, num, Math.ceil(app_counter/60), app_counter%60);
+                            const appDate = new Date(year, month, num, Math.floor(app_counter/60), app_counter%60);
                             if(appDate >= sDate) {
-                                week_appointments[day_numb].push({ 'slotDate':appDate, 'startSlot' : app_counter });
+                                day_appointments.push({ 'slotDate':appDate, 'startSlot' : app_counter });
                                 app_counter = app_counter + 30;
                             }
+                        }
+                        if(week_appointments[day_numb] === undefined) {
+                            week_appointments[day_numb] = day_appointments;
+                        }
+                        else{
+                            week_appointments[day_numb] = week_appointments[day_numb].concat(day_appointments);
                         }
                     }
                 }
@@ -111,8 +131,21 @@ const SelectDate: FC<SelectDateProps> =
                     if(dSlot !== undefined) {
                         let noAppBool = true;
                         week_appointments.map(w_app => {
-                            if(w_app.includes(dSlot)) {
+                            let found = false;
+                            w_app.map(element => {
+                                if(element.slotDate.toISOString() === dSlot.slotDate.toISOString()) {
+                                    found = true ;
+                                }
+                            });
+                            if(found) {
                                 noAppBool = false;
+                                if(expectedDuration > 30) {
+                                    let deleteSlot_Counter = Math.ceil((expectedDuration-1)/30);
+                                    while(deleteSlot_Counter>0 && filtered_day_slots.length > 0) {
+                                        filtered_day_slots.pop();
+                                        deleteSlot_Counter = deleteSlot_Counter - 1;
+                                    }
+                                }
                             }
                         });
                         if (noAppBool) {
@@ -135,13 +168,13 @@ const SelectDate: FC<SelectDateProps> =
                 const endSlot = stringToTime(doctorHours[i].end);
 
                 let slot_counter = startSlot;
-                while (slot_counter < endSlot - expectedDuration) {
+                while (slot_counter < endSlot- (30*Math.floor((expectedDuration-1)/30))) {
                     // eslint-disable-next-line max-len
-                    const day = new Date(sDate.getFullYear(), sDate.getMonth(), sDate.getDate() + day_numb, Math.ceil(slot_counter/60), slot_counter%60);
-                    if(day >= sDate) {
+                    const day = new Date(sDate.getFullYear(), sDate.getMonth(), sDate.getDate() + day_numb, Math.floor(slot_counter/60), slot_counter%60);
+                    if(day >= currentDate) {
                         daySlots.push({ 'slotDate':day, 'startSlot': slot_counter });
-                        slot_counter = slot_counter + 30;
                     }
+                    slot_counter = slot_counter + 30;
                 }
             }
         }
@@ -150,25 +183,30 @@ const SelectDate: FC<SelectDateProps> =
 
     function TimeSlots() {
         const weekSlots = findSlots(startDay);
-        const dates = Array<Array<Date>>(weekSlots.length);
         const options= Array<Array<string>>(weekSlots.length);
+
         for(let i = 0; i < weekSlots.length; i++) {
-            const day_dates = Array<Date>();
             const day_options= Array<string>();
             for(let j = 0; j < weekSlots[i].length; j++) {
-                day_dates.push(weekSlots[i][j].slotDate);
-                day_options.push(
-                    // eslint-disable-next-line max-len
-                    `${i } ` +`${weekSlots[i][j].slotDate.toLocaleTimeString().split(':')[0]}:${weekSlots[i][j].slotDate.toLocaleTimeString().split(':')[1]}`);
+                day_options.push(weekSlots[i][j].slotDate.toISOString());
+                    
             }
-            dates.push(day_dates);
             options.push(day_options);
         }
-
+        
+        let defaultValue= '';let dv_bool= true;let dv_counter = 0;
+        while (dv_bool && dv_counter < options.length) {
+            if(options[dv_counter] !== undefined && options[dv_counter] !== [] &&
+                options[dv_counter][0] !== undefined) {
+                defaultValue = options[dv_counter][0];
+                dv_bool = false;
+            }
+            dv_counter = dv_counter + 1;
+        }
         const { getRootProps, getRadioProps } = useRadioGroup({
-            defaultValue: '',
+            defaultValue: defaultValue,
             name: 'framework',
-            onChange: onClickDate,
+            onChange: printTheInt,
         });
 
         const group = getRootProps();
@@ -185,11 +223,13 @@ const SelectDate: FC<SelectDateProps> =
                     <GridItem colSpan={1} rowSpan={12}><Center>
                         <Stack {...group}>
                             {slotDay.map(value => {
-                                console.log(`${value }!`);
                                 const radio = getRadioProps({ value });
                                 return (
                                     <RadioCard key={value} {...radio}>
-                                        {value.split(' ')[1]}
+                                        {
+                                            // eslint-disable-next-line max-len
+                                            `${new Date(value).toLocaleTimeString().split(':')[0] }:${ new Date(value).toLocaleTimeString().split(':')[1]}`
+                                        }
                                     </RadioCard>
                                 );
                             })}
@@ -200,13 +240,12 @@ const SelectDate: FC<SelectDateProps> =
         );
     }
 
-    function onClickDate(newDate:string) {
-        //setExpectedTime(newDate);
-        setNoDateSelectedError(true);
+    function printTheInt(props: any) {
+        console.log(props);
+        const expectedTime = new Date(`${props }`);
+        //setExpectedTime(new Date(props));
+        console.log(expectedTime);
     }
-
-    const { toggleColorMode } = useColorMode();
-    const color = useColorModeValue('green', 'gray');
     
     useEffect(() => {
         setValidForm(expectedTime != null);
@@ -227,10 +266,13 @@ const SelectDate: FC<SelectDateProps> =
                             templateRows="repeat(1, 1fr)"
                         >
                             <GridItem colSpan={1} rowSpan={1}>
-                                <IconButton aria-label="PriorWeek" icon={<ArrowLeftIcon />}
+                                <IconButton aria-label="PriorWeek"
+                                    icon={<ArrowLeftIcon />}
+                                    isActive={prevIsActive}
                                     onClick={() => {
                                         // eslint-disable-next-line max-len
                                         setStartDay(new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate() - 7));
+                                        setPrevIsActive(startDay <= currentDate);
                                     }}
                                 />
                             </GridItem>

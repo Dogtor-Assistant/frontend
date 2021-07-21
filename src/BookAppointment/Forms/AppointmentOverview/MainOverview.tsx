@@ -37,7 +37,7 @@ const insuranceArr: Insurance[] = ['Public', 'Private'];
 type AppointmentOverviewProps = {
     doctorName: string,
     patientNotes: string,
-    setInsurance: React.Dispatch<React.SetStateAction<Insurance>>,
+    setInsurance: React.Dispatch<React.SetStateAction<'Private' | 'Public'>>,
     insurance: Insurance,
     possibleServices: ReadonlyArray<{
         readonly id: string,
@@ -284,7 +284,7 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                                     mt="1"
                                     paddingLeft={4}
                                 >
-                                    {expectedTime.toDateString()}
+                                    {`${expectedTime.toDateString() } ${ expectedTime.toLocaleTimeString()}`}
                                 </Box>
                             </GridItem>
                             <GridItem colSpan={1} rowSpan={1}>
@@ -355,8 +355,9 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                             <GridItem colSpan={1} rowSpan={1}>
                                 <AppService
                                     expectedDuration={expectedDuration} insurance={insurance}
-                                    possibleServices={possibleServices} selectedServices={selectedServices}
-                                    setExpectedDuration={setExpectedDuration} setSelectedServices={setSelectedServices}
+                                    possibleServices={possibleServices}
+                                    selectedServices={selectedServices} setExpectedDuration={setExpectedDuration}
+                                    setInsurance={setInsurance} setSelectedServices={setSelectedServices}
                                     setSelectedServicesID={setSelectedServicesID} setValidForm={setValidForm}
                                 />
                             </GridItem>

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useHistory } from 'react-router';
 import {
     Box,
     Divider,
@@ -10,7 +11,18 @@ import { Search } from 'Home';
 import PastApp from './PastApp';
 import UpcomingApp from './UpcomingApp';
 
+import { useIsLoggedIn } from 'authentication';
+
 function PatientPage() {
+    const history = useHistory();
+    const isLoggedIn = useIsLoggedIn();
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            history.push('/login');
+        }
+    }, [isLoggedIn, history]);
+
     return (
         <div>
             <Box my={4}>

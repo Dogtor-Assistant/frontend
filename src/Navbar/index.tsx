@@ -71,7 +71,7 @@ function Navbar() {
                         }
                         {
                             !isLoggedIn && (
-                                <Link to="/login">
+                                <Link to="/patient">
                                     <Button variant="ghost">
                                         Login
                                     </Button>

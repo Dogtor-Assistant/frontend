@@ -21,6 +21,7 @@ import SelectServices from '../SelectServices';
 
 type SelectServicesProps = {
     insurance: Insurance,
+    setInsurance: React.Dispatch<React.SetStateAction<'Private' | 'Public'>>,
     possibleServices: ReadonlyArray<{
         readonly id: string,
         readonly description: string | null,
@@ -55,6 +56,7 @@ const AppService: FC<SelectServicesProps> =
     insurance,
     possibleServices,
     expectedDuration,
+    setInsurance,
     selectedServices,
     setExpectedDuration,
     setSelectedServices,
@@ -80,8 +82,9 @@ const AppService: FC<SelectServicesProps> =
                     <DrawerBody>
                         <SelectServices
                             expectedDuration={expectedDuration} insurance={insurance}
-                            possibleServices={possibleServices} selectedServices={selectedServices}
-                            setExpectedDuration={setExpectedDuration} setSelectedServices={setSelectedServices}
+                            possibleServices={possibleServices}
+                            selectedServices={selectedServices} setExpectedDuration={setExpectedDuration}
+                            setInsurance={setInsurance} setSelectedServices={setSelectedServices}
                             setSelectedServicesID={setSelectedServicesID} setValidForm={setValidForm}
                         />
                     </DrawerBody>

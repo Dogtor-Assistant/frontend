@@ -2,9 +2,9 @@ import type { Menu_doctor$key } from './__generated__/Menu_doctor.graphql';
 import type { MenuMutation } from'./__generated__/MenuMutation.graphql';
 import type { PayloadError } from 'relay-runtime';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { render } from 'react-dom';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import {
     Alert,
@@ -33,6 +33,8 @@ type Props = { Doctor:Menu_doctor$key };
 export type Day = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday'
 
 function Menu(this: any, props:Props) {
+    const userInsurance = usePatientInsurance();
+
     const insuranceArr: Insurance[] = ['Public', 'Private'];
     const dayArr: Day[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -62,7 +64,6 @@ function Menu(this: any, props:Props) {
     
     const [step, setStep] = useState(1);
     const userLoggedIn = useIsPatient();
-    const userInsurance = usePatientInsurance();
 
     const doctor=useFragment(
         graphql`
@@ -102,15 +103,11 @@ function Menu(this: any, props:Props) {
     }
     `);
 
-    /*if (userInsurance !== undefined) {
-        if(userInsurance === 'Private' || userInsurance === 'Public') {
-            setInsurance(userInsurance);
+    useEffect(() => {
+        if (userLoggedIn === false) {
+            history.push('/login');
         }
-    }
-
-    /*if (userLoggedIn === false) {
-        throw Error ('not logged In');
-    }*/
+    }, [history, userLoggedIn]);
 
     if (isInFlight) {
         return <LoadingIndicator />;
@@ -164,8 +161,9 @@ function Menu(this: any, props:Props) {
                     <Heading size="md">Select the services</Heading>
                     <SelectServices
                         expectedDuration={expectedDuration} insurance={insurance}
-                        possibleServices={doctor.services} selectedServices={selectedServices}
-                        setExpectedDuration={setExpectedDuration} setSelectedServices={setSelectedServices}
+                        possibleServices={doctor.services}
+                        selectedServices={selectedServices} setExpectedDuration={setExpectedDuration}
+                        setInsurance={setInsurance} setSelectedServices={setSelectedServices}
                         setSelectedServicesID={setSelectedServicesID} setValidForm={setValidSelectService}
                     />
                     <Nav
