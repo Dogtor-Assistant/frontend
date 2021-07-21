@@ -19,6 +19,7 @@ import {
     useUpdate,
 } from 'Search/context';
 import CitiesSuggestions from './CitiesSuggestions';
+import NearbySuggestions from './NearbySuggestions';
 import SpecialitiesSuggestions from './SpecialitiesSuggestions';
 
 type Props = {
@@ -34,6 +35,7 @@ function Suggestions(props: Props) {
                 suggestions {
                     ...SpecialitiesSuggestions_suggestions
                     ...CitiesSuggestions_suggestions
+                    ...NearbySuggestions_suggestions
                 }
             }
         `,
@@ -55,6 +57,7 @@ function Suggestions(props: Props) {
                 </Text>
                 <SpecialitiesSuggestions suggestions={search.suggestions} />
                 <CitiesSuggestions suggestions={search.suggestions} />
+                <NearbySuggestions suggestions={search.suggestions} />
                 <Button
                     onClick={() => {
                         update({ query: null }, true);

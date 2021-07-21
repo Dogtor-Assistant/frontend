@@ -7,7 +7,7 @@ import { Button } from '@chakra-ui/react';
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
-import { useCurrentSearchArguments, useUpdate } from 'Search/context';
+import { useNearbyLabel, useUpdate } from 'Search/context';
 
 type Props = {
     suggestions: NearbySuggestion_suggestions$key,
@@ -29,7 +29,7 @@ function NearbySuggestion(props: Props) {
         `,
         props.suggestions,
     );
-    const { nearby: current } = useCurrentSearchArguments();
+    const currentLabel = useNearbyLabel();
     const update = useUpdate();
 
     if (suggestions.nearby == null) {
@@ -47,7 +47,7 @@ function NearbySuggestion(props: Props) {
                 )
             }
             size="sm"
-            variant={current?.label === suggestions.nearby.label ? 'solid' : 'outline'}
+            variant={currentLabel === suggestions.nearby.label ? 'solid' : 'outline'}
         >
             Near: {suggestions.nearby.label}
         </Button>
