@@ -14,6 +14,7 @@ export type DoctorResultRow_doctor = {
         readonly streetNumber: number;
         readonly city: string;
     };
+    readonly " $fragmentRefs": FragmentRefs<"useRouteToBookAppointment_doctor">;
     readonly " $refType": "DoctorResultRow_doctor";
 };
 export type DoctorResultRow_doctor$data = DoctorResultRow_doctor;
@@ -89,10 +90,15 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "useRouteToBookAppointment_doctor"
     }
   ],
   "type": "Doctor",
   "abstractKey": null
 };
-(node as any).hash = '0d112bce12e19fcaeef328cb4f67c0df';
+(node as any).hash = '23d1f4395e7d05262fd33cb8f29b409c';
 export default node;

@@ -24,6 +24,8 @@ import { graphql } from 'babel-plugin-relay/macro';
 
 import Rating from 'Rating';
 
+import useRouteToBookAppointment from './useRouteToBookAppointment';
+
 type Props = {
     doctor: DoctorResultRow_doctor$key,
 }
@@ -44,6 +46,8 @@ function DoctorResultRow(props: Props) {
                     streetNumber
                     city
                 }
+
+                ...useRouteToBookAppointment_doctor
             }
         `,
         props.doctor,
@@ -51,6 +55,7 @@ function DoctorResultRow(props: Props) {
 
     const { isOpen, onToggle } = useDisclosure();
     const ratingColor = useColorModeValue('dark', 'gray.800');
+    const bookAppointment = useRouteToBookAppointment(doctor);
 
     return (
         <Box
@@ -125,7 +130,10 @@ function DoctorResultRow(props: Props) {
                         variant="unstyled"
                     />
                     <Spacer />
-                    <Button flex={1}>
+                    <Button
+                        flex={1}
+                        onClick={() => bookAppointment()}
+                    >
                         Book Appointment
                     </Button>
                 </Flex>
