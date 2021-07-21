@@ -8,6 +8,7 @@ import { graphql } from 'babel-plugin-relay/macro';
 
 import HorizonalScrollview from 'HorizonalScrollview';
 import TopReviews from './TopReviews';
+import TopServicesCard from './TopServicesCard';
 import WorkingHoursCard from './WorkingHoursCard';
 
 type Props = {
@@ -18,6 +19,7 @@ function DoctorDetails(props: Props) {
     const doctor = useFragment(
         graphql`
             fragment DoctorDetails_doctor on Doctor {
+                ...TopServicesCard_doctor
                 ...WorkingHoursCard_doctor
                 ...TopReviews_doctor
             }
@@ -31,6 +33,7 @@ function DoctorDetails(props: Props) {
         >
             <Divider/>
             <HorizonalScrollview align="start" w="100%">
+                <TopServicesCard doctor={doctor} />
                 <WorkingHoursCard doctor={doctor} />
                 <TopReviews doctor={doctor} />
             </HorizonalScrollview>

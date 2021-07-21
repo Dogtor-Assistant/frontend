@@ -40,7 +40,7 @@ function DoctorReviewCard(props: Props) {
             borderRadius="lg"
             borderWidth="1px"
             overflow="hidden"
-            w="md"
+            w="xs"
         >
             <VStack
                 align="start"

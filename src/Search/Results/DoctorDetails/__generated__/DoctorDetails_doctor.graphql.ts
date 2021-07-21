@@ -5,7 +5,7 @@
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type DoctorDetails_doctor = {
-    readonly " $fragmentRefs": FragmentRefs<"WorkingHoursCard_doctor" | "TopReviews_doctor">;
+    readonly " $fragmentRefs": FragmentRefs<"TopServicesCard_doctor" | "WorkingHoursCard_doctor" | "TopReviews_doctor">;
     readonly " $refType": "DoctorDetails_doctor";
 };
 export type DoctorDetails_doctor$data = DoctorDetails_doctor;
@@ -25,6 +25,11 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
+      "name": "TopServicesCard_doctor"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
       "name": "WorkingHoursCard_doctor"
     },
     {
@@ -36,5 +41,5 @@ const node: ReaderFragment = {
   "type": "Doctor",
   "abstractKey": null
 };
-(node as any).hash = '95b65b4ff756ec03400090f9bb8824b4';
+(node as any).hash = 'e7195e915c385a075256b46d55ef5e42';
 export default node;
