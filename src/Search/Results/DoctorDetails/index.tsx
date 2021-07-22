@@ -1,7 +1,7 @@
 import type { DoctorDetails_doctor$key } from './__generated__/DoctorDetails_doctor.graphql';
 
 import React from 'react';
-import { Divider, HStack, VStack } from '@chakra-ui/react';
+import { Divider, VStack } from '@chakra-ui/react';
 
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
