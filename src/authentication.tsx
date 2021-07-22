@@ -88,7 +88,7 @@ async function refreshImpl(url: string, refreshToken: string): Promise<TokenType
 }
 
 export function AuthenticationProvider({ children }: Props) {
-    const authURL = useBackendURL('auth', 'token');
+    const authURL = useBackendURL('http', 'auth', 'token');
     const [localStorageToken, setLocalStorageToken] = useLocalStorage<TokenType | null>('authentication', null);
     
     const [isLoggedIn, setIsLoggedIn] = useState(localStorageToken != null);
