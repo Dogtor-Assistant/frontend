@@ -1,7 +1,7 @@
 import type { DoctorDetails_doctor$key } from './__generated__/DoctorDetails_doctor.graphql';
 
 import React from 'react';
-import { Divider, VStack } from '@chakra-ui/react';
+import { Divider, HStack, VStack } from '@chakra-ui/react';
 
 import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
@@ -34,12 +34,18 @@ function DoctorDetails(props: Props) {
             w="100%"
         >
             <Divider/>
-            <HorizonalScrollview align="start" w="100%">
-                <DoctorLocationCard doctor={doctor} />
-                <WorkingHoursCard doctor={doctor} />
-                <TopServicesCard doctor={doctor} />
-                <TopReviews doctor={doctor} />
-            </HorizonalScrollview>
+            <VStack align="start" w="100%">
+                <HorizonalScrollview align="start" w="100%">
+                    <DoctorLocationCard doctor={doctor} />
+                    <VStack align="start">
+                        <WorkingHoursCard doctor={doctor} />
+                        <TopServicesCard doctor={doctor} />
+                    </VStack>
+                </HorizonalScrollview>
+                <HorizonalScrollview align="start" w="100%">
+                    <TopReviews doctor={doctor} />
+                </HorizonalScrollview>
+            </VStack>
         </VStack>
     );
 }

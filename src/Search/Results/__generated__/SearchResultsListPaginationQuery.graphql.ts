@@ -94,7 +94,7 @@ fragment SearchResultsList_search_1G22uz on Search {
 }
 
 fragment TopReviews_doctor on Doctor {
-  reviews(last: 3) {
+  reviews(last: 5) {
     edges {
       node {
         id
@@ -401,7 +401,7 @@ return {
                               {
                                 "kind": "Literal",
                                 "name": "last",
-                                "value": 3
+                                "value": 5
                               }
                             ],
                             "concreteType": "ReviewsConnection",
@@ -455,7 +455,7 @@ return {
                                 "storageKey": null
                               }
                             ],
-                            "storageKey": "reviews(last:3)"
+                            "storageKey": "reviews(last:5)"
                           },
                           (v3/*: any*/),
                           (v2/*: any*/)
@@ -519,12 +519,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6fd5649745905f542dda5ee729d08be1",
+    "cacheID": "5f31ae6106ea0f2a13f6a975fdc170f3",
     "id": null,
     "metadata": {},
     "name": "SearchResultsListPaginationQuery",
     "operationKind": "query",
-    "text": "query SearchResultsListPaginationQuery(\n  $count: Int! = 20\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SearchResultsList_search_1G22uz\n    id\n  }\n}\n\nfragment DoctorDetails_doctor on Doctor {\n  ...TopServicesCard_doctor\n  ...WorkingHoursCard_doctor\n  ...DoctorLocationCard_doctor\n  ...TopReviews_doctor\n}\n\nfragment DoctorLocationCard_doctor on Doctor {\n  lastname\n  address {\n    coordinates {\n      latitude\n      longitude\n    }\n  }\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  specialities\n  rating\n  address {\n    streetName\n    streetNumber\n    city\n  }\n  ...DoctorDetails_doctor\n  ...useRouteToBookAppointment_doctor\n}\n\nfragment DoctorReviewCard_review on Review {\n  rating\n  content\n  patient {\n    firstname\n    lastname\n    id\n  }\n}\n\nfragment SearchResultsList_search_1G22uz on Search {\n  results(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment TopReviews_doctor on Doctor {\n  reviews(last: 3) {\n    edges {\n      node {\n        id\n        ...DoctorReviewCard_review\n      }\n    }\n  }\n}\n\nfragment TopServicesCard_doctor on Doctor {\n  services {\n    id\n    name\n  }\n}\n\nfragment WorkingHoursCard_doctor on Doctor {\n  offeredSlots {\n    day\n    start\n    end\n  }\n}\n\nfragment useRouteToBookAppointment_doctor on Doctor {\n  id\n}\n"
+    "text": "query SearchResultsListPaginationQuery(\n  $count: Int! = 20\n  $cursor: String\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SearchResultsList_search_1G22uz\n    id\n  }\n}\n\nfragment DoctorDetails_doctor on Doctor {\n  ...TopServicesCard_doctor\n  ...WorkingHoursCard_doctor\n  ...DoctorLocationCard_doctor\n  ...TopReviews_doctor\n}\n\nfragment DoctorLocationCard_doctor on Doctor {\n  lastname\n  address {\n    coordinates {\n      latitude\n      longitude\n    }\n  }\n}\n\nfragment DoctorResultRow_doctor on Doctor {\n  firstname\n  lastname\n  specialities\n  rating\n  address {\n    streetName\n    streetNumber\n    city\n  }\n  ...DoctorDetails_doctor\n  ...useRouteToBookAppointment_doctor\n}\n\nfragment DoctorReviewCard_review on Review {\n  rating\n  content\n  patient {\n    firstname\n    lastname\n    id\n  }\n}\n\nfragment SearchResultsList_search_1G22uz on Search {\n  results(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...DoctorResultRow_doctor\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment TopReviews_doctor on Doctor {\n  reviews(last: 5) {\n    edges {\n      node {\n        id\n        ...DoctorReviewCard_review\n      }\n    }\n  }\n}\n\nfragment TopServicesCard_doctor on Doctor {\n  services {\n    id\n    name\n  }\n}\n\nfragment WorkingHoursCard_doctor on Doctor {\n  offeredSlots {\n    day\n    start\n    end\n  }\n}\n\nfragment useRouteToBookAppointment_doctor on Doctor {\n  id\n}\n"
   }
 };
 })();

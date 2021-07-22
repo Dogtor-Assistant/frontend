@@ -49,7 +49,7 @@ function DoctorReviewCard(props: Props) {
             >
                 <Box alignItems="baseline" d="flex">
                     <Badge borderRadius="full" colorScheme="teal" px="2">
-                        Top
+                        Review
                     </Badge>
                 </Box>
 

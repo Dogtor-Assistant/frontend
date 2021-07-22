@@ -16,7 +16,7 @@ function TopReviews(props: Props) {
     const doctor = useFragment(
         graphql`
             fragment TopReviews_doctor on Doctor {
-                reviews(last: 3) {
+                reviews(last: 5) {
                     edges {
                         node {
                             id

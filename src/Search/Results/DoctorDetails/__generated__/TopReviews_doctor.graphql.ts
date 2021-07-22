@@ -35,7 +35,7 @@ const node: ReaderFragment = {
         {
           "kind": "Literal",
           "name": "last",
-          "value": 3
+          "value": 5
         }
       ],
       "concreteType": "ReviewsConnection",
@@ -78,11 +78,11 @@ const node: ReaderFragment = {
           "storageKey": null
         }
       ],
-      "storageKey": "reviews(last:3)"
+      "storageKey": "reviews(last:5)"
     }
   ],
   "type": "Doctor",
   "abstractKey": null
 };
-(node as any).hash = '0be8eb9cfecd78932481edf3eb2f1966';
+(node as any).hash = '7f53880335776a2a9dd01fdaf52a0b47';
 export default node;
