@@ -16,16 +16,22 @@ function TopReviews(props: Props) {
     const doctor = useFragment(
         graphql`
             fragment TopReviews_doctor on Doctor {
-                topReviews {
-                    id
-                    ...DoctorReviewCard_review
+                reviews(last: 3) {
+                    edges {
+                        node {
+                            id
+                            ...DoctorReviewCard_review
+                        }
+                    }
                 }
             }
         `,
         props.doctor,
     );
 
-    if (doctor.topReviews.length < 1) {
+    const reviews = doctor.reviews.edges?.compactMap(edge => edge?.node) ?? [];
+
+    if (reviews.length < 1) {
         return null;
     }
 
@@ -35,11 +41,11 @@ function TopReviews(props: Props) {
                 fontSize="md"
                 fontWeight="semibold"
             >
-                Top Reviews
+                Latest Reviews
             </Text>
             <HStack>
                 {
-                    doctor.topReviews.map(review => {
+                    reviews.map(review => {
                         return (
                             <DoctorReviewCard key={review.id} review={review}/>
                         );
