@@ -1,3 +1,4 @@
+/// shamelessly stolen from https://developers.google.com/maps/documentation/javascript/examples/style-array
 const styles = [
     { elementType: 'geometry', stylers: [{ color: '#242f3e' }]},
     { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }]},
