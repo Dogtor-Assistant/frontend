@@ -46,6 +46,7 @@ type Address {
   streetNumber: Int!
   city: String!
   zipCode: Int!
+  coordinates: Coordinates!
 }
 
 type AppointmentTime {
@@ -69,7 +70,7 @@ type Appointment implements Node {
 type Checkup implements Node {
   id: ID!
   isRead: Boolean!
-  services: [Service!]!
+  services: [String!]!
   suggestedDate: DateTime!
 }
 
@@ -85,6 +86,7 @@ type Doctor implements Node {
   topReviews: [Review!]!
   webpage: URL
   appointments: [Appointment!]!
+  reviews(after: String, first: Int, before: String, last: Int): ReviewsConnection!
   services: [Service!]!
 }
 
@@ -125,6 +127,7 @@ type Patient implements Node {
   isSmoker: Boolean
   address: Address!
   checkupRecommendations: [Recommendation!]!
+  unreadCheckups: [Checkup!]!
 }
 
 type Review implements Node {
@@ -221,15 +224,41 @@ type AppointmentsConnection {
   edges: [AppointmentEdge]
 }
 
+type Coordinates {
+  latitude: Float!
+  longitude: Float!
+}
+
+type NearbyLocation {
+  label: String!
+  coordinates: Coordinates!
+  maximumDistanceInMeters: Int!
+}
+
+input CoordinatesInput {
+  latitude: Float!
+  longitude: Float!
+}
+
+input NearbyLocationInput {
+  label: String!
+  coordinates: CoordinatesInput!
+  maximumDistanceInMeters: Int!
+}
+
 type SearchScope {
   query: String
   specialities: [String!]
   cities: [String!]
+  nearby: NearbyLocation
+  minRating: Float
 }
 
 type SearchSuggestions {
   specialities: [String!]
   cities: [String!]
+  nearby: NearbyLocation
+  minRating: Float
 }
 
 type Search implements Node {
@@ -286,6 +315,13 @@ input UserPatientInput {
   surgeries: [String]!
 }
 
+input UserPatientInputUpd {
+  id: ID!
+  birthDate: DateTime!
+  gender: Gender!
+  insurance: Insurance!
+}
+
 input ServiceInput {
   serviceId: ID!
   serviceName: String!
@@ -299,11 +335,22 @@ input FollowupInput {
   doctorNotes: String
 }
 
+input RecommendationInput {
+  service: String!
+  kind: String!
+  periodInDays: Int
+}
+
+input CheckupsGenInput {
+  id: ID!
+  recommendations: [RecommendationInput!]!
+}
+
 type Query {
   greeting: String!
   me: User
   node(id: ID!): Node
-  search(query: String, specialities: [String!], cities: [String!]): Search!
+  search(query: String, specialities: [String!], cities: [String!], nearby: NearbyLocationInput, minRating: Float): Search!
   users(after: String, first: Int, before: String, last: Int): UsersConnection!
   patients(after: String, first: Int, before: String, last: Int): PatientsConnection!
   doctors(after: String, first: Int, before: String, last: Int): DoctorsConnection!
@@ -312,6 +359,8 @@ type Query {
   latestReviews: [Review!]!
   patientUpcomingAppointments(id: ID!): [Appointment!]!
   patientPreviousAppointments(id: ID!): [Appointment!]!
+  cities: [String!]!
+  specialities: [String!]!
 }
 
 type Mutation {
@@ -320,4 +369,7 @@ type Mutation {
   makeAppointmentAsDone(id: ID!): Boolean!
   assignFollowup(followupInput: FollowupInput!): Boolean!
   createUserPatient(input: UserPatientInput!): User
+  updateUserPatientProfile(input: UserPatientInputUpd!): Patient
+  generateCheckups(input: CheckupsGenInput!): [Checkup!]!
+  markCheckupAsRead(id: ID!): Boolean!
 }
