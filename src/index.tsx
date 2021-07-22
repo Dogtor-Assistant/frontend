@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 
 import App from 'App';
+import GlobalValuesProvider from 'GlobalValuesProvider';
 
 import 'utils/extensions';
 import { AuthenticationProvider } from 'authentication';
 import { ConfigProvider } from 'config';
 import { GrahQLEnvironmentProvider } from 'environment';
-import { UserDataProvider } from 'user';
 import theme from 'utils/theme';
 
 ReactDOM.render(
@@ -17,9 +17,9 @@ ReactDOM.render(
             <ConfigProvider>
                 <AuthenticationProvider>
                     <GrahQLEnvironmentProvider>
-                        <UserDataProvider>
+                        <GlobalValuesProvider>
                             <App />
-                        </UserDataProvider>
+                        </GlobalValuesProvider>
                     </GrahQLEnvironmentProvider>
                 </AuthenticationProvider>
             </ConfigProvider>
