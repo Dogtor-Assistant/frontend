@@ -35,17 +35,12 @@ function LoadedCheckupNot(props: LoadedProps) {
             firstname
             lastname
             patientProfile {
-                insurance
                 address {
-                    streetName
-                    streetNumber
                     city
-                    zipCode
                 }
                 unreadCheckups {
                   id
                   services
-                  suggestedDate
                 }
               }
           }
@@ -64,19 +59,10 @@ function LoadedCheckupNot(props: LoadedProps) {
                         <NotBox
                             city={data.me?.patientProfile?.address?.city !== undefined ?
                                 data.me?.patientProfile?.address?.city : ''}
-                            date={checkup.suggestedDate}
-                            insurance={data.me?.patientProfile?.insurance !== undefined ?
-                                data.me?.patientProfile?.insurance : 'Public'}
                             key={checkup.id}
                             keyV={checkup.id}
                             name={`${data.me?.firstname} ${data.me?.lastname}`}
                             service={checkup.services[0]}
-                            streetName={data.me?.patientProfile?.address?.streetName !== undefined ?
-                                data.me?.patientProfile?.address?.streetName : ''}
-                            streetNumber={data.me?.patientProfile?.address?.streetNumber !== undefined ?
-                                data.me?.patientProfile?.address?.streetNumber : 0}
-                            zipCode={data.me?.patientProfile?.address?.zipCode !== undefined ?
-                                data.me?.patientProfile?.address?.zipCode : 0}
                         />
                     );
                 })

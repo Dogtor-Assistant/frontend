@@ -16,22 +16,21 @@ import { graphql } from 'babel-plugin-relay/macro';
 
 import LoadingIndicator from 'LoadingIndicator';
 
-type appBoxProps = {
-    insurance: string,
+import useRouteToSearch from 'useRouteToSearch';
+
+type notBoxProps = {
     keyV: string,
     service: string,
-    date: string,
-    streetName: string,
-    streetNumber: number,
     city: string,
-    zipCode: number,
     name: string,
 
 }
-const AppBox: FC<appBoxProps> =
+const NotBox: FC<notBoxProps> =
 ({
-    insurance, keyV, service, date, streetName, streetNumber, city, zipCode, name,
+    keyV, service, city, name,
 }): ReactElement => {
+    const route = useRouteToSearch();
+
     const [showNotification, setShowNotification] = useState(true);
 
     const [commit, isInFlight] = useMutation<NotBoxMarkAsReadMutation>(graphql`
@@ -76,7 +75,10 @@ const AppBox: FC<appBoxProps> =
                         <Button
                             colorScheme="blue"
                             ml={4} my={4}
-                            onClick={() => { /* redirect to search page with all data */}}
+                            onClick={() => {
+                                markAsRead();
+                                route({ cities: [city], query: service });
+                            }}
                             variant="solid"
                         >
                                 Continue
@@ -90,4 +92,4 @@ const AppBox: FC<appBoxProps> =
     );
 };
   
-export default AppBox;
+export default NotBox;
