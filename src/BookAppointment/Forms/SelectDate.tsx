@@ -242,7 +242,8 @@ const SelectDate: FC<SelectDateProps> =
 
     function printTheInt(props: any) {
         console.log(props);
-        const expectedTime = new Date(`${props }`);
+        expectedTime = new Date(`${props }`);
+        //setExpectedTime(expectedTime);
         //setExpectedTime(new Date(props));
         console.log(expectedTime);
     }

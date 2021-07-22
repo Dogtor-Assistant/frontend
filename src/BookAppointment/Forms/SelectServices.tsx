@@ -1,21 +1,22 @@
 import type { Insurance } from 'BookAppointment/__generated__/MenuMutation.graphql';
 import type { FC, ReactElement } from 'react';
 
+import { useRef } from 'react';
 import React, { useEffect, useState } from 'react';
 import {
+    AlertDialog,
+    AlertDialogBody,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogOverlay,
     Box,
+    Button,
     Center,
     Checkbox,
     Container,
     Divider,
-    Popover,
-    PopoverArrow,
-    PopoverBody,
-    PopoverCloseButton,
-    PopoverContent,
-    PopoverHeader,
     SimpleGrid,
-    useDisclosure,
 } from '@chakra-ui/react';
 
 import { usePatientInsurance } from 'user';
@@ -64,7 +65,6 @@ const SelectServices: FC<SelectServicesProps> =
     setValidForm,
     setSelectedServicesID,
 }): ReactElement => {
-    const [serviceInsuranceError, setServiceInsuranceError] = useState(false);
     const [selectedServiceError, setSelectedServiceError] = useState(false);
 
     const userInsurance = usePatientInsurance();
@@ -73,6 +73,7 @@ const SelectServices: FC<SelectServicesProps> =
     }
     
     useEffect(() => {
+        console.log(selectedServiceError);
         setValidForm(selectedServices.length !== 0 || selectedServiceError);
     }, [selectedServices, selectedServiceError, setValidForm]);
 
@@ -88,11 +89,11 @@ const SelectServices: FC<SelectServicesProps> =
         }
         return checkB;
     };
-    console.log(possibleServices);
 
-    const { onOpen, onClose, isOpen } = useDisclosure();
-    const firstFieldRef = React.useRef(null);
-
+    const [isOpen, setIsOpen] = React.useState(false);
+    const onClose = () => setIsOpen(false);
+    const cancelRef = useRef();
+    
     return (
         <div>
             <Center height="50px">
@@ -125,69 +126,100 @@ const SelectServices: FC<SelectServicesProps> =
                                     mt="1"
                                     paddingLeft={4}
                                 >
-                                    <Checkbox isChecked={checkedBool()[index]} key={service.name} onChange={() => {
-                                        if(checkedBool()[index]) {
-                                            const newServices = selectedServices.filter(s => (s !== service));
-                                            setSelectedServices(newServices);
-                                            // eslint-disable-next-line max-len
-                                            const duration = possibleServices[index].estimatedDuration;
-                                            if(duration != null) {
-                                                setExpectedDuration(expectedDuration - duration);
+                                    <Checkbox
+                                        isChecked={checkedBool()[index]}
+                                        key={service.name}
+                                        onChange={event => {
+                                            if(checkedBool()[index]) {
+                                                // eslint-disable-next-line max-len
+                                                const newServices = Array<{
+                                                    readonly id: string,
+                                                    readonly description: string | null,
+                                                    readonly estimatedDuration: number | null,
+                                                    readonly name: string,
+                                                    readonly privateCovered: boolean | null,
+                                                    readonly publicCovered: boolean | null,
+                                                }>();
+                                                selectedServices.map(ss => {
+                                                    if(event.target.value !== ss.name) {
+                                                        newServices.push(ss);
+                                                    }
+                                                });
+                                                selectedServices = newServices;
+                                                setSelectedServices(selectedServices);
+                                                // eslint-disable-next-line max-len
+                                                const duration = possibleServices[index].estimatedDuration;
+                                                if(duration != null && duration <= expectedDuration) {
+                                                    setExpectedDuration(expectedDuration - duration);
+                                                }
+                                                else{
+                                                    setExpectedDuration(0);
+                                                }
                                             }
-                                        }
-                                        else{
-                                            // eslint-disable-next-line max-len
-                                            if(possibleServices[index].privateCovered === false &&
-                                            insurance === 'Private') {
-                                                console.log('Hit');
-                                                setServiceInsuranceError(true);
+                                            else{
+                                                // eslint-disable-next-line max-len
+                                                if((possibleServices[index].privateCovered !== false &&
+                                                    insurance === 'Private')||
+                                                    (possibleServices[index].publicCovered === false &&
+                                                    insurance === 'Public')) {
+                                                    setIsOpen(true);
+                                                }
+                                                selectedServices.push(service);
+                                                setSelectedServices(selectedServices);
+                                                // eslint-disable-next-line max-len
+                                                const duration = possibleServices[index].estimatedDuration;
+                                                if (duration != null) {
+                                                    setExpectedDuration(expectedDuration + duration);
+                                                }
                                             }
-                                            // eslint-disable-next-line max-len
-                                            if(possibleServices[index].publicCovered === false &&
-                                            insurance === 'Public') {
-                                                console.log('Hit');
-                                                setServiceInsuranceError(true);
+                                            if (selectedServices.length !== 0) {
+                                                const err = true;
+                                                setSelectedServiceError(err);
+                                                const selectedServicesID = new Array<string>();
+                                                for(let i = 0; i < selectedServices.length; i++) {
+                                                    selectedServicesID.push(selectedServices[i].id);
+                                                }
+                                                setSelectedServicesID(selectedServicesID);
                                             }
-                                            selectedServices.push(service);
-                                            setSelectedServices(selectedServices);
-                                            // eslint-disable-next-line max-len
-                                            const duration = possibleServices[index].estimatedDuration;
-                                            if (duration != null) {
-                                                setExpectedDuration(expectedDuration + duration);
+                                            else{
+                                                const err = false;
+                                                setSelectedServiceError(err);
+                                                setSelectedServicesID([]);
                                             }
-                                        }
-                                        if (selectedServices !== []) {
-                                            setSelectedServiceError(true);
-                                            const selectedServicesID = new Array<string>();
-                                            for(let i = 0; i < selectedServices.length; i++) {
-                                                selectedServicesID.push(selectedServices[i].id);
-                                            }
-                                            setSelectedServicesID(selectedServicesID);
-                                        }
-                                        else{
-                                            setSelectedServiceError(false);
-                                            setSelectedServicesID([]);
-                                        }
-                                    }}>
+                                        }}
+                                        value={service.name}>
                                         {service.name}
                                     </Checkbox>
+                                    <AlertDialog
+                                        closeOnOverlayClick={true}
+                                        isCentered={true}
+                                        isOpen={isOpen}
+                                        leastDestructiveRef={undefined}
+                                        onClose={onClose}
+                                    >
+                                        <AlertDialogOverlay>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                                                    Attention!
+                                                </AlertDialogHeader>
+
+                                                <AlertDialogBody>
+                                                    This service is not covered by your insurance,
+                                                    you may have to pay for it yourself.
+                                                </AlertDialogBody>
+
+                                                <AlertDialogFooter>
+                                                    <Button onClick={onClose}>
+                                                    Close
+                                                    </Button>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialogOverlay>
+                                    </AlertDialog>
                                 </Box>
                                 
                             </Container>
                         ))}
-                        {serviceInsuranceError &&
-                                <Popover isOpen={true} onClose={onClose} onOpen={onOpen}>
-                                    <PopoverContent>
-                                        <PopoverArrow />
-                                        <PopoverCloseButton onClick={onClose}/>
-                                        <PopoverHeader>Attention!</PopoverHeader>
-                                        <PopoverBody>
-                                            Your Insurance does not cover this Service!
-                                            If you still choose to use this service you may have to pay for it yourself.
-                                        </PopoverBody>
-                                    </PopoverContent>
-                                </Popover>
-                        }
                     </SimpleGrid>
                 </Box>
             </Box>
