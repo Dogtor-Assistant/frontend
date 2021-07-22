@@ -1,6 +1,8 @@
 import type { Weekday } from '../__generated__/Menu_doctor.graphql';
-import type { FC, ReactElement } from 'react';
+import type { UseRadioProps } from '@chakra-ui/react';
+import type { FC, ReactElement, ReactNode } from 'react';
 
+import { useMemo } from 'react';
 import React, { useEffect, useState } from 'react';
 import { useRadioGroup } from '@chakra-ui/react';
 import {
@@ -181,6 +183,17 @@ const SelectDate: FC<SelectDateProps> =
         return daySlots;
     }
 
+    const radioValue = useMemo(() => {
+        if (!isNaN(expectedTime.getTime())) {
+            return expectedTime.toISOString();
+        }
+        return undefined;
+    }, [expectedTime]);
+
+    useEffect(() => {
+        setValidForm(radioValue != null);
+    }, [radioValue, setValidForm]);
+
     function TimeSlots() {
         const weekSlots = findSlots(startDay);
         const options= Array<Array<string>>(weekSlots.length);
@@ -203,10 +216,12 @@ const SelectDate: FC<SelectDateProps> =
             }
             dv_counter = dv_counter + 1;
         }
+
         const { getRootProps, getRadioProps } = useRadioGroup({
             defaultValue: defaultValue,
             name: 'framework',
             onChange: printTheInt,
+            value:radioValue,
         });
 
         const group = getRootProps();
@@ -218,17 +233,25 @@ const SelectDate: FC<SelectDateProps> =
                 templateRows="repeat(13, 1fr)"
                 {...group}
             >
-                {options.map(slotDay => (
+                {options.map((slotDay, index) => (
                     // eslint-disable-next-line react/jsx-key
-                    <GridItem colSpan={1} rowSpan={12}><Center>
+                    <GridItem colSpan={1} key={`day_${index}`} rowSpan={12}><Center>
                         <Stack {...group}>
                             {slotDay.map(value => {
                                 const radio = getRadioProps({ value });
+                                const date = new Date(value);
+                                const timeString= date.toLocaleTimeString(
+                                    // 24-hour format
+                                    'de',
+                                    {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                    },
+                                );
                                 return (
-                                    <RadioCard key={value} {...radio}>
+                                    <RadioCard key={value} {...radio} >
                                         {
-                                            // eslint-disable-next-line max-len
-                                            `${new Date(value).toLocaleTimeString().split(':')[0] }:${ new Date(value).toLocaleTimeString().split(':')[1]}`
+                                            timeString
                                         }
                                     </RadioCard>
                                 );
@@ -240,17 +263,45 @@ const SelectDate: FC<SelectDateProps> =
         );
     }
 
-    function printTheInt(props: any) {
-        console.log(props);
-        expectedTime = new Date(`${props }`);
-        //setExpectedTime(expectedTime);
-        //setExpectedTime(new Date(props));
-        console.log(expectedTime);
+    type Props = UseRadioProps & {
+        children: ReactNode[] | ReactNode | null,
     }
-    
-    useEffect(() => {
-        setValidForm(expectedTime != null);
-    }, [expectedTime, setValidForm]);
+
+    function RadioCard(props: Props) {
+        const { children, ...rest } = props;
+        const { getInputProps, getCheckboxProps } = useRadio(rest);
+        const input = getInputProps();
+        const checkbox = getCheckboxProps();
+
+        return (
+            <Box as="label" >
+                <input {...input} />
+                <Box
+                    {...checkbox}
+                    _checked={{
+                        bg: 'green.600',
+                        borderColor: 'green.600',
+                        color: 'white',
+                    }}
+                    _focus={{
+                        boxShadow: 'outline',
+                    }}
+                    borderRadius="full"
+                    borderWidth="1px"
+                    boxShadow="md"
+                    cursor="pointer"
+                    px={5}
+                    py={3}
+                >
+                    {children}
+                </Box>
+            </Box>
+        );
+    }
+
+    function printTheInt(props: string) {
+        setExpectedTime(new Date(props));
+    }
 
     return (
         <div>
@@ -323,38 +374,6 @@ function stringToTime(number: string) {
     const h = parseInt(numberArray[0]);
     const min = parseInt(numberArray[1]);
     return h*60 + min;
-}
-
-function RadioCard(props:any) {
-    const { getInputProps, getCheckboxProps } = useRadio(props);
-
-    const input = getInputProps();
-    const checkbox = getCheckboxProps();
-
-    return (
-        <Box as="label">
-            <input {...input} />
-            <Box
-                {...checkbox}
-                _checked={{
-                    bg: 'green.600',
-                    borderColor: 'green.600',
-                    color: 'white',
-                }}
-                _focus={{
-                    boxShadow: 'outline',
-                }}
-                borderRadius="full"
-                borderWidth="1px"
-                boxShadow="md"
-                cursor="pointer"
-                px={5}
-                py={3}
-            >
-                {props.children}
-            </Box>
-        </Box>
-    );
 }
 
 export default SelectDate;

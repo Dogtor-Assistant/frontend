@@ -7,7 +7,6 @@ import {
     Checkbox,
     Container,
     Divider,
-    HStack,
     Input,
     Stack,
 } from '@chakra-ui/react';
@@ -38,7 +37,7 @@ const Agreement: FC<AgreementProps> =
                     fontWeight="semibold"
                     lineHeight="tight"
                     mt="1"
-                    onChange={event => {
+                    onChange={() => {
                         if (shareData) {
                             setShareData(false);
                         }
@@ -60,7 +59,7 @@ const Agreement: FC<AgreementProps> =
                 fontWeight="semibold"
                 lineHeight="tight"
                 mt="1"
-                onChange={event => {
+                onChange={() => {
                     if (shareData) {
                         setShareData(false);
                     }

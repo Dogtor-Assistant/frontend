@@ -3,8 +3,6 @@ import type { MenuMutation } from'./__generated__/MenuMutation.graphql';
 import type { PayloadError } from 'relay-runtime';
 
 import React, { useEffect, useState } from 'react';
-import { render } from 'react-dom';
-import { Redirect, Route } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import {
     Alert,
@@ -25,20 +23,19 @@ import SelectDate from './Forms/SelectDate';
 import SelectServices from './Forms/SelectServices';
 import Nav from './Nav';
 
-import { useIsPatient, usePatientInsurance } from 'user';
+import { useIsPatient } from 'user';
 
 export type Insurance = 'Private' | 'Public';
 type Props = { Doctor:Menu_doctor$key };
 
 export type Day = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday'
 
-function Menu(this: any, props:Props) {
-    const userInsurance = usePatientInsurance();
+function Menu(props:Props) {
 
     const insuranceArr: Insurance[] = ['Public', 'Private'];
-    const dayArr: Day[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     const history = useHistory();
+    const currentTime = new Date();
     
     const [validSelectDate, setValidSelectDate] = useState(false);
     const [validSelectService, setValidSelectService] = useState(false);
@@ -48,7 +45,7 @@ function Menu(this: any, props:Props) {
     const [alertServicesInsurance, setAlertServicesInsurance] = useState(false);
 
     const [expectedDuration, setExpectedDuration] = useState(0);
-    const [expectedTime, setExpectedTime] = useState(new Date());
+    const [expectedTime, setExpectedTime] = useState(currentTime);
     const [insurance, setInsurance] = useState(insuranceArr[0]);
     const [patientNotes, setPatientNotes] = useState('');
     const [selectedServices, setSelectedServices] = useState(new Array<{
@@ -186,7 +183,7 @@ function Menu(this: any, props:Props) {
                     <Heading>Book Appointment</Heading>
                     <Heading size="md">Select a Date</Heading>
                     <SelectDate
-                        blockedAppointments={doctor.appointments} currentDate={new Date()}
+                        blockedAppointments={doctor.appointments} currentDate={currentTime}
                         doctorHours={doctor.offeredSlots} expectedDuration={expectedDuration}
                         expectedTime={expectedTime} setExpectedTime={setExpectedTime}
                         setValidForm={setValidSelectDate}
@@ -240,7 +237,7 @@ function Menu(this: any, props:Props) {
                     <Heading>Book Appointment</Heading>
                     <Heading size="md">Appointment Overview</Heading>
                     <AppointmentOverview
-                        blockedAppointments={doctor.appointments} currentTime={expectedTime}
+                        blockedAppointments={doctor.appointments} currentTime={currentTime}
                         doctorHours={doctor.offeredSlots}
                         doctorName={`Dr. ${ doctor.firstname } ${ doctor.lastname}`} expectedDuration={expectedDuration}
                         expectedTime={expectedTime} insurance={insurance} patientNotes={patientNotes}

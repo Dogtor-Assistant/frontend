@@ -1,7 +1,6 @@
 import type { Insurance } from 'BookAppointment/__generated__/MenuMutation.graphql';
 import type { FC, ReactElement } from 'react';
 
-import { useRef } from 'react';
 import React, { useEffect, useState } from 'react';
 import {
     AlertDialog,
@@ -73,7 +72,6 @@ const SelectServices: FC<SelectServicesProps> =
     }
     
     useEffect(() => {
-        console.log(selectedServiceError);
         setValidForm(selectedServices.length !== 0 || selectedServiceError);
     }, [selectedServices, selectedServiceError, setValidForm]);
 
@@ -92,7 +90,6 @@ const SelectServices: FC<SelectServicesProps> =
 
     const [isOpen, setIsOpen] = React.useState(false);
     const onClose = () => setIsOpen(false);
-    const cancelRef = useRef();
     
     return (
         <div>
@@ -158,7 +155,7 @@ const SelectServices: FC<SelectServicesProps> =
                                             }
                                             else{
                                                 // eslint-disable-next-line max-len
-                                                if((possibleServices[index].privateCovered !== false &&
+                                                if((possibleServices[index].privateCovered === false &&
                                                     insurance === 'Private')||
                                                     (possibleServices[index].publicCovered === false &&
                                                     insurance === 'Public')) {

@@ -31,7 +31,6 @@ import AppService from './AppService';
 
 export type Day = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
 export type Insurance = 'Private' | 'Public';
-const weekdayArr: Weekday[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const insuranceArr: Insurance[] = ['Public', 'Private'];
 
 type AppointmentOverviewProps = {
@@ -116,7 +115,7 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
         if (insurance === insuranceArr[1]) {
             return(
                 <RadioGroup
-                    defaultValue='Private' onChange={event => {
+                    defaultValue='Private' onChange={() => {
                         setInsurance(insuranceArr[0]);
                     }}
                     value={insurance}
@@ -137,7 +136,7 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
         
         return(
             <RadioGroup
-                defaultValue='Public' onChange={event => {
+                defaultValue='Public' onChange={() => {
                     setInsurance(insuranceArr[1]);
                 }}
                 value={insurance}
@@ -164,7 +163,7 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                     fontWeight="semibold"
                     lineHeight="tight"
                     mt="1"
-                    onChange={event => {
+                    onChange={() => {
                         if (shareData) {
                             setShareData(false);
                         }
@@ -186,7 +185,7 @@ const AppointmentOverview: FC<AppointmentOverviewProps> =
                 fontWeight="semibold"
                 lineHeight="tight"
                 mt="1"
-                onChange={event => {
+                onChange={() => {
                     if (shareData) {
                         setShareData(false);
                     }
