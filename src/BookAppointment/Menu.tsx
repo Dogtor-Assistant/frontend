@@ -1,3 +1,4 @@
+/* eslint-disable relay/unused-fields */
 import type { Menu_doctor$key } from './__generated__/Menu_doctor.graphql';
 import type { MenuMutation } from'./__generated__/MenuMutation.graphql';
 import type { PayloadError } from 'relay-runtime';
