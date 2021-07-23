@@ -50,7 +50,7 @@ const SelectDate: FC<SelectDateProps> =
 }): ReactElement => {
 
     useEffect(() => {
-        setValidForm(expectedTime !== currentDate);
+        setValidForm(expectedTime.toString() !== currentDate.toString());
     }, [currentDate, expectedTime, setValidForm]);
 
     // eslint-disable-next-line max-len
@@ -189,10 +189,6 @@ const SelectDate: FC<SelectDateProps> =
         }
         return undefined;
     }, [expectedTime]);
-
-    useEffect(() => {
-        setValidForm(radioValue != null);
-    }, [radioValue, setValidForm]);
 
     function TimeSlots() {
         const weekSlots = findSlots(startDay);

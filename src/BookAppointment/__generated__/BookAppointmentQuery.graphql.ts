@@ -33,6 +33,7 @@ query BookAppointmentQuery(
 }
 
 fragment Menu_doctor on Doctor {
+  id
   firstname
   lastname
   offeredSlots {
@@ -282,12 +283,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "95398ccea5869d557f9ec10b245f10ff",
+    "cacheID": "758ba52c45635fb4639532f2a7b11e1e",
     "id": null,
     "metadata": {},
     "name": "BookAppointmentQuery",
     "operationKind": "query",
-    "text": "query BookAppointmentQuery(\n  $doctorID: ID!\n) {\n  node(id: $doctorID) {\n    __typename\n    ... on Doctor {\n      ...Menu_doctor\n    }\n    id\n  }\n}\n\nfragment Menu_doctor on Doctor {\n  firstname\n  lastname\n  offeredSlots {\n    day\n    start\n    end\n  }\n  services {\n    id\n    description\n    estimatedDuration\n    name\n    privateCovered\n    publicCovered\n  }\n  appointments {\n    isDone\n    expectedTime {\n      duration\n      start\n    }\n    id\n  }\n}\n"
+    "text": "query BookAppointmentQuery(\n  $doctorID: ID!\n) {\n  node(id: $doctorID) {\n    __typename\n    ... on Doctor {\n      ...Menu_doctor\n    }\n    id\n  }\n}\n\nfragment Menu_doctor on Doctor {\n  id\n  firstname\n  lastname\n  offeredSlots {\n    day\n    start\n    end\n  }\n  services {\n    id\n    description\n    estimatedDuration\n    name\n    privateCovered\n    publicCovered\n  }\n  appointments {\n    isDone\n    expectedTime {\n      duration\n      start\n    }\n    id\n  }\n}\n"
   }
 };
 })();

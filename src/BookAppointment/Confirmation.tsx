@@ -17,7 +17,7 @@ function Confirmation() {
     useEffect(() => {
         if (isFirstRun.current) {
             isFirstRun.current = false;
-            setTimeout(() => { history.push('/home'); }, 3000);
+            setTimeout(() => { history.push('/patient'); }, 3000);
         }
     });
 

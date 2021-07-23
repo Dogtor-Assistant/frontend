@@ -13,7 +13,7 @@ function BookAppointmentIndex() {
                 <Route exact path={path}>
                     <BookAppointment/>
                 </Route>
-                <Route path={`${path}/success`}>
+                <Route path={`${path }/confirmation`}>
                     <Confirmation />
                 </Route>
             </Switch>

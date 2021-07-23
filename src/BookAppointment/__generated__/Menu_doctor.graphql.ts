@@ -6,6 +6,7 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type Weekday = "Friday" | "Monday" | "Saturday" | "Sunday" | "Thursday" | "Tuesday" | "Wednesday" | "%future added value";
 export type Menu_doctor = {
+    readonly id: string;
     readonly firstname: string;
     readonly lastname: string;
     readonly offeredSlots: ReadonlyArray<{
@@ -43,6 +44,13 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "start",
   "storageKey": null
 };
@@ -52,6 +60,7 @@ return {
   "metadata": null,
   "name": "Menu_doctor",
   "selections": [
+    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -81,7 +90,7 @@ return {
           "name": "day",
           "storageKey": null
         },
-        (v0/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -100,13 +109,7 @@ return {
       "name": "services",
       "plural": true,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -175,7 +178,7 @@ return {
               "name": "duration",
               "storageKey": null
             },
-            (v0/*: any*/)
+            (v1/*: any*/)
           ],
           "storageKey": null
         }
@@ -187,5 +190,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '1bc4aaf712697cef80272832f9855484';
+(node as any).hash = '159f65bc53305b5dadf15d939b074344';
 export default node;

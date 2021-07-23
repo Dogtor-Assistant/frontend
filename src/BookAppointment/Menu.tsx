@@ -3,7 +3,7 @@ import type { MenuMutation } from'./__generated__/MenuMutation.graphql';
 import type { PayloadError } from 'relay-runtime';
 
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import {
     Alert,
     AlertIcon,
@@ -31,11 +31,12 @@ type Props = { Doctor:Menu_doctor$key };
 export type Day = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday'
 
 function Menu(props:Props) {
+    const { path } = useRouteMatch();
 
     const insuranceArr: Insurance[] = ['Public', 'Private'];
 
     const history = useHistory();
-    const currentTime = new Date();
+    const [currentTime] = useState(new Date());
     
     const [validSelectDate, setValidSelectDate] = useState(false);
     const [validSelectService, setValidSelectService] = useState(false);
@@ -65,6 +66,7 @@ function Menu(props:Props) {
     const doctor=useFragment(
         graphql`
             fragment Menu_doctor on Doctor {
+                id
                 firstname
                 lastname
                 offeredSlots{
@@ -133,13 +135,15 @@ function Menu(props:Props) {
         commit({
             onCompleted(data, err) {
                 if (err) handleError(err);
-                else history.push('/bookappointment/confirmation');
+                else {
+                    history.push(`${{ path }}/confirmation`);
+                }
             },
             variables: {
                 'input': {
-                    'doctorId': doctor.lastname,
+                    'doctorId': doctor.id,
                     'expectedDuration' : expectedDuration,
-                    'expectedTime' : expectedTime.toDateString(),
+                    'expectedTime' : expectedTime.toISOString(),
                     'insurance' : insurance,
                     'patientNotes': patientNotes,
                     'selectedServices' : selectedServicesID,
