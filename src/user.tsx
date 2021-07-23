@@ -1,24 +1,14 @@
-import type { userQuery as userQueryType } from './__generated__/userQuery.graphql';
+import type { user_data$key } from './__generated__/user_data.graphql';
 import type { ReactNode } from 'react';
-import type { ErrorBoundary } from 'react-error-boundary';
-import type { PreloadedQuery } from 'react-relay';
 import type { Insurance } from 'Signup/__generated__/PatientUserCreateMutation.graphql';
 
-import userQuery from './__generated__/userQuery.graphql';
+import React, { useContext } from 'react';
 
-import React, { useContext, useEffect, useRef } from 'react';
-
-import { usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
-import Suspense from 'Suspense';
-
-type LoadedProps = {
-    data: PreloadedQuery<userQueryType>,
-    children: ReactNode[] | ReactNode | null,
-}
-
 type Props = {
+    data: user_data$key,
     children: ReactNode[] | ReactNode | null,
 }
 
@@ -38,10 +28,10 @@ const UserContext = React.createContext<UserContextType>({
     isPatient: false,
 });
 
-function LoadedUserProvider(props: LoadedProps) {
-    const data = usePreloadedQuery(
+export function UserDataProvider(props: Props) {
+    const data = useFragment(
         graphql`
-            query userQuery {
+            fragment user_data on Query {
                 me {
                     id
                     firstname
@@ -76,33 +66,6 @@ function LoadedUserProvider(props: LoadedProps) {
         >
             {props.children}
         </UserContext.Provider>
-    );
-}
-
-export function UserDataProvider(props: Props) {
-    const [
-        data,
-        loadQuery,
-        dispose,
-    ] = useQueryLoader<userQueryType>(userQuery);
-
-    const error = useRef<ErrorBoundary>(null);
-    useEffect(() => {
-        error.current?.reset();
-        loadQuery({ });
-        return () => {
-            dispose();
-        };
-    }, [dispose, loadQuery]);
-
-    return (
-        <Suspense boundaryRef={error}>
-            {data != null && (
-                <LoadedUserProvider data={data}>
-                    {props.children}
-                </LoadedUserProvider>
-            )}
-        </Suspense>
     );
 }
 
