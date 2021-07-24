@@ -217,6 +217,7 @@ function LoadedCalendar(props: LoadedProps) {
                     resourceTimeGridPlugin,
                 ]}
                 schedulerLicenseKey='GPL-My-Project-Is-Open-Source'
+                timeZone='UTC'
             />
             <CustomModal eventType={selectedEvent}
                 handleOnCloseDelete={handleOnCloseDelete}
