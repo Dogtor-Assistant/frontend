@@ -8,12 +8,14 @@ import {
 
 import { Search } from 'Home';
 import CheckupNot from './CheckupNot';
+import FollowApp from './FollowApp';
 import PastApp from './PastApp';
 import ProfileSuggestion from './ProfileSuggestion';
 import UpcomingApp from './UpcomingApp';
 
 function PatientPage() {
     const [showSuggestion, setShowSuggestion] = useState(true);
+    const [showFollowup, setShowFollowup] = useState(true);
 
     return (
         <div>
@@ -33,6 +35,14 @@ function PatientPage() {
                 { !showSuggestion &&
                     <CheckupNot />
                 }
+                { showFollowup && <>
+                    <Heading alignSelf="center" my={4} size="md">Followup Appointments</Heading>
+                    <FollowApp setShowFollowup={setShowFollowup} />
+
+                    <Divider py={4}/>
+                </>
+                }
+
                 <Heading alignSelf="center" my={4} size="md">Upcoming Appointments</Heading>
                 <UpcomingApp />
 
