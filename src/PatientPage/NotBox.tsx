@@ -56,7 +56,7 @@ const NotBox: FC<notBoxProps> =
 
     return (<>
         { showNotification &&
-            <Box borderColor="#C4EC6C" borderRadius="lg" borderWidth="2px" key={keyV} overflow="hidden" px={6}>
+            <Box borderColor="green.300" borderRadius="lg" borderWidth="2px" key={keyV} overflow="hidden" px={6}>
                 <Text fontSize="lg" mt={4}>
                         Special Reminder for {name}: It&apos;s been long since your last {service}!
                         Click Continue to book an appointment!
