@@ -3,6 +3,7 @@ import useMetaTags from 'react-metatags-hook';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { useColorModeValue } from '@chakra-ui/color-mode';
 
+import BookAppointment from 'BookAppointment';
 import DebugMenu from 'DebugMenu';
 import Footer from 'Footer';
 import Home from 'Home';
@@ -46,6 +47,10 @@ function App() {
 
                         <Route path="/signup">
                             <Signup />
+                        </Route>
+
+                        <Route path="/bookappointment/:id">
+                            <BookAppointment />
                         </Route>
 
                         <DoctorRoute component={Calendar} exact path="/doctor" />
