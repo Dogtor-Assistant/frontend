@@ -41,7 +41,7 @@ function LoadedCheckupNot(props: LoadedProps) {
     );
     
     return (
-        <Center>
+        <Center py={4}>
             <Grid gap={6} w={600}>
                 { data.me?.patientProfile?.unreadCheckups !== undefined &&
                 data.me?.patientProfile?.unreadCheckups.length > 0 &&

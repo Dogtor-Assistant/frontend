@@ -1,4 +1,4 @@
-import type { NotBoxMarkAsReadMutation } from './__generated__/NotBoxMarkAsReadMutation.graphql';
+import type { FollBoxMarkAsReadMutation } from './__generated__/FollBoxMarkAsReadMutation.graphql';
 import type { FC, ReactElement } from 'react';
 
 import { useState } from 'react';
@@ -21,21 +21,22 @@ import useRouteToSearch from 'useRouteToSearch';
 type notBoxProps = {
     keyV: string,
     service: string,
-    city: string,
+    doctorName: string,
     name: string,
+    date: Date,
 
 }
-const NotBox: FC<notBoxProps> =
+const FollBox: FC<notBoxProps> =
 ({
-    keyV, service, city, name,
+    keyV, service, doctorName, name, date,
 }): ReactElement => {
     const route = useRouteToSearch();
 
     const [showNotification, setShowNotification] = useState(true);
 
-    const [commit, isInFlight] = useMutation<NotBoxMarkAsReadMutation>(graphql`
-    mutation NotBoxMarkAsReadMutation($input: ID!){
-        markCheckupAsRead(id: $input)
+    const [commit, isInFlight] = useMutation<FollBoxMarkAsReadMutation>(graphql`
+    mutation FollBoxMarkAsReadMutation($input: ID!){
+        markFollowupAsRead(id: $input)
     }
     `);
 
@@ -56,10 +57,11 @@ const NotBox: FC<notBoxProps> =
 
     return (<>
         { showNotification &&
-            <Box borderColor="#C4EC6C" borderRadius="lg" borderWidth="2px" key={keyV} overflow="hidden" px={6}>
+            <Box borderRadius="lg" borderWidth="1px" key={keyV} overflow="hidden" px={6}>
                 <Text fontSize="lg" mt={4}>
-                        Special Reminder for {name}: It&apos;s been long since your last {service}!
-                        Click Continue to book an appointment!
+                    {name} you have a followup suggested by Dr. {doctorName}! <br/>
+                        Service: {service} <br/>
+                        Suggested Date: {date.toDateString()}
                 </Text>
                 <Flex>
                     <Spacer />
@@ -77,7 +79,7 @@ const NotBox: FC<notBoxProps> =
                             ml={4} my={4}
                             onClick={() => {
                                 markAsRead();
-                                route({ cities: [city], query: service });
+                                route({ query: `${doctorName}` });
                             }}
                             variant="solid"
                         >
@@ -92,4 +94,4 @@ const NotBox: FC<notBoxProps> =
     );
 };
   
-export default NotBox;
+export default FollBox;
