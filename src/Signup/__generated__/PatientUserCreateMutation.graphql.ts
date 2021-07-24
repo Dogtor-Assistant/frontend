@@ -30,8 +30,6 @@ export type AddressInput = {
     streetNumber: number;
     city: string;
     zipCode: number;
-    lat: number;
-    lon: number;
 };
 export type PatientUserCreateMutationVariables = {
     input: UserPatientInput;
