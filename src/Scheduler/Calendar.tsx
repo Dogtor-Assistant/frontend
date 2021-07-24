@@ -173,9 +173,8 @@ function LoadedCalendar(props: LoadedProps) {
         [...(data.node?.appointments ? data.node?.appointments.map(appointment => !appointment.isDone ? {} : ({
             end: typeof appointment.expectedTime?.start === 'string' ? new Date(new Date(
                 appointment.expectedTime?.start).setMinutes(new Date(appointment.expectedTime?.start).getMinutes()
-                 + ((appointment.expectedTime.duration != null && appointment.expectedTime.duration === undefined) ?
-                     appointment.expectedTime.duration : 0
-                 ))).toISOString() : '',
+                 + appointment.expectedTime.duration!)).toISOString() : '', // eslint-disable-line
+
             firstName: appointment.patient.firstname,
             id: appointment.id,
             lastName: appointment.patient.lastname,
@@ -200,11 +199,9 @@ function LoadedCalendar(props: LoadedProps) {
             title: appointment.patient.firstname.concat(' '.concat(appointment.patient.lastname)),
         })) : []),
         ] : []);
-        
     return (
         <Container maxW="container.xl" >
             <FullCalendar
-                displayEventTime={true}
                 eventClick={handleEventClick}
                 events={events}
                 headerToolbar={{

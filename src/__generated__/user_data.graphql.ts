@@ -4,6 +4,7 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
+export type Insurance = "Private" | "Public" | "%future added value";
 export type user_data = {
     readonly me: {
         readonly id: string;
@@ -12,6 +13,7 @@ export type user_data = {
         readonly patientProfile: {
             readonly __typename: string;
             readonly id: string;
+            readonly insurance: Insurance;
         } | null;
         readonly doctorProfile: {
             readonly __typename: string;
@@ -36,16 +38,13 @@ var v0 = {
   "name": "id",
   "storageKey": null
 },
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "__typename",
-    "storageKey": null
-  },
-  (v0/*: any*/)
-];
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -82,7 +81,17 @@ return {
           "kind": "LinkedField",
           "name": "patientProfile",
           "plural": false,
-          "selections": (v1/*: any*/),
+          "selections": [
+            (v1/*: any*/),
+            (v0/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "insurance",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         },
         {
@@ -92,7 +101,10 @@ return {
           "kind": "LinkedField",
           "name": "doctorProfile",
           "plural": false,
-          "selections": (v1/*: any*/),
+          "selections": [
+            (v1/*: any*/),
+            (v0/*: any*/)
+          ],
           "storageKey": null
         }
       ],
@@ -103,5 +115,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'f5c932faeebb2402d240b3e2e5358ae8';
+(node as any).hash = '28041c6799c854d971d3bc406c411642';
 export default node;

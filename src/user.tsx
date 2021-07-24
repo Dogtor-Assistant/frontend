@@ -1,5 +1,6 @@
 import type { user_data$key } from './__generated__/user_data.graphql';
 import type { ReactNode } from 'react';
+import type { Insurance } from 'Signup/__generated__/PatientUserCreateMutation.graphql';
 
 import React, { useContext } from 'react';
 
@@ -19,6 +20,7 @@ type UserContextType = {
     isDoctor: boolean,
     patientId?: string | undefined,
     doctorId?: string | undefined,
+    insurance?: Insurance | undefined,
 }
 
 const UserContext = React.createContext<UserContextType>({
@@ -37,6 +39,7 @@ export function UserDataProvider(props: Props) {
                     patientProfile {
                         __typename
                         id
+                        insurance
                     }
                     doctorProfile {
                         __typename
@@ -54,6 +57,7 @@ export function UserDataProvider(props: Props) {
                 doctorId: data.me?.doctorProfile != null ? data.me?.doctorProfile.id : undefined,
                 firstname: data.me?.firstname,
                 id: data.me?.id,
+                insurance: data.me?.patientProfile != null ? data.me?.patientProfile.insurance : undefined,
                 isDoctor: data.me?.doctorProfile != null,
                 isPatient: data.me?.patientProfile != null,
                 lastname: data.me?.lastname,
@@ -105,4 +109,9 @@ export function useDoctorId(): string | undefined {
 export function usePatientId(): string | undefined {
     const { patientId } = useContext(UserContext);
     return patientId;
+}
+
+export function usePatientInsurance(): Insurance | undefined {
+    const { insurance } = useContext(UserContext);
+    return insurance;
 }
