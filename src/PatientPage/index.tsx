@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useHistory } from 'react-router';
+import React, { useState } from 'react';
 import {
     Box,
     Divider,
@@ -8,20 +7,13 @@ import {
 } from '@chakra-ui/react';
 
 import { Search } from 'Home';
+import CheckupNot from './CheckupNot';
 import PastApp from './PastApp';
+import ProfileSuggestion from './ProfileSuggestion';
 import UpcomingApp from './UpcomingApp';
 
-import { useIsLoggedIn } from 'authentication';
-
 function PatientPage() {
-    const history = useHistory();
-    const isLoggedIn = useIsLoggedIn();
-
-    useEffect(() => {
-        if (!isLoggedIn) {
-            history.push('/login');
-        }
-    }, [isLoggedIn, history]);
+    const [showSuggestion, setShowSuggestion] = useState(true);
 
     return (
         <div>
@@ -32,6 +24,15 @@ function PatientPage() {
                 align="stretch"
                 spacing={4}
             >
+                { showSuggestion &&
+                <ProfileSuggestion
+                    setShowSuggestion={setShowSuggestion}
+                    showSuggestion={showSuggestion}
+                />
+                }
+                { !showSuggestion &&
+                    <CheckupNot />
+                }
                 <Heading alignSelf="center" my={4} size="md">Upcoming Appointments</Heading>
                 <UpcomingApp />
 
