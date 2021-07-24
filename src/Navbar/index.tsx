@@ -17,9 +17,12 @@ import {
     PopoverTrigger,
     Spacer,
     Text,
+    useColorMode,
     useColorModeValue,
     VStack,
 } from '@chakra-ui/react';
+
+import LogoIcon from './LogoIcon';
 
 import { useIsLoggedIn, useLogout } from 'authentication';
 import {
@@ -41,6 +44,8 @@ function Navbar() {
     const isDoctor = useIsDoctor();
     const isPatient = useIsPatient();
 
+    const { colorMode } = useColorMode();
+
     return (
         <chakra.header
             bg={backgroundColor}
@@ -55,9 +60,7 @@ function Navbar() {
                 <Flex>
                     <HStack align="center" justify="left" paddingLeft={8}>
                         <Link to="/">
-                            <Button variant="ghost">
-                                Dogtor
-                            </Button>
+                            <LogoIcon darkMode={colorMode === 'dark'} height={'90px'} width={'180px'}/>
                         </Link>
                     </HStack>
                     <Spacer/>

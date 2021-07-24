@@ -7,7 +7,6 @@ export type FollowAppUnreadQueryVariables = {};
 export type FollowAppUnreadQueryResponse = {
     readonly me: {
         readonly firstname: string;
-        readonly lastname: string;
         readonly patientProfile: {
             readonly unreadFollowups: ReadonlyArray<{
                 readonly id: string;
@@ -16,9 +15,9 @@ export type FollowAppUnreadQueryResponse = {
                     readonly lastname: string;
                 };
                 readonly services: ReadonlyArray<{
-                    readonly serviceId: string;
                     readonly serviceName: string;
                 }>;
+                readonly suggestedDate: string;
             }>;
         } | null;
     } | null;
@@ -34,7 +33,6 @@ export type FollowAppUnreadQuery = {
 query FollowAppUnreadQuery {
   me {
     firstname
-    lastname
     patientProfile {
       unreadFollowups {
         id
@@ -44,9 +42,9 @@ query FollowAppUnreadQuery {
           id
         }
         services {
-          serviceId
           serviceName
         }
+        suggestedDate
       }
       id
     }
@@ -67,14 +65,14 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "lastname",
+  "name": "id",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "lastname",
   "storageKey": null
 },
 v3 = {
@@ -89,17 +87,17 @@ v3 = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "serviceId",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "serviceName",
       "storageKey": null
     }
   ],
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "suggestedDate",
   "storageKey": null
 };
 return {
@@ -118,7 +116,6 @@ return {
         "plural": false,
         "selections": [
           (v0/*: any*/),
-          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -135,7 +132,7 @@ return {
                 "name": "unreadFollowups",
                 "plural": true,
                 "selections": [
-                  (v2/*: any*/),
+                  (v1/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -145,11 +142,12 @@ return {
                     "plural": false,
                     "selections": [
                       (v0/*: any*/),
-                      (v1/*: any*/)
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v3/*: any*/)
+                  (v3/*: any*/),
+                  (v4/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -178,7 +176,6 @@ return {
         "plural": false,
         "selections": [
           (v0/*: any*/),
-          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -195,7 +192,7 @@ return {
                 "name": "unreadFollowups",
                 "plural": true,
                 "selections": [
-                  (v2/*: any*/),
+                  (v1/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -205,34 +202,35 @@ return {
                     "plural": false,
                     "selections": [
                       (v0/*: any*/),
-                      (v1/*: any*/),
-                      (v2/*: any*/)
+                      (v2/*: any*/),
+                      (v1/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v3/*: any*/)
+                  (v3/*: any*/),
+                  (v4/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v2/*: any*/)
+              (v1/*: any*/)
             ],
             "storageKey": null
           },
-          (v2/*: any*/)
+          (v1/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "89c289ff2b499aff95e2a6a4fc315b13",
+    "cacheID": "5ab1734dcf2ddf8767d36c83ca8d27bf",
     "id": null,
     "metadata": {},
     "name": "FollowAppUnreadQuery",
     "operationKind": "query",
-    "text": "query FollowAppUnreadQuery {\n  me {\n    firstname\n    lastname\n    patientProfile {\n      unreadFollowups {\n        id\n        doctor {\n          firstname\n          lastname\n          id\n        }\n        services {\n          serviceId\n          serviceName\n        }\n      }\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query FollowAppUnreadQuery {\n  me {\n    firstname\n    patientProfile {\n      unreadFollowups {\n        id\n        doctor {\n          firstname\n          lastname\n          id\n        }\n        services {\n          serviceName\n        }\n        suggestedDate\n      }\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = '8ea6e68854b0dbba4d7471f2b7fa98ec';
+(node as any).hash = '17e02868f4fe92d3f1fe0cb021764f43';
 export default node;

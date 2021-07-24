@@ -5,13 +5,14 @@ import type { PreloadedQuery } from 'react-relay';
 import FollowAppUnreadQuery from './__generated__/FollowAppUnreadQuery.graphql';
 
 import React, { useEffect, useRef } from 'react';
-import { Center, Grid, Text } from '@chakra-ui/react';
+import { Center, Grid } from '@chakra-ui/react';
 
 import { useQueryLoader } from 'react-relay';
 import { usePreloadedQuery } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
 import Suspense from 'Suspense';
+import FollBox from './FollBox';
 
 type LoadedProps = {
   data: PreloadedQuery<FollowAppUnreadQueryType>,
@@ -24,7 +25,6 @@ function LoadedFollowApp(props: LoadedProps) {
         query FollowAppUnreadQuery {
           me {
             firstname
-            lastname
             patientProfile {
                 unreadFollowups {
                     id
@@ -33,9 +33,9 @@ function LoadedFollowApp(props: LoadedProps) {
                         lastname
                     }
                     services {
-                        serviceId
                         serviceName
                     }
+                    suggestedDate
                 }
               }
           }
@@ -57,18 +57,14 @@ function LoadedFollowApp(props: LoadedProps) {
                 data.me?.patientProfile?.unreadFollowups.length > 0 &&
                 data.me?.patientProfile?.unreadFollowups.map(followup => {
                     return (
-                        <Text key={followup.id}>
-                            hi
-                            {followup.doctor.firstname} {followup.doctor.lastname}
-                            {followup.services[0].serviceId} {followup.services[0].serviceName}
-                        </Text>
-                        
-                    /*<FollBox
+                        <FollBox
+                            date={new Date(followup.suggestedDate)}
+                            doctorName={`${followup.doctor.firstname} ${followup.doctor.lastname}`}
                             key={followup.id}
                             keyV={followup.id}
-                            name={`${data.me?.firstname} ${data.me?.lastname}`}
-                            service={checkup.services[0]}
-                        />*/
+                            name={`${data.me?.firstname}`}
+                            service={followup.services[0].serviceName}
+                        />
                     );
                 })
                 }
