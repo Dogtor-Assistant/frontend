@@ -10,6 +10,7 @@ import Login from 'Login';
 import Navbar from 'Navbar';
 import PatientPage from 'PatientPage';
 import Calendar from 'Scheduler/Calendar';
+import Search from 'Search/Search';
 import Signup from 'Signup';
 import NotFound from './Notfound/NotFound';
 import { DoctorRoute, PatientRoute } from './ProtectedRoutes/ProtectedRoutes';
@@ -51,8 +52,11 @@ function App() {
 
                         <PatientRoute component={PatientPage} exact path="/patient" />
 
-                        <Route component={NotFound} />
+                        <Route path="/search">
+                            <Search />
+                        </Route>
 
+                        <Route component={NotFound} />
                     </Switch>
                     
                     <Footer/>
