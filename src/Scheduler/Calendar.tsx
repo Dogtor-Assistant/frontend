@@ -170,7 +170,7 @@ function LoadedCalendar(props: LoadedProps) {
     );
 
     const [events, setEvents] = useState<EventInput[]>(data ?
-        [...(data.node?.appointments ? data.node?.appointments.map(appointment => !appointment.isDone ? {} : ({
+        [...(data.node?.appointments ? data.node?.appointments.map(appointment => appointment.isDone ? {} : ({
             end: typeof appointment.expectedTime?.start === 'string' ? new Date(new Date(
                 appointment.expectedTime?.start).setMinutes(new Date(appointment.expectedTime?.start).getMinutes()
                  + appointment.expectedTime.duration!)).toISOString() : '', // eslint-disable-line
