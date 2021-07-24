@@ -34,6 +34,7 @@ fragment user_data on Query {
     patientProfile {
       __typename
       id
+      insurance
     }
     doctorProfile {
       __typename
@@ -51,16 +52,13 @@ var v0 = {
   "name": "id",
   "storageKey": null
 },
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "__typename",
-    "storageKey": null
-  },
-  (v0/*: any*/)
-];
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -118,7 +116,17 @@ return {
             "kind": "LinkedField",
             "name": "patientProfile",
             "plural": false,
-            "selections": (v1/*: any*/),
+            "selections": [
+              (v1/*: any*/),
+              (v0/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "insurance",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           },
           {
@@ -128,7 +136,10 @@ return {
             "kind": "LinkedField",
             "name": "doctorProfile",
             "plural": false,
-            "selections": (v1/*: any*/),
+            "selections": [
+              (v1/*: any*/),
+              (v0/*: any*/)
+            ],
             "storageKey": null
           }
         ],
@@ -151,12 +162,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2b9bbb4eeb93a1fe8e62c32ff3c84387",
+    "cacheID": "d2fd396fd69bcfa038210ea152b4c4a1",
     "id": null,
     "metadata": {},
     "name": "GlobalValuesProviderQuery",
     "operationKind": "query",
-    "text": "query GlobalValuesProviderQuery {\n  ...user_data\n  ...backendConstants_data\n}\n\nfragment backendConstants_data on Query {\n  cities\n  specialities\n}\n\nfragment user_data on Query {\n  me {\n    id\n    firstname\n    lastname\n    patientProfile {\n      __typename\n      id\n    }\n    doctorProfile {\n      __typename\n      id\n    }\n  }\n}\n"
+    "text": "query GlobalValuesProviderQuery {\n  ...user_data\n  ...backendConstants_data\n}\n\nfragment backendConstants_data on Query {\n  cities\n  specialities\n}\n\nfragment user_data on Query {\n  me {\n    id\n    firstname\n    lastname\n    patientProfile {\n      __typename\n      id\n      insurance\n    }\n    doctorProfile {\n      __typename\n      id\n    }\n  }\n}\n"
   }
 };
 })();
