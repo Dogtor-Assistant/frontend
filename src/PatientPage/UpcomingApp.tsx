@@ -4,7 +4,13 @@ import type { PreloadedQuery } from 'react-relay';
 
 import UpcomingAppQuery from './__generated__/UpcomingAppQuery.graphql';
 
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+} from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Center, Grid, Text } from '@chakra-ui/react';
 
 import { useQueryLoader } from 'react-relay';
@@ -118,6 +124,30 @@ function UpcomingApp() {
             dispose();
         };
     }, [id, dispose, loadQuery]);
+
+    const { search, pathname } = useLocation();
+    const history = useHistory();
+    const params = useMemo(() => {
+        return new URLSearchParams(search);
+    }, [search]);
+
+    const refresh = useMemo(() => {
+        const value = params.get('refresh');
+        switch (value) {
+        case 'true':
+        case '1':
+            return true;
+        default:
+            return false;
+        }
+    }, [params]);
+
+    useEffect(() => {
+        if (refresh) {
+            history.replace(pathname);
+            refreshUpcomingApp();
+        }
+    }, [refresh, pathname, refreshUpcomingApp, history]);
   
     return (
         <Suspense boundaryRef={error}>
