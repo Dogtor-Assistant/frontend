@@ -16,7 +16,7 @@ export type AppBox_appointment = {
     readonly selectedServices: ReadonlyArray<{
         readonly name: string;
     }>;
-    readonly " $fragmentRefs": FragmentRefs<"useAppointmentExpectedTime_appointment">;
+    readonly " $fragmentRefs": FragmentRefs<"useAppointmentExpectedTime_appointment" | "useAppointmentEstimatedTime_appointment">;
     readonly " $refType": "AppBox_appointment";
 };
 export type AppBox_appointment$data = AppBox_appointment;
@@ -105,10 +105,15 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "useAppointmentExpectedTime_appointment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "useAppointmentEstimatedTime_appointment"
     }
   ],
   "type": "Appointment",
   "abstractKey": null
 };
-(node as any).hash = 'f02323374271e274092e1c21d6293c45';
+(node as any).hash = 'b9174c5b9f00fb1780b296b50ea07fb3';
 export default node;

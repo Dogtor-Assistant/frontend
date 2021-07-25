@@ -2,7 +2,10 @@ import type { AppBox_appointment$key } from './__generated__/AppBox_appointment.
 import type { AppBoxDeleteAppMutation } from './__generated__/AppBoxDeleteAppMutation.graphql';
 
 import React from 'react';
+import { useMemo } from 'react';
 import {
+    Alert,
+    AlertIcon,
     Box,
     Button,
     ButtonGroup,
@@ -20,11 +23,14 @@ import { graphql } from 'babel-plugin-relay/macro';
 
 import LoadingIndicator from 'LoadingIndicator';
 
+import useAppointmentEstimatedTime from './useAppointmentEstimatedTime';
 import useAppointmentExpectedTime from './useAppointmentExpectedTime';
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'];
+
+const significantTimeDeviation = 5 * 60 * 1000;
 
 type Props = {
     appointment: AppBox_appointment$key,
@@ -46,6 +52,7 @@ function AppBox(props: Props) {
             fragment AppBox_appointment on Appointment {
                 id
                 ...useAppointmentExpectedTime_appointment
+                ...useAppointmentEstimatedTime_appointment
                 expectedTime {
                     duration
                 }
@@ -64,16 +71,35 @@ function AppBox(props: Props) {
     const { isPast, refreshQuery } = props;
 
     const appDate = useAppointmentExpectedTime(appointment);
+    const estimatedDate = useAppointmentEstimatedTime(appointment);
     const date = appDate != null ? dateString(appDate) : '';
     const duration = appointment.expectedTime.duration ?? 0;
     const time = appDate?.toLocaleTimeString('de', { hour: '2-digit', minute: '2-digit' });
+    const estimatedTimeString = estimatedDate.toLocaleTimeString('de', { hour: '2-digit', minute: '2-digit' });
 
     const services = appointment.selectedServices.map(serv => serv.name).join(' - ');
     const doctor = `Dr. ${appointment.doctor.lastname} ${appointment.doctor.firstname}`;
 
+    const doesEstimateDeviateFromExpected = useMemo(() => {
+        if (appDate == null) {
+            return false;
+        }
+        
+        return Math.abs(estimatedDate.getTime() - appDate.getTime()) >= significantTimeDeviation;
+    }, [appDate, estimatedDate]);
+
     return (
         <Box borderRadius="lg" borderWidth="1px" key={appointment.id} overflow="hidden">
             <Box p="6">
+                {
+                    doesEstimateDeviateFromExpected && (
+                        <Alert status="warning">
+                            <AlertIcon />
+                            Dr. {appointment.doctor.lastname} is running behind on his schedule.
+                            We anticipate that your Appointment will take place at {estimatedTimeString}
+                        </Alert>
+                    )
+                }
                 <Box alignItems="baseline" d="flex" justifyContent="space-between">
                     <Box
                         color="gray.500"
