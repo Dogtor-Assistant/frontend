@@ -25,8 +25,8 @@ export type Menu_doctor = {
     readonly appointments: ReadonlyArray<{
         readonly isDone: boolean;
         readonly expectedTime: {
-            readonly duration: number | null;
-            readonly start: string | null;
+            readonly duration: number;
+            readonly start: string;
         };
     }>;
     readonly " $refType": "Menu_doctor";

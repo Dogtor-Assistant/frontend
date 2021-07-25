@@ -10,7 +10,7 @@ export type PastAppQueryResponse = {
     readonly patientPreviousAppointments: ReadonlyArray<{
         readonly id: string;
         readonly expectedTime: {
-            readonly start: string | null;
+            readonly start: string;
         };
         readonly doctor: {
             readonly firstname: string;
