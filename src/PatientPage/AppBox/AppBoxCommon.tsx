@@ -106,7 +106,7 @@ function AppBoxCommon(props: Props) {
                     shouldDisplayWarningAboutEstimatedTime && (
                         <Alert mb="6" status="warning">
                             <AlertIcon />
-                            Dr. {appointment.doctor.lastname} is running behind on his schedule.
+                            Dr. {appointment.doctor.lastname} is running behind on their schedule.
                             We anticipate that your Appointment will take place at {estimatedTimeString}
                         </Alert>
                     )
