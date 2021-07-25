@@ -24,7 +24,7 @@ import {
 
 import { useIsLoggedIn, useIsLoggingIn } from 'authentication';
 import { useBackendConfig } from 'config';
-import { BACKEND_CONFIGS } from 'utils/constants';
+import { BACKEND_CONFIGS, IS_PRODUCTION_BUILD } from 'utils/constants';
 
 function DebugMenu() {
     const isLoggedIn = useIsLoggedIn();
@@ -34,6 +34,10 @@ function DebugMenu() {
 
     const { colorMode, toggleColorMode } = useColorMode();
     const appearenceName = useColorModeValue('Light', 'Dark');
+
+    if (IS_PRODUCTION_BUILD) {
+        return null;
+    }
 
     return (
         <div style={{

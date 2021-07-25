@@ -9,3 +9,5 @@ export const LOCAL_BACKEND_SSL = false;
 export const BACKEND_CONFIGS = <const> ['Production', 'Staging', 'Local'];
 
 export const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+
+export const IS_PRODUCTION_BUILD = process.env.NODE_ENV === 'production';
