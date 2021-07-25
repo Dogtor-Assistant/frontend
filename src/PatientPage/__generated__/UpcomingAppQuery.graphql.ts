@@ -10,8 +10,8 @@ export type UpcomingAppQueryResponse = {
     readonly patientUpcomingAppointments: ReadonlyArray<{
         readonly id: string;
         readonly expectedTime: {
-            readonly duration: number | null;
-            readonly start: string | null;
+            readonly duration: number;
+            readonly start: string;
         };
         readonly doctor: {
             readonly firstname: string;
