@@ -4,7 +4,7 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type AppBox_appointment = {
+export type AppBoxCommon_appointment = {
     readonly id: string;
     readonly expectedTime: {
         readonly duration: number;
@@ -16,13 +16,13 @@ export type AppBox_appointment = {
     readonly selectedServices: ReadonlyArray<{
         readonly name: string;
     }>;
-    readonly " $fragmentRefs": FragmentRefs<"useAppointmentExpectedTime_appointment" | "useAppointmentEstimatedTime_appointment">;
-    readonly " $refType": "AppBox_appointment";
+    readonly " $fragmentRefs": FragmentRefs<"useAppointmentExpectedTime_appointment">;
+    readonly " $refType": "AppBoxCommon_appointment";
 };
-export type AppBox_appointment$data = AppBox_appointment;
-export type AppBox_appointment$key = {
-    readonly " $data"?: AppBox_appointment$data;
-    readonly " $fragmentRefs": FragmentRefs<"AppBox_appointment">;
+export type AppBoxCommon_appointment$data = AppBoxCommon_appointment;
+export type AppBoxCommon_appointment$key = {
+    readonly " $data"?: AppBoxCommon_appointment$data;
+    readonly " $fragmentRefs": FragmentRefs<"AppBoxCommon_appointment">;
 };
 
 
@@ -31,7 +31,7 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AppBox_appointment",
+  "name": "AppBoxCommon_appointment",
   "selections": [
     {
       "alias": null,
@@ -105,15 +105,10 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "useAppointmentExpectedTime_appointment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "useAppointmentEstimatedTime_appointment"
     }
   ],
   "type": "Appointment",
   "abstractKey": null
 };
-(node as any).hash = 'b9174c5b9f00fb1780b296b50ea07fb3';
+(node as any).hash = '12bb366b265e01b8d39d6b3d92a9d04e';
 export default node;

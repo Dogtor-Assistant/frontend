@@ -1,5 +1,5 @@
-import type { AppBox_appointment$key } from './__generated__/AppBox_appointment.graphql';
-import type { AppBoxDeleteAppMutation } from './__generated__/AppBoxDeleteAppMutation.graphql';
+import type { AppBoxCommon_appointment$key } from './__generated__/AppBoxCommon_appointment.graphql';
+import type { AppBoxCommonDeleteAppMutation } from './__generated__/AppBoxCommonDeleteAppMutation.graphql';
 
 import React from 'react';
 import { useMemo } from 'react';
@@ -23,7 +23,6 @@ import { graphql } from 'babel-plugin-relay/macro';
 
 import LoadingIndicator from 'LoadingIndicator';
 
-import useAppointmentEstimatedTime from './useAppointmentEstimatedTime';
 import useAppointmentExpectedTime from './useAppointmentExpectedTime';
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -33,8 +32,9 @@ const months = ['January', 'February', 'March', 'April', 'May', 'June',
 const significantTimeDeviation = 5 * 60 * 1000;
 
 type Props = {
-    appointment: AppBox_appointment$key,
+    appointment: AppBoxCommon_appointment$key,
     isPast: boolean,
+    estimatedDate: Date | null,
     refreshQuery: () => void,
 }
 
@@ -46,13 +46,12 @@ function dateString(date: Date) {
     return `${day} ${num} ${month} ${year}`;
 }
 
-function AppBox(props: Props) {
+function AppBoxCommon(props: Props) {
     const appointment = useFragment(
         graphql`
-            fragment AppBox_appointment on Appointment {
+            fragment AppBoxCommon_appointment on Appointment {
                 id
                 ...useAppointmentExpectedTime_appointment
-                ...useAppointmentEstimatedTime_appointment
                 expectedTime {
                     duration
                 }
@@ -71,17 +70,17 @@ function AppBox(props: Props) {
     const { isPast, refreshQuery } = props;
 
     const appDate = useAppointmentExpectedTime(appointment);
-    const estimatedDate = useAppointmentEstimatedTime(appointment);
+    const estimatedDate = props.estimatedDate;
     const date = appDate != null ? dateString(appDate) : '';
     const duration = appointment.expectedTime.duration ?? 0;
     const time = appDate?.toLocaleTimeString('de', { hour: '2-digit', minute: '2-digit' });
-    const estimatedTimeString = estimatedDate.toLocaleTimeString('de', { hour: '2-digit', minute: '2-digit' });
+    const estimatedTimeString = estimatedDate?.toLocaleTimeString('de', { hour: '2-digit', minute: '2-digit' });
 
     const services = appointment.selectedServices.map(serv => serv.name).join(' - ');
     const doctor = `Dr. ${appointment.doctor.lastname} ${appointment.doctor.firstname}`;
 
     const shouldDisplayWarningAboutEstimatedTime = useMemo(() => {
-        if (appDate == null) {
+        if (appDate == null || estimatedDate == null) {
             return false;
         }
 
@@ -163,8 +162,8 @@ type PopoverCompProps = {
 }
 
 function PopoverComp({ id, refreshQuery }: PopoverCompProps) {
-    const [commit, isInFlight] = useMutation<AppBoxDeleteAppMutation>(graphql`
-    mutation AppBoxDeleteAppMutation($input: ID!){
+    const [commit, isInFlight] = useMutation<AppBoxCommonDeleteAppMutation>(graphql`
+    mutation AppBoxCommonDeleteAppMutation($input: ID!){
         deleteAppointmentById(id: $input)
     }
     `);
@@ -229,4 +228,4 @@ function PopoverComp({ id, refreshQuery }: PopoverCompProps) {
     );
 }
 
-export default AppBox;
+export default AppBoxCommon;

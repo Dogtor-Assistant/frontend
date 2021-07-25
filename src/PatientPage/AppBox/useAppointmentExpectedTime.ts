@@ -17,10 +17,6 @@ function useAppointmentExpectedTime(appointment: useAppointmentExpectedTime_appo
         appointment,
     );
 
-    if (expectedTime.start == null) {
-        return null;
-    }
-
     return new Date(expectedTime.start);
 }
 
