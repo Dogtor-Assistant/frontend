@@ -7,7 +7,6 @@ import { FragmentRefs } from "relay-runtime";
 export type AppBox_appointment = {
     readonly id: string;
     readonly expectedTime: {
-        readonly start: string;
         readonly duration: number;
     };
     readonly doctor: {
@@ -17,6 +16,7 @@ export type AppBox_appointment = {
     readonly selectedServices: ReadonlyArray<{
         readonly name: string;
     }>;
+    readonly " $fragmentRefs": FragmentRefs<"useAppointmentExpectedTime_appointment">;
     readonly " $refType": "AppBox_appointment";
 };
 export type AppBox_appointment$data = AppBox_appointment;
@@ -48,13 +48,6 @@ const node: ReaderFragment = {
       "name": "expectedTime",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "start",
-          "storageKey": null
-        },
         {
           "alias": null,
           "args": null,
@@ -107,10 +100,15 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "useAppointmentExpectedTime_appointment"
     }
   ],
   "type": "Appointment",
   "abstractKey": null
 };
-(node as any).hash = 'aef935b456a894b1082ebb27154e492c';
+(node as any).hash = 'f02323374271e274092e1c21d6293c45';
 export default node;

@@ -28,8 +28,8 @@ query PatientPageQuery(
 
 fragment AppBox_appointment on Appointment {
   id
+  ...useAppointmentExpectedTime_appointment
   expectedTime {
-    start
     duration
   }
   doctor {
@@ -84,6 +84,12 @@ fragment UpcomingApp_data_UJS9J on Query {
   patientUpcomingAppointments(id: $patientID) {
     id
     ...AppBox_appointment
+  }
+}
+
+fragment useAppointmentExpectedTime_appointment on Appointment {
+  expectedTime {
+    start
   }
 }
 */
@@ -310,12 +316,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0d6c6fc66dfcbbfd163fa38f82c0b1db",
+    "cacheID": "6f4b7ad92591d7349af15b360d291e35",
     "id": null,
     "metadata": {},
     "name": "PatientPageQuery",
     "operationKind": "query",
-    "text": "query PatientPageQuery(\n  $patientID: ID!\n) {\n  ...CheckupNot_data\n  ...UpcomingApp_data_UJS9J\n  ...PastApp_data_UJS9J\n}\n\nfragment AppBox_appointment on Appointment {\n  id\n  expectedTime {\n    start\n    duration\n  }\n  doctor {\n    firstname\n    lastname\n    id\n  }\n  selectedServices {\n    name\n    id\n  }\n}\n\nfragment CheckupNot_data on Query {\n  me {\n    ...NotBox_user\n    patientProfile {\n      unreadCheckups {\n        id\n        ...NotBox_checkup\n      }\n      id\n    }\n    id\n  }\n}\n\nfragment NotBox_checkup on Checkup {\n  id\n  services\n}\n\nfragment NotBox_user on User {\n  firstname\n  lastname\n  patientProfile {\n    address {\n      city\n    }\n    id\n  }\n}\n\nfragment PastApp_data_UJS9J on Query {\n  patientPreviousAppointments(id: $patientID) {\n    id\n    ...AppBox_appointment\n  }\n}\n\nfragment UpcomingApp_data_UJS9J on Query {\n  patientUpcomingAppointments(id: $patientID) {\n    id\n    ...AppBox_appointment\n  }\n}\n"
+    "text": "query PatientPageQuery(\n  $patientID: ID!\n) {\n  ...CheckupNot_data\n  ...UpcomingApp_data_UJS9J\n  ...PastApp_data_UJS9J\n}\n\nfragment AppBox_appointment on Appointment {\n  id\n  ...useAppointmentExpectedTime_appointment\n  expectedTime {\n    duration\n  }\n  doctor {\n    firstname\n    lastname\n    id\n  }\n  selectedServices {\n    name\n    id\n  }\n}\n\nfragment CheckupNot_data on Query {\n  me {\n    ...NotBox_user\n    patientProfile {\n      unreadCheckups {\n        id\n        ...NotBox_checkup\n      }\n      id\n    }\n    id\n  }\n}\n\nfragment NotBox_checkup on Checkup {\n  id\n  services\n}\n\nfragment NotBox_user on User {\n  firstname\n  lastname\n  patientProfile {\n    address {\n      city\n    }\n    id\n  }\n}\n\nfragment PastApp_data_UJS9J on Query {\n  patientPreviousAppointments(id: $patientID) {\n    id\n    ...AppBox_appointment\n  }\n}\n\nfragment UpcomingApp_data_UJS9J on Query {\n  patientUpcomingAppointments(id: $patientID) {\n    id\n    ...AppBox_appointment\n  }\n}\n\nfragment useAppointmentExpectedTime_appointment on Appointment {\n  expectedTime {\n    start\n  }\n}\n"
   }
 };
 })();

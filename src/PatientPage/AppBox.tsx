@@ -20,6 +20,8 @@ import { graphql } from 'babel-plugin-relay/macro';
 
 import LoadingIndicator from 'LoadingIndicator';
 
+import useAppointmentExpectedTime from './useAppointmentExpectedTime';
+
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const months = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'];
@@ -30,13 +32,21 @@ type Props = {
     refreshQuery: () => void,
 }
 
+function dateString(date: Date) {
+    const day = days[date.getDay()];
+    const num = date.getDate().toString();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear().toString();
+    return `${day} ${num} ${month} ${year}`;
+}
+
 function AppBox(props: Props) {
     const appointment = useFragment(
         graphql`
             fragment AppBox_appointment on Appointment {
                 id
+                ...useAppointmentExpectedTime_appointment
                 expectedTime {
-                    start
                     duration
                 }
                 doctor {
@@ -53,19 +63,10 @@ function AppBox(props: Props) {
 
     const { isPast, refreshQuery } = props;
 
-    const appDate = appointment.expectedTime.start != null ? new Date(appointment.expectedTime.start) : null;
-    const day = appDate?.getDay() != null ? days[appDate?.getDay()] : null;
-    const num = appDate?.getDate() != null ? appDate?.getDate().toString() : null;
-    const month = appDate?.getMonth() != null ? months[appDate?.getMonth()] : null;
-    const year = appDate?.getFullYear() != null ? appDate?.getFullYear().toString() : null;
-    const date = `${day} ${num} ${month} ${year}`;
-                  
+    const appDate = useAppointmentExpectedTime(appointment);
+    const date = appDate != null ? dateString(appDate) : '';
     const duration = appointment.expectedTime.duration ?? 0;
-    let hour = appDate?.getHours() != null ? appDate?.getHours().toString() : null;
-    if (hour != null && parseInt(hour) < 10) hour = `0${ hour}`;
-    let minute = appDate?.getHours() != null ? appDate?.getMinutes().toString() : null;
-    if (minute != null && parseInt(minute) < 10) minute = `0${ minute}`;
-    const time = `${hour}:${minute}`;
+    const time = appDate?.toLocaleTimeString('de', { hour: '2-digit', minute: '2-digit' });
 
     const services = appointment.selectedServices.map(serv => serv.name).join(' - ');
     const doctor = `Dr. ${appointment.doctor.lastname} ${appointment.doctor.firstname}`;
