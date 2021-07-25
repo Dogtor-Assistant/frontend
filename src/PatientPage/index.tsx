@@ -41,6 +41,7 @@ function LoadedPatientPage(props: LoadedProps) {
     const data = usePreloadedQuery(
         graphql`
             query PatientPageQuery($patientID: ID!) {
+                ...ProfileSuggestion_data
                 ...CheckupNot_data
                 ...UpcomingApp_data @arguments(patientID: $patientID)
                 ...PastApp_data @arguments(patientID: $patientID)
@@ -63,6 +64,7 @@ function LoadedPatientPage(props: LoadedProps) {
                 {
                     showSuggestion && (
                         <ProfileSuggestion
+                            data={data}
                             setShowSuggestion={setShowSuggestion}
                             showSuggestion={showSuggestion}
                         />

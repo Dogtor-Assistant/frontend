@@ -8,7 +8,7 @@ export type PatientPageQueryVariables = {
     patientID: string;
 };
 export type PatientPageQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"CheckupNot_data" | "UpcomingApp_data" | "PastApp_data">;
+    readonly " $fragmentRefs": FragmentRefs<"ProfileSuggestion_data" | "CheckupNot_data" | "UpcomingApp_data" | "PastApp_data">;
 };
 export type PatientPageQuery = {
     readonly response: PatientPageQueryResponse;
@@ -21,6 +21,7 @@ export type PatientPageQuery = {
 query PatientPageQuery(
   $patientID: ID!
 ) {
+  ...ProfileSuggestion_data
   ...CheckupNot_data
   ...UpcomingApp_data_UJS9J
   ...PastApp_data_UJS9J
@@ -81,6 +82,20 @@ fragment PastApp_data_UJS9J on Query {
   }
 }
 
+fragment ProfileSuggestion_data on Query {
+  me {
+    patientProfile {
+      birthDate
+      insurance
+      gender
+      medications
+      medicalConditions
+      id
+    }
+    id
+  }
+}
+
 fragment UpcomingApp_data_UJS9J on Query {
   patientUpcomingAppointments(id: $patientID) {
     id
@@ -119,21 +134,21 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "firstname",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "lastname",
+  "name": "firstname",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "lastname",
   "storageKey": null
 },
 v5 = [
@@ -144,7 +159,7 @@ v5 = [
   }
 ],
 v6 = [
-  (v4/*: any*/),
+  (v2/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -185,9 +200,9 @@ v6 = [
     "name": "doctor",
     "plural": false,
     "selections": [
-      (v2/*: any*/),
       (v3/*: any*/),
-      (v4/*: any*/)
+      (v4/*: any*/),
+      (v2/*: any*/)
     ],
     "storageKey": null
   },
@@ -206,7 +221,7 @@ v6 = [
         "name": "name",
         "storageKey": null
       },
-      (v4/*: any*/)
+      (v2/*: any*/)
     ],
     "storageKey": null
   }
@@ -218,6 +233,11 @@ return {
     "metadata": null,
     "name": "PatientPageQuery",
     "selections": [
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "ProfileSuggestion_data"
+      },
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -251,8 +271,6 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -261,6 +279,42 @@ return {
             "name": "patientProfile",
             "plural": false,
             "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "birthDate",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "insurance",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "gender",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "medications",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "medicalConditions",
+                "storageKey": null
+              },
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -279,7 +333,6 @@ return {
                 ],
                 "storageKey": null
               },
-              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -288,7 +341,7 @@ return {
                 "name": "unreadCheckups",
                 "plural": true,
                 "selections": [
-                  (v4/*: any*/),
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -302,6 +355,8 @@ return {
             ],
             "storageKey": null
           },
+          (v2/*: any*/),
+          (v3/*: any*/),
           (v4/*: any*/)
         ],
         "storageKey": null
@@ -329,14 +384,14 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d3193a37ccf7fcfcf55a38ea98d4b5ba",
+    "cacheID": "d3e28d77330611b94cb1d79994cfc0fd",
     "id": null,
     "metadata": {},
     "name": "PatientPageQuery",
     "operationKind": "query",
-    "text": "query PatientPageQuery(\n  $patientID: ID!\n) {\n  ...CheckupNot_data\n  ...UpcomingApp_data_UJS9J\n  ...PastApp_data_UJS9J\n}\n\nfragment AppBox_appointment on Appointment {\n  id\n  ...useAppointmentExpectedTime_appointment\n  ...useAppointmentEstimatedTime_appointment\n  expectedTime {\n    duration\n  }\n  doctor {\n    firstname\n    lastname\n    id\n  }\n  selectedServices {\n    name\n    id\n  }\n}\n\nfragment CheckupNot_data on Query {\n  me {\n    ...NotBox_user\n    patientProfile {\n      unreadCheckups {\n        id\n        ...NotBox_checkup\n      }\n      id\n    }\n    id\n  }\n}\n\nfragment NotBox_checkup on Checkup {\n  id\n  services\n}\n\nfragment NotBox_user on User {\n  firstname\n  lastname\n  patientProfile {\n    address {\n      city\n    }\n    id\n  }\n}\n\nfragment PastApp_data_UJS9J on Query {\n  patientPreviousAppointments(id: $patientID) {\n    id\n    ...AppBox_appointment\n  }\n}\n\nfragment UpcomingApp_data_UJS9J on Query {\n  patientUpcomingAppointments(id: $patientID) {\n    id\n    ...AppBox_appointment\n  }\n}\n\nfragment useAppointmentEstimatedTime_appointment on Appointment {\n  id\n  estimatedStart\n}\n\nfragment useAppointmentExpectedTime_appointment on Appointment {\n  expectedTime {\n    start\n  }\n}\n"
+    "text": "query PatientPageQuery(\n  $patientID: ID!\n) {\n  ...ProfileSuggestion_data\n  ...CheckupNot_data\n  ...UpcomingApp_data_UJS9J\n  ...PastApp_data_UJS9J\n}\n\nfragment AppBox_appointment on Appointment {\n  id\n  ...useAppointmentExpectedTime_appointment\n  ...useAppointmentEstimatedTime_appointment\n  expectedTime {\n    duration\n  }\n  doctor {\n    firstname\n    lastname\n    id\n  }\n  selectedServices {\n    name\n    id\n  }\n}\n\nfragment CheckupNot_data on Query {\n  me {\n    ...NotBox_user\n    patientProfile {\n      unreadCheckups {\n        id\n        ...NotBox_checkup\n      }\n      id\n    }\n    id\n  }\n}\n\nfragment NotBox_checkup on Checkup {\n  id\n  services\n}\n\nfragment NotBox_user on User {\n  firstname\n  lastname\n  patientProfile {\n    address {\n      city\n    }\n    id\n  }\n}\n\nfragment PastApp_data_UJS9J on Query {\n  patientPreviousAppointments(id: $patientID) {\n    id\n    ...AppBox_appointment\n  }\n}\n\nfragment ProfileSuggestion_data on Query {\n  me {\n    patientProfile {\n      birthDate\n      insurance\n      gender\n      medications\n      medicalConditions\n      id\n    }\n    id\n  }\n}\n\nfragment UpcomingApp_data_UJS9J on Query {\n  patientUpcomingAppointments(id: $patientID) {\n    id\n    ...AppBox_appointment\n  }\n}\n\nfragment useAppointmentEstimatedTime_appointment on Appointment {\n  id\n  estimatedStart\n}\n\nfragment useAppointmentExpectedTime_appointment on Appointment {\n  expectedTime {\n    start\n  }\n}\n"
   }
 };
 })();
-(node as any).hash = 'f6fa47dd428a36773f9617e00b5f8e11';
+(node as any).hash = '9d759be9d7553f039d6bbe8098fbb6e3';
 export default node;
