@@ -1,13 +1,5 @@
-import type {
-    Gender,
-    Insurance,
-    ProfileSuggestionQuery as ProfileSuggestionQType,
-} from './__generated__/ProfileSuggestionQuery.graphql';
+import type { Gender, Insurance, ProfileSuggestion_data$key } from './__generated__/ProfileSuggestion_data.graphql';
 import type { ProfileSuggestionUpdateMutation } from './__generated__/ProfileSuggestionUpdateMutation.graphql';
-import type { ErrorBoundary } from 'react-error-boundary';
-import type { PreloadedQuery } from 'react-relay';
-
-import ProfileSuggestionQuery from './__generated__/ProfileSuggestionQuery.graphql';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -29,23 +21,21 @@ import {
 } from '@chakra-ui/react';
 
 import { useMutation } from 'react-relay';
-import { useQueryLoader } from 'react-relay';
-import { usePreloadedQuery } from 'react-relay';
+import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
 import LoadingIndicator from 'LoadingIndicator';
-import Suspense from 'Suspense';
 import MiniForm from './MiniForm';
 
 import { usePatientId } from 'user';
 
-type LoadedProps = {
-  data: PreloadedQuery<ProfileSuggestionQType>,
-  setShowSuggestion: React.Dispatch<React.SetStateAction<boolean>>,
-  showSuggestion: boolean,
+type Props = {
+    data: ProfileSuggestion_data$key,
+    setShowSuggestion: React.Dispatch<React.SetStateAction<boolean>>,
+    showSuggestion: boolean,
 }
 
-function LoadedProfileSuggestion(props: LoadedProps) {
+function ProfileSuggestion(props: Props) {
     const history = useHistory();
     const patientId = usePatientId();
     
@@ -57,21 +47,20 @@ function LoadedProfileSuggestion(props: LoadedProps) {
     const [insurance, setInsurance] = useState(0);
     const [birthDate, setBirthDate] = useState(new Date());
     const [gender, setGender] = useState(-1);
-
-    const data = usePreloadedQuery(
+    const data = useFragment(
         graphql`
-        query ProfileSuggestionQuery {
-            me {
-                patientProfile {
-                    birthDate
-                    insurance
-                    gender
-                    medications
-                    medicalConditions                    
+            fragment ProfileSuggestion_data on Query {
+                me {
+                    patientProfile {
+                        birthDate
+                        insurance
+                        gender
+                        medications
+                        medicalConditions                    
+                    }
                 }
             }
-        }
-      `,
+        `,
         props.data,
     );
     
@@ -189,39 +178,6 @@ function LoadedProfileSuggestion(props: LoadedProps) {
                 </AlertDialogOverlay>
             </AlertDialog>
         </Center>
-    );
-}
-
-type ProfileSuggestionProps = {
-    setShowSuggestion: React.Dispatch<React.SetStateAction<boolean>>,
-    showSuggestion: boolean,
-}
-
-function ProfileSuggestion(props: ProfileSuggestionProps) {
-    const [
-        data,
-        loadQuery,
-        dispose,
-    ] = useQueryLoader<ProfileSuggestionQType>(ProfileSuggestionQuery);
-
-    const error = useRef<ErrorBoundary>(null);
-    useEffect(() => {
-        error.current?.reset();
-        loadQuery({ });
-        return () => {
-            dispose();
-        };
-    }, [dispose, loadQuery]);
-
-    return (
-        <Suspense boundaryRef={error}>
-            {data != null &&
-            <LoadedProfileSuggestion
-                data={data}
-                setShowSuggestion={props.setShowSuggestion}
-                showSuggestion={props.showSuggestion}/>
-            }
-        </Suspense>
     );
 }
 

@@ -3,21 +3,21 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from "relay-runtime";
-export type AppBoxDeleteAppMutationVariables = {
+export type AppBoxCommonDeleteAppMutationVariables = {
     input: string;
 };
-export type AppBoxDeleteAppMutationResponse = {
+export type AppBoxCommonDeleteAppMutationResponse = {
     readonly deleteAppointmentById: boolean;
 };
-export type AppBoxDeleteAppMutation = {
-    readonly response: AppBoxDeleteAppMutationResponse;
-    readonly variables: AppBoxDeleteAppMutationVariables;
+export type AppBoxCommonDeleteAppMutation = {
+    readonly response: AppBoxCommonDeleteAppMutationResponse;
+    readonly variables: AppBoxCommonDeleteAppMutationVariables;
 };
 
 
 
 /*
-mutation AppBoxDeleteAppMutation(
+mutation AppBoxCommonDeleteAppMutation(
   $input: ID!
 ) {
   deleteAppointmentById(id: $input)
@@ -52,7 +52,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "AppBoxDeleteAppMutation",
+    "name": "AppBoxCommonDeleteAppMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -61,18 +61,18 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "AppBoxDeleteAppMutation",
+    "name": "AppBoxCommonDeleteAppMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "6f6e5fc78fc714763ae49b7c672b6944",
+    "cacheID": "bd4f786a23d1231472cf3060acb9765b",
     "id": null,
     "metadata": {},
-    "name": "AppBoxDeleteAppMutation",
+    "name": "AppBoxCommonDeleteAppMutation",
     "operationKind": "mutation",
-    "text": "mutation AppBoxDeleteAppMutation(\n  $input: ID!\n) {\n  deleteAppointmentById(id: $input)\n}\n"
+    "text": "mutation AppBoxCommonDeleteAppMutation(\n  $input: ID!\n) {\n  deleteAppointmentById(id: $input)\n}\n"
   }
 };
 })();
-(node as any).hash = 'fb4dc131c02cdee6d8e0e64254187a69';
+(node as any).hash = '39d9e597e9ae3f09b95f61aa081f17c4';
 export default node;
