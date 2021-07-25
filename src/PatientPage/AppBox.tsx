@@ -80,20 +80,32 @@ function AppBox(props: Props) {
     const services = appointment.selectedServices.map(serv => serv.name).join(' - ');
     const doctor = `Dr. ${appointment.doctor.lastname} ${appointment.doctor.firstname}`;
 
-    const doesEstimateDeviateFromExpected = useMemo(() => {
+    const shouldDisplayWarningAboutEstimatedTime = useMemo(() => {
         if (appDate == null) {
             return false;
         }
+
+        const now = Date.now();
+        if (estimatedDate.getTime() < now) {
+            return false;
+        }
+
+        const isDifferenceSignificant = Math.abs(
+            estimatedDate.getTime() - appDate.getTime(),
+        ) >= significantTimeDeviation;
+        if (!isDifferenceSignificant) {
+            return false;
+        }
         
-        return Math.abs(estimatedDate.getTime() - appDate.getTime()) >= significantTimeDeviation;
+        return appDate.getTime() < now;
     }, [appDate, estimatedDate]);
 
     return (
         <Box borderRadius="lg" borderWidth="1px" key={appointment.id} overflow="hidden">
             <Box p="6">
                 {
-                    doesEstimateDeviateFromExpected && (
-                        <Alert status="warning">
+                    shouldDisplayWarningAboutEstimatedTime && (
+                        <Alert mb="6" status="warning">
                             <AlertIcon />
                             Dr. {appointment.doctor.lastname} is running behind on his schedule.
                             We anticipate that your Appointment will take place at {estimatedTimeString}
