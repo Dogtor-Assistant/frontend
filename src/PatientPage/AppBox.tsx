@@ -1,5 +1,5 @@
+import type { AppBox_appointment$key } from './__generated__/AppBox_appointment.graphql';
 import type { AppBoxDeleteAppMutation } from './__generated__/AppBoxDeleteAppMutation.graphql';
-import type { FC, ReactElement } from 'react';
 
 import React from 'react';
 import {
@@ -15,27 +15,63 @@ import {
 } from '@chakra-ui/react';
 
 import { useMutation } from 'react-relay';
+import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
 import LoadingIndicator from 'LoadingIndicator';
 
-type appBoxProps = {
-    keyV: string,
-    services: string,
-    date: string,
-    duration?: number,
-    time: string,
-    doctor: string,
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const months = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'];
+
+type Props = {
+    appointment: AppBox_appointment$key,
     isPast: boolean,
     refreshQuery: () => void,
 }
-const AppBox: FC<appBoxProps> =
-({
-    keyV, services, date, duration, time, doctor, isPast, refreshQuery,
-}): ReactElement => {
-    return (
-        <Box borderRadius="lg" borderWidth="1px" key={keyV} overflow="hidden">
 
+function AppBox(props: Props) {
+    const appointment = useFragment(
+        graphql`
+            fragment AppBox_appointment on Appointment {
+                id
+                expectedTime {
+                    start
+                    duration
+                }
+                doctor {
+                    firstname
+                    lastname
+                }
+                selectedServices {
+                    name
+                }
+            }
+        `,
+        props.appointment,
+    );
+
+    const { isPast, refreshQuery } = props;
+
+    const appDate = appointment.expectedTime.start != null ? new Date(appointment.expectedTime.start) : null;
+    const day = appDate?.getDay() != null ? days[appDate?.getDay()] : null;
+    const num = appDate?.getDate() != null ? appDate?.getDate().toString() : null;
+    const month = appDate?.getMonth() != null ? months[appDate?.getMonth()] : null;
+    const year = appDate?.getFullYear() != null ? appDate?.getFullYear().toString() : null;
+    const date = `${day} ${num} ${month} ${year}`;
+                  
+    const duration = appointment.expectedTime.duration ?? 0;
+    let hour = appDate?.getHours() != null ? appDate?.getHours().toString() : null;
+    if (hour != null && parseInt(hour) < 10) hour = `0${ hour}`;
+    let minute = appDate?.getHours() != null ? appDate?.getMinutes().toString() : null;
+    if (minute != null && parseInt(minute) < 10) minute = `0${ minute}`;
+    const time = `${hour}:${minute}`;
+
+    const services = appointment.selectedServices.map(serv => serv.name).join(' - ');
+    const doctor = `Dr. ${appointment.doctor.lastname} ${appointment.doctor.firstname}`;
+
+    return (
+        <Box borderRadius="lg" borderWidth="1px" key={appointment.id} overflow="hidden">
             <Box p="6">
                 <Box alignItems="baseline" d="flex" justifyContent="space-between">
                     <Box
@@ -47,10 +83,12 @@ const AppBox: FC<appBoxProps> =
                     >
                         {date} &bull; {time}
                     </Box>
-                    { !isPast &&
-                    <Box float="right">
-                        {duration} min.
-                    </Box>
+                    {
+                        !isPast && (
+                            <Box float="right">
+                                {duration} min.
+                            </Box>
+                        )
                     }
                 </Box>
 
@@ -67,22 +105,25 @@ const AppBox: FC<appBoxProps> =
                 <Box ml="2">
                     {doctor}
                 </Box>
-                { !isPast && <PopoverComp keyV={keyV} refreshQuery={refreshQuery} /> }
+                {
+                    !isPast && (
+                        <PopoverComp
+                            id={appointment.id}
+                            refreshQuery={refreshQuery}
+                        />
+                    )
+                }
             </Box>
         </Box>
     );
-};
+}
 
-type popoverCompProps = {
-    keyV: string,
+type PopoverCompProps = {
+    id: string,
     refreshQuery: () => void,
 }
 
-const PopoverComp: FC<popoverCompProps> =
-({
-    keyV, refreshQuery,
-}): ReactElement => {
-    
+function PopoverComp({ id, refreshQuery }: PopoverCompProps) {
     const [commit, isInFlight] = useMutation<AppBoxDeleteAppMutation>(graphql`
     mutation AppBoxDeleteAppMutation($input: ID!){
         deleteAppointmentById(id: $input)
@@ -138,7 +179,7 @@ const PopoverComp: FC<popoverCompProps> =
                                     >
                                         No
                                     </Button>
-                                    <Button bg="tomato" onClick={() => deleteApp(keyV)}>Yes</Button>
+                                    <Button bg="tomato" onClick={() => deleteApp(id)}>Yes</Button>
                                 </ButtonGroup>
                             </PopoverFooter>
                         </PopoverContent>
@@ -147,6 +188,6 @@ const PopoverComp: FC<popoverCompProps> =
             </Popover>
         </>
     );
-};
-  
+}
+
 export default AppBox;

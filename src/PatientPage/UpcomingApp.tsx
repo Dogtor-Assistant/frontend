@@ -1,158 +1,60 @@
-import type { UpcomingAppQuery as UpcomingAppQueryType } from './__generated__/UpcomingAppQuery.graphql';
-import type { ErrorBoundary } from 'react-error-boundary';
-import type { PreloadedQuery } from 'react-relay';
+import type { UpcomingApp_data$key } from './__generated__/UpcomingApp_data.graphql';
 
-import UpcomingAppQuery from './__generated__/UpcomingAppQuery.graphql';
-
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-} from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import React from 'react';
 import { Center, Grid, Text } from '@chakra-ui/react';
 
-import { useQueryLoader } from 'react-relay';
-import { usePreloadedQuery } from 'react-relay';
+import { useFragment } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
 
-import Suspense from 'Suspense';
 import AppBox from './AppBox';
 
-import { usePatientId } from 'user';
-
-type LoadedProps = {
-  data: PreloadedQuery<UpcomingAppQueryType>,
-  refreshQuery: () => void,
+type Props = {
+    data: UpcomingApp_data$key,
+    refreshQuery: () => void,
 }
 
-function LoadedUpcomingApp(props: LoadedProps) {
-    const data = usePreloadedQuery(
+function UpcomingApp(props: Props) {
+    const data = useFragment(
         graphql`
-        query UpcomingAppQuery($patientID: ID!) {
-          patientUpcomingAppointments(id: $patientID) {
-          id
-          expectedTime {
-            duration
-            start
-          }
-          doctor {
-            firstname
-            lastname
-          }
-          selectedServices {
-            name
-          }
-        } 
-      }
-      `,
+            fragment UpcomingApp_data on Query
+            @argumentDefinitions(
+                patientID: { type: "ID!" }
+            ) {
+                patientUpcomingAppointments(id: $patientID) {
+                    id
+                    ...AppBox_appointment
+                }
+            }
+        `,
         props.data,
     );
-    
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const months = ['January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'];
-
     return (
         <Center>
             <Grid gap={6} w={600}>
-                { data.patientUpcomingAppointments.length === 0 &&
-                <Center><Text>No upcoming appointments!</Text></Center>
+                {
+                    data.patientUpcomingAppointments.length === 0 && (
+                        <Center>
+                            <Text>
+                                No upcoming appointments!
+                            </Text>
+                        </Center>
+                    )
                 }
-                { data.patientUpcomingAppointments.length !== 0 &&
-              data.patientUpcomingAppointments.map(app => {
-                  const appDate = app.expectedTime.start != null ? new Date(app.expectedTime.start) : null;
-
-                  const day = appDate?.getDay() !== undefined ? days[appDate?.getDay()] : null;
-                  const num = appDate?.getDate() !== undefined ? appDate?.getDate().toString() : null;
-                  const month = appDate?.getMonth() !== undefined ? months[appDate?.getMonth()] : null;
-                  const year = appDate?.getFullYear() !== undefined ? appDate?.getFullYear().toString() : null;
-                  const date = `${day} ${num} ${month} ${year}`;
-                  
-                  const duration = app.expectedTime.duration != null ? app.expectedTime.duration : 0;
-                  let hour = appDate?.getHours() !== undefined ? appDate?.getHours().toString() : null;
-                  if (hour != null && parseInt(hour) < 10) hour = `0${ hour}`;
-                  let minute = appDate?.getHours() !== undefined ? appDate?.getMinutes().toString() : null;
-                  if (minute != null && parseInt(minute) < 10) minute = `0${ minute}`;
-                  const time = `${hour}:${minute}`;
-
-                  const services = app.selectedServices.map(serv => serv.name).join(' - ');
-
-                  const doctor = `Dr. ${app.doctor.lastname} ${app.doctor.firstname}`;
-
-                  return (
-                      <AppBox
-                          date={date}
-                          doctor={doctor}
-                          duration={duration}
-                          isPast={false}
-                          key={app.id} keyV={app.id}
-                          refreshQuery={props.refreshQuery}
-                          services={services}
-                          time={time}
-                      />
-                  ); },
-              )
+                {
+                    data.patientUpcomingAppointments.length !== 0 &&
+                    data.patientUpcomingAppointments.map(app => {
+                        return (
+                            <AppBox
+                                appointment={app}
+                                isPast={false}
+                                key={app.id}
+                                refreshQuery={props.refreshQuery}
+                            />
+                        );
+                    })
                 }
             </Grid>
         </Center>
-    );
-}
-
-function UpcomingApp() {
-    const id = usePatientId();
-
-    const [
-        data,
-        loadQuery,
-        dispose,
-    ] = useQueryLoader<UpcomingAppQueryType>(UpcomingAppQuery);
-
-    const error = useRef<ErrorBoundary>(null);
-    useEffect(() => {
-        error.current?.reset();
-        loadQuery({ patientID: id !== undefined ? id : '' });
-        return () => {
-            dispose();
-        };
-    }, [id, dispose, loadQuery]);
-
-    const refreshUpcomingApp = useCallback(() => {
-        loadQuery({ patientID: id !== undefined ? id : '' }, { fetchPolicy: 'network-only' });
-        return () => {
-            dispose();
-        };
-    }, [id, dispose, loadQuery]);
-
-    const { search, pathname } = useLocation();
-    const history = useHistory();
-    const params = useMemo(() => {
-        return new URLSearchParams(search);
-    }, [search]);
-
-    const refresh = useMemo(() => {
-        const value = params.get('refresh');
-        switch (value) {
-        case 'true':
-        case '1':
-            return true;
-        default:
-            return false;
-        }
-    }, [params]);
-
-    useEffect(() => {
-        if (refresh) {
-            history.replace(pathname);
-            refreshUpcomingApp();
-        }
-    }, [refresh, pathname, refreshUpcomingApp, history]);
-  
-    return (
-        <Suspense boundaryRef={error}>
-            {data != null && <LoadedUpcomingApp data={data} refreshQuery={refreshUpcomingApp}/>}
-        </Suspense>
     );
 }
 
