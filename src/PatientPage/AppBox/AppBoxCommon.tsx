@@ -96,7 +96,7 @@ function AppBoxCommon(props: Props) {
             return false;
         }
         
-        return appDate.getTime() < now;
+        return appDate.getTime() > now;
     }, [appDate, estimatedDate]);
 
     return (
