@@ -3,9 +3,10 @@ import type {
 } from './__generated__/useAppointmentEstimatedTime_appointment.graphql';
 import type {
     useAppointmentEstimatedTimeSubscription,
+    useAppointmentEstimatedTimeSubscriptionResponse,
 } from './__generated__/useAppointmentEstimatedTimeSubscription.graphql';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { useFragment, useSubscription } from 'react-relay';
 import { graphql } from 'babel-plugin-relay/macro';
@@ -32,14 +33,19 @@ function useAppointmentEstimatedTime(appointment: useAppointmentEstimatedTime_ap
     const initialDate = useMemo(() => new Date(decoded.estimatedStart), [decoded]);
     const [date, setDate] = useState(initialDate);
 
+    const onNext = useCallback(
+        (data: useAppointmentEstimatedTimeSubscriptionResponse | null | undefined) => {
+            const newEstimate = data?.estimatedWaitingTime.estimatedStart;
+            if (newEstimate != null) {
+                setDate(new Date(newEstimate));
+            }
+        },
+        [setDate],
+    );
+
     useSubscription<useAppointmentEstimatedTimeSubscription>(
         {
-            onNext: response => {
-                const newEstimate = response?.estimatedWaitingTime.estimatedStart;
-                if (newEstimate != null) {
-                    setDate(new Date(newEstimate));
-                }
-            },
+            onNext,
             subscription,
             variables: {
                 appointmentId: decoded.id,
